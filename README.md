@@ -1,7 +1,7 @@
 # Robotics-Group-Studies
 Year 3 Robotics Group Studies Project 2020
 
-**Linux Command Cheat Sheet:**
+#Linux Command Cheat Sheet#
 
 See files in current directory: ls
 
@@ -11,7 +11,9 @@ Make a new directory: mkdir *[directory name]*
 
 Copy file to a directory: cp *[file name] [destination address]*
 
-**Git Cheat Sheet:**
+#Git Cheat Sheet#
+
+##**Please do not push your local master to origin**##
 
 See current status: git status
 
