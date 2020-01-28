@@ -18,7 +18,6 @@ seat_length = 30
 legs_length = 30
 
 
-# Test
 
 #####################
 #### PYMUNK
