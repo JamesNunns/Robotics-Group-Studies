@@ -140,7 +140,7 @@ class Window(pyglet.window.Window):
     '''
     The 'Window' class which represents a pyglet window for our swing simulation.
     '''
-    def __init__(self, width: int = 1200, height: int = 720, title: str = "Simulation", q_table: np.array = np.zeros((181,5)), timeout: int = -1, theta: int = 30):
+    def __init__(self, width: int = 1200, height: int = 720, title: str = "Simulation", timeout: int = -1, theta: int = 30):
         '''
         Initialise the Pyglet window / create Pymunk space / generate swing and robot.
         '''
@@ -153,7 +153,6 @@ class Window(pyglet.window.Window):
         self._width = width
         self._height = height
         self._title = title
-        self._q_table = q_table
         self._timeout = timeout
         self._theta = theta
         
