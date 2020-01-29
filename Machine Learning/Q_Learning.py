@@ -230,7 +230,7 @@ class Window(pyglet.window.Window):
     def update(self, dt):
         self.space.step(dt)
         self.time += dt
-        self.angle_history.append(self.swing.rod1._get_angle())
+        self.angle_history.append(self.swing.rod1._get_angle() * (180 / math.pi) - self.theta)
 
         # print(self.swing.pivot3.impulse)
 
