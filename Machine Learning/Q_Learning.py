@@ -4,6 +4,7 @@ import time
 import random
 import pyglet
 import pymunk
+import sys
 from pymunk.pyglet_util import DrawOptions
 import numpy as np
 import matplotlib.pyplot as plt
@@ -264,37 +265,42 @@ class Window(pyglet.window.Window):
         self.close()
 
 if __name__ == "__main__":
-    np.savetxt('q_table.csv', np.zeros((181,5)), delimiter=',') # For resetting q_table
-    q_table = np.loadtxt('q_table.csv', delimiter=',')
+	try:
+		np.savetxt('q_table.csv', np.zeros((181,5)), delimiter=',') # For resetting q_table
+		q_table = np.loadtxt('q_table.csv', delimiter=',')
 
-    for i in range(1, episodes):
-        print("----- Episode " + str(i) + " -----")
+		for i in range(1, episodes):
+			print("----- Episode " + str(i) + " -----")
 
-        plt.matshow(q_table)
-        plt.savefig('q_table.png', bbox_inches='tight', dpi=56)
+			plt.matshow(q_table)
+			plt.savefig('q_table.png', bbox_inches='tight', dpi=56)
 
-        window = Window(q_table=q_table, timeout=20)
-        pyglet.clock.schedule_interval(window.update, 1.0/60)
-        pyglet.app.run()
+			window = Window(q_table=q_table, timeout=20)
+			pyglet.clock.schedule_interval(window.update, 1.0/60)
+			pyglet.app.run()
 
-        np.savetxt('q_table.csv', q_table, delimiter=',')
+			np.savetxt('q_table.csv', q_table, delimiter=',')
 
 
-    # Initialise window
-    window = Window(q_table=q_table)
+		# Initialise window
+		window = Window(q_table=q_table)
 
-    # Start pyglet window
-    start = time.time()
-    pyglet.clock.schedule_interval(window.update, 1.0/60)
-    pyglet.app.run()
-    stop = time.time()
+		# Start pyglet window
+		start = time.time()
+		pyglet.clock.schedule_interval(window.update, 1.0/60)
+		pyglet.app.run()
+		stop = time.time()
 
-    t = np.linspace(0, stop-start, len(window.angle_history))
+		t = np.linspace(0, stop-start, len(window.angle_history))
 
-    plt.plot(t, window.angle_history)
-    plt.title("Angle over time")
-    plt.xlabel("Time")
-    plt.ylabel("Angle")
-    plt.grid()
-    plt.legend()
-    plt.show()
+		plt.plot(t, window.angle_history)
+		plt.title("Angle over time")
+		plt.xlabel("Time")
+		plt.ylabel("Angle")
+		plt.grid()
+		plt.legend()
+		plt.show()
+
+	except KeyboardInterrupt:
+		print("Simulation closing...")
+		sys.exit()
