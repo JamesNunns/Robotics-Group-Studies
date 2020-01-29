@@ -200,7 +200,7 @@ class Window(pyglet.window.Window):
         '''
         self.space.step(dt) # Move Pymunk space forward one time step
         self.time += dt # Add time step to total time
-        self.angle_history.append(self.swing.rod1._get_angle()) # Add angle to angle history
+        self.angle_history.append(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta) # Add angle to angle history
         self.angle = int(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta) # Set current angle correctly
         if self.time > self._timeout and not self._timeout == -1: self.close() # Exit window if time exceeds timeout
 
