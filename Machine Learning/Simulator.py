@@ -80,31 +80,31 @@ class Swing:
         self.head = pymunk.Body(10, 10000)
 
         # Create shapes
-        top_shape = pymunk.Poly.create_box(self.top, size=(1200, 50))
-        bottom_shape = pymunk.Poly.create_box(self.bottom, size=(1200, 50))
-        rod1_shape = pymunk.Segment(self.rod1, (0, 0), angle.rod1, radius=3)
-        rod2_shape = pymunk.Segment(self.rod2, (0, 0), angle.rod2, radius=3)
-        rod3_shape = pymunk.Segment(self.rod3, (0, 0), angle.rod3, radius=3)
-        seat_shape = pymunk.Segment(self.seat, angle.seat[0],
+        self.top_shape = pymunk.Poly.create_box(self.top, size=(1200, 50))
+        self.bottom_shape = pymunk.Poly.create_box(self.bottom, size=(1200, 50))
+        self.rod1_shape = pymunk.Segment(self.rod1, (0, 0), angle.rod1, radius=3)
+        self.rod2_shape = pymunk.Segment(self.rod2, (0, 0), angle.rod2, radius=3)
+        self.rod3_shape = pymunk.Segment(self.rod3, (0, 0), angle.rod3, radius=3)
+        self.seat_shape = pymunk.Segment(self.seat, angle.seat[0],
                                     angle.seat[1], radius=5)
-        torso_shape = pymunk.Poly.create_box(self.torso, size=(10, 100))
-        legs_shape = pymunk.Poly.create_box(self.legs, size=(10, 50))
-        head_shape = pymunk.Circle(self.head, radius=20)
+        self.torso_shape = pymunk.Poly.create_box(self.torso, size=(10, 100))
+        self.legs_shape = pymunk.Poly.create_box(self.legs, size=(10, 50))
+        self.head_shape = pymunk.Circle(self.head, radius=20)
 
         # Set layer of shapes (disables collisions between bodies)
-        rod1_shape.filter = pymunk.ShapeFilter(categories=0b100,
+        self.rod1_shape.filter = pymunk.ShapeFilter(categories=0b100,
                                                mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        rod2_shape.filter = pymunk.ShapeFilter(categories=0b100,
+        self.rod2_shape.filter = pymunk.ShapeFilter(categories=0b100,
                                                mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        rod3_shape.filter = pymunk.ShapeFilter(categories=0b100,
+        self.rod3_shape.filter = pymunk.ShapeFilter(categories=0b100,
                                                mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        seat_shape.filter = pymunk.ShapeFilter(categories=0b100,
+        self.seat_shape.filter = pymunk.ShapeFilter(categories=0b100,
                                                mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        torso_shape.filter = pymunk.ShapeFilter(categories=0b100,
+        self.torso_shape.filter = pymunk.ShapeFilter(categories=0b100,
                                                 mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        legs_shape.filter = pymunk.ShapeFilter(categories=0b100,
+        self.legs_shape.filter = pymunk.ShapeFilter(categories=0b100,
                                                mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        head_shape.filter = pymunk.ShapeFilter(categories=0b100,
+        self.head_shape.filter = pymunk.ShapeFilter(categories=0b100,
                                                mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
 
         # Set positions of bodies
@@ -163,23 +163,24 @@ class Swing:
         self.pivot9.collide_bodies = False
 
         # Add bodies and pivots to space
-        self.space.add(self.top, top_shape, self.bottom, bottom_shape,
-                       self.rod1, rod1_shape, self.rod2, rod2_shape,
-                       self.rod3, rod3_shape, self.seat, seat_shape,
-                       self.torso, torso_shape, self.legs, legs_shape,
-                       self.head, head_shape, self.pivot1, self.pivot2,
+        self.space.add(self.top, self.top_shape, self.bottom, self.bottom_shape,
+                       self.rod1, self.rod1_shape, self.rod2, self.rod2_shape,
+                       self.rod3, self.rod3_shape, self.seat, self.seat_shape,
+                       self.torso, self.torso_shape, self.legs, self.legs_shape,
+                       self.head, self.head_shape, self.pivot1, self.pivot2,
                        self.pivot3, self.pivot4, self.pivot5, self.pivot6,
                        self.pivot7, self.pivot8, self.pivot9, self.gear1,
                        self.gear2)
 
     def delete(self):  # Doesn't work, variables are locally defined above
-        self.space.remove(self.top, top_shape, self.bottom, bottom_shape,
-                          self.rod1, rod1_shape, self.rod2, rod2_shape,
-                          self.rod3, rod3_shape, self.seat, seat_shape,
-                          self.torso, torso_shape, self.legs, legs_shape,
-                          self.head, head_shape, pivot1, pivot2, pivot3,
-                          pivot4, pivot5, pivot6, pivot7, pivot8, pivot9,
-                          self.gear1, self.gear2)
+        self.space.remove(self.top, self.top_shape, self.bottom, self.bottom_shape,
+                          self.rod1, self.rod1_shape, self.rod2, self.rod2_shape,
+                          self.rod3, self.rod3_shape, self.seat, self.seat_shape,
+                          self.torso, self.torso_shape, self.legs, self.legs_shape,
+                          self.head, self.head_shape, self.pivot1, self.pivot2,
+                          self.pivot3, self.pivot4, self.pivot5, self.pivot6,
+                          self.pivot7, self.pivot8, self.pivot9, self.gear1,
+                          self.gear2)
 
 
 #####################
