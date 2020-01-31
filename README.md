@@ -17,6 +17,10 @@ Copy file to a directory: cp *[file name] [destination address]*
 
 ## **Open Git, use git pull, and then checkout to a new branch**
 
+Configure username: git config --global user.name "username"
+
+Configure email: git config --global user.email "email"
+
 See current status: git status
 
 Switch branch: git checkout *[desired branch]*
