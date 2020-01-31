@@ -15,7 +15,7 @@ Copy file to a directory: cp *[file name] [destination address]*
 
 ## **Please do not push your local master to origin**
 
-##**Open Git, use git pull, and then checkout to a new branch**
+## **Open Git, use git pull, and then checkout to a new branch**
 
 See current status: git status
 
