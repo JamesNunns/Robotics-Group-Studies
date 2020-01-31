@@ -84,7 +84,7 @@ class Swing:
         self.rod1 = pymunk.Body(5, 10000)
         self.rod2 = pymunk.Body(5, 10000)
         self.rod3 = pymunk.Body(5, 10000)
-        self.seat = pymunk.Body(10, 10000)
+        self.seat = pymunk.Body(20, 10000)
         self.torso = pymunk.Body(20, 10000)
         self.legs = pymunk.Body(20, 10000)
         self.head = pymunk.Body(10, 10000)
@@ -209,8 +209,7 @@ class Window(pyglet.window.Window):
         Initialise the Pyglet window / create Pymunk space / generate
         swing and robot.
         '''
-        super().__init__(width, height, title,
-                         resizable=False)  # Init Pyglet window
+        super().__init__(width, height, title, resizable=False)  # Init Pyglet window
 
         self.space = pymunk.Space()  # Init Pymunk space for 2D physics engine
         self.space.gravity = 0, -1000  # Set gravity of space
@@ -223,12 +222,32 @@ class Window(pyglet.window.Window):
         self._theta = theta
         self.q_table = q_table
 
+        self.episode = 0
+        self.reset()  # Start simulation
+
+    def reset(self):
+        '''
+        Reset swing.
+        '''
+        try:
+            np.savetxt('q_table.csv', self.q_table, delimiter=',')  # Save updated q_table
+            plt.matshow(self.q_table)  # Generate image from matrix of q_table
+            plt.savefig('q_table.png', bbox_inches='tight', dpi=56)  # Save image for displaying on Pyglet window
+            plt.figure()
+            plt.plot(np.linspace(0, self.time, len(self.angle_history)), self.angle_history)
+            plt.savefig('history.png', bbox_inches='tight', dpi=56)
+        except:
+            pass
+
         # Variables
+        self.episode += 1
         self.velocity = 0
         self.angle = self._theta  # Current angle
         self.angle_history = [self.angle, self.angle]  # Angle history (for plotting over time)
         self.time = 0  # Simulation time
 
+        try: self.swing.delete()
+        except: pass
         self.swing = Swing(self.space, self._theta)  # Generate the swing/robot
         self.state = 0 # Current state of the system
         self.image = pyglet.image.load('q_table.png') # Initialise Q-table image
@@ -250,9 +269,10 @@ class Window(pyglet.window.Window):
         if angle > 90: angle = 90 # If above 90, set to 90
         if angle < -90: angle = -90 # If below 90, set to -90
 
-        if self.swing.pivot3.impulse > 8000: # If robot pulls too hard on rod then add a penalty
+        if self.swing.pivot3.impulse > 8000 and self.time > 1: # If robot pulls too hard on rod then add a penalty
             penalty = self.swing.pivot3.impulse # Set penalty to the impulse exerted on the rod
-            print("Penalty given: " + str(round(self.swing.pivot3.impulse, 1)))
+            print("Penalty given: " + str(round(penalty, 1)))
+            self.time = 20
         elif action == 4: # If action is to do nothing...
             penalty = 0 # ...no penalty
         else:
@@ -285,28 +305,38 @@ class Window(pyglet.window.Window):
         '''
         self.clear()  # Clear screen
         self.space.debug_draw(options)  # Draw space objects (Pymunk bodies, shapes, pivots, gears etc.)
+        episode = pyglet.text.Label("Episode " + str(self.episode),
+                                 font_name='Helvetica',
+                                 font_size=32, x=1050, y=650,
+                                 anchor_x='center', anchor_y='center')  # Create label of current time
+        episode.draw()  # Draw time label
         time = pyglet.text.Label(str(round(self.time, 1)) + "s",
                                  font_name='Helvetica',
-                                 font_size=36, x=1110, y=660,
+                                 font_size=24, x=1050, y=600,
                                  anchor_x='center', anchor_y='center')  # Create label of current time
         time.draw()  # Draw time label
         angle = pyglet.text.Label(str(round(self.angle, 1)) + "°",
                                   font_name='Helvetica',
-                                  font_size=36, x=1110, y=610,
+                                  font_size=24, x=1050, y=560,
                                   anchor_x='center', anchor_y='center')  # Create label of current angle
         angle.draw()  # Draw angle label
         velocity = pyglet.text.Label(str(round(self.velocity, 1)) + "°/s",
                                  font_name='Helvetica',
-                                 font_size=36, x=1110, y=560,
+                                 font_size=24, x=1050, y=520,
                                  anchor_x='center', anchor_y='center')  # Create label of current time
         velocity.draw()  # Draw time label
         state = pyglet.text.Label(str(round(self.state, 1)) + "",
                                  font_name='Helvetica',
-                                 font_size=36, x=1110, y=510,
+                                 font_size=24, x=1050, y=480,
                                  anchor_x='center', anchor_y='center')  # Create label of current time
         state.draw()  # Draw time label
+        state = pyglet.text.Label("Previous Episode:",
+                            font_name='Helvetica',
+                            font_size=16, x=1000, y=250,
+                            anchor_x='center', anchor_y='center')  # Create label of current time
+        state.draw()  # Draw time label
         self.image.blit(0, 0)  # Draw image
-        try: self.history.blit(880, 0)  # Draw history
+        try: self.history.blit(890, 0)  # Draw history
         except: pass
 
     def update(self, dt):
@@ -326,7 +356,7 @@ class Window(pyglet.window.Window):
 
         next_state, reward = self.env_step(action, velocity)  # Determine new state
 
-        print(next_state, reward)
+        # print(next_state, reward)
 
         old_value = self.q_table[self.state, action]  # Get old q_table value
         next_max = np.max(self.q_table[next_state])  # Find next max q_table values
@@ -340,7 +370,7 @@ class Window(pyglet.window.Window):
         self.angle = int(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta)  # Set current angle correctly
         self.velocity = velocity  # Save current velocity
         if self.time > self._timeout and not self._timeout == -1:
-            self.close()  # Exit window if time exceeds timeout
+            self.reset()  # Exit window if time exceeds timeout
 
 #####################
 #### MAIN
@@ -349,24 +379,12 @@ class Window(pyglet.window.Window):
 
 if __name__ == "__main__":
     try:
-        np.savetxt('q_table.csv', np.zeros((21,5)), delimiter=',') # For resetting q_table
+        # np.savetxt('q_table.csv', np.zeros((21,5)), delimiter=',') # For resetting q_table
         q_table = np.loadtxt('q_table.csv', delimiter=',') # Get saved q_table
 
-        for i in range(1, episodes): # For all episodes
-            print("----- Episode " + str(i) + " -----")
-            
-            plt.matshow(q_table)  # Generate image from matrix of q_table
-            plt.savefig('q_table.png', bbox_inches='tight', dpi=56)  # Save image for displaying on Pyglet window
-
-            window = Window(timeout=20, q_table=q_table)  # Generate window from q_table
-            pyglet.clock.schedule_interval(window.update, 1.0/60)  # Schedule update method to run 60 times a second (FPS of window)
-            pyglet.app.run()  # Run pyglet window
-
-            plt.figure()
-            plt.plot(np.linspace(0, 20, len(window.angle_history)), window.angle_history)
-            plt.savefig('history.png', bbox_inches='tight', dpi=56)
-
-            np.savetxt('q_table.csv', q_table, delimiter=',')  # Save updated q_table
+        window = Window(timeout=20, q_table=q_table)  # Generate window from q_table
+        pyglet.clock.schedule_interval(window.update, 1.0/60)  # Schedule update method to run 60 times a second (FPS of window)
+        pyglet.app.run()  # Run pyglet window
 
     except KeyboardInterrupt:  # Ctrl-C pressed
         print("Simulation closing...")
