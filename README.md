@@ -11,6 +11,8 @@ Make a new directory: mkdir *[directory name]*
 
 Copy file to a directory: cp *[file name] [destination address]*
 
+Delete a file in the current directory: rm *[file name]*
+
 # Git Cheat Sheet
 
 ## **Please do not push your local master to origin**
