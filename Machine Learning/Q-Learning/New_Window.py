@@ -84,7 +84,7 @@ class Swing:
         self.rod1 = pymunk.Body(5, 10000)
         self.rod2 = pymunk.Body(5, 10000)
         self.rod3 = pymunk.Body(5, 10000)
-        self.seat = pymunk.Body(20, 10000)
+        self.seat = pymunk.Body(10, 10000)
         self.torso = pymunk.Body(20, 10000)
         self.legs = pymunk.Body(20, 10000)
         self.head = pymunk.Body(10, 10000)
@@ -95,27 +95,19 @@ class Swing:
         self.rod1_shape = pymunk.Segment(self.rod1, (0, 0), angle.rod1, radius=3)
         self.rod2_shape = pymunk.Segment(self.rod2, (0, 0), angle.rod2, radius=3)
         self.rod3_shape = pymunk.Segment(self.rod3, (0, 0), angle.rod3, radius=3)
-        self.seat_shape = pymunk.Segment(self.seat, angle.seat[0],
-                                    angle.seat[1], radius=5)
+        self.seat_shape = pymunk.Segment(self.seat, angle.seat[0], angle.seat[1], radius=5)
         self.torso_shape = pymunk.Poly.create_box(self.torso, size=(10, 100))
         self.legs_shape = pymunk.Poly.create_box(self.legs, size=(10, 50))
         self.head_shape = pymunk.Circle(self.head, radius=20)
 
         # Set layer of shapes (disables collisions between bodies)
-        self.rod1_shape.filter = pymunk.ShapeFilter(categories=0b100,
-                                               mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        self.rod2_shape.filter = pymunk.ShapeFilter(categories=0b100,
-                                               mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        self.rod3_shape.filter = pymunk.ShapeFilter(categories=0b100,
-                                               mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        self.seat_shape.filter = pymunk.ShapeFilter(categories=0b100,
-                                               mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        self.torso_shape.filter = pymunk.ShapeFilter(categories=0b100,
-                                                mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        self.legs_shape.filter = pymunk.ShapeFilter(categories=0b100,
-                                               mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
-        self.head_shape.filter = pymunk.ShapeFilter(categories=0b100,
-                                               mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
+        self.rod1_shape.filter = pymunk.ShapeFilter(categories=0b100, mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
+        self.rod2_shape.filter = pymunk.ShapeFilter(categories=0b100, mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
+        self.rod3_shape.filter = pymunk.ShapeFilter(categories=0b100, mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
+        self.seat_shape.filter = pymunk.ShapeFilter(categories=0b100, mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
+        self.torso_shape.filter = pymunk.ShapeFilter(categories=0b100, mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
+        self.legs_shape.filter = pymunk.ShapeFilter(categories=0b100, mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
+        self.head_shape.filter = pymunk.ShapeFilter(categories=0b100, mask=pymunk.ShapeFilter.ALL_MASKS ^ 0b100)
 
         # Set positions of bodies
         self.top.position = (600, 720)
@@ -141,16 +133,10 @@ class Swing:
         self.pivot2 = pymunk.PivotJoint(self.rod1, self.rod2, angle.point1)
         self.pivot3 = pymunk.PivotJoint(self.rod2, self.rod3, angle.point2)
         self.pivot4 = pymunk.PivotJoint(self.rod3, self.seat, angle.point4)
-        self.pivot5 = pymunk.PinJoint(self.rod3, self.seat, anchor_a=angle.rod3,
-                                      anchor_b=angle.seat[0])
-        self.pivot6 = pymunk.PinJoint(self.rod3, self.seat, anchor_a=angle.rod3,
-                                      anchor_b=angle.seat[1])
-        self.pivot7 = pymunk.PivotJoint(self.torso, self.seat,
-                                        (angle.point4[0] + angle.seat[1][0],
-                                         angle.point4[1] + angle.seat[1][1]))
-        self.pivot8 = pymunk.PivotJoint(self.seat, self.legs,
-                                        (angle.point4[0] + angle.seat[0][0],
-                                         angle.point4[1] + angle.seat[0][1]))
+        self.pivot5 = pymunk.PinJoint(self.rod3, self.seat, anchor_a=angle.rod3, anchor_b=angle.seat[0])
+        self.pivot6 = pymunk.PinJoint(self.rod3, self.seat, anchor_a=angle.rod3, anchor_b=angle.seat[1])
+        self.pivot7 = pymunk.PivotJoint(self.torso, self.seat, (angle.point4[0] + angle.seat[1][0], angle.point4[1] + angle.seat[1][1]))
+        self.pivot8 = pymunk.PivotJoint(self.seat, self.legs, (angle.point4[0] + angle.seat[0][0], angle.point4[1] + angle.seat[0][1]))
         self.pivot9 = pymunk.PivotJoint(self.head, self.torso, self.head.position)
         self.gear1 = pymunk.GearJoint(self.torso, self.seat, angle._theta, 1.0)
         self.gear2 = pymunk.GearJoint(self.seat, self.legs, -angle._theta, 1.0)
@@ -204,7 +190,8 @@ class Window(pyglet.window.Window):
     '''
     def __init__(self, width: int = 1200, height: int = 720,
                  title: str = "Simulation", timeout: int = -1,
-                 theta: int = 30, q_table: np.array = np.zeros((21,5))):
+                 theta: int = 30, q_table: np.array = np.zeros((21,5)),
+                 episode: int = 1):
         '''
         Initialise the Pyglet window / create Pymunk space / generate
         swing and robot.
@@ -221,73 +208,18 @@ class Window(pyglet.window.Window):
         self._timeout = timeout
         self._theta = theta
         self.q_table = q_table
-
-        self.episode = 0
-        self.reset()  # Start simulation
-
-    def reset(self):
-        '''
-        Reset swing.
-        '''
-        try:
-            np.savetxt('q_table.csv', self.q_table, delimiter=',')  # Save updated q_table
-            plt.matshow(self.q_table)  # Generate image from matrix of q_table
-            plt.savefig('q_table.png', bbox_inches='tight', dpi=56)  # Save image for displaying on Pyglet window
-            plt.figure()
-            plt.plot(np.linspace(0, self.time, len(self.angle_history)), self.angle_history)
-            plt.savefig('history.png', bbox_inches='tight', dpi=56)
-        except:
-            pass
+        self.episode = episode
 
         # Variables
-        self.episode += 1
         self.velocity = 0
         self.angle = self._theta  # Current angle
         self.angle_history = [self.angle, self.angle]  # Angle history (for plotting over time)
         self.time = 0  # Simulation time
 
-        try: self.swing.delete()
-        except: pass
         self.swing = Swing(self.space, self._theta)  # Generate the swing/robot
         self.state = 0 # Current state of the system
         self.image = pyglet.image.load('q_table.png') # Initialise Q-table image
-        try: self.history = pyglet.image.load('history.png')
-        except: self.history = None
-
-    def env_step(self, action: int, velocity: float):
-        '''
-        Run one step in the Q-learning algorithm.
-        '''
-        if action == 0: self.swing.gear2._set_phase(-self._theta * math.pi / 180 - 1.2) # Extend legs
-        elif action == 1: self.swing.gear2._set_phase(-self._theta * math.pi / 180 + 0.8) # Retract legs
-        elif action == 2: self.swing.gear1._set_phase(self._theta * math.pi / 180 - 0.2) # Extend torso
-        elif action == 3: self.swing.gear1._set_phase(self._theta * math.pi / 180 + 0.6) # Retract torso
-
-        try: angle = int(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta) # Calculate current rod angle
-        except: angle = -90 # If angle is outside of bounds
-
-        if angle > 90: angle = 90 # If above 90, set to 90
-        if angle < -90: angle = -90 # If below 90, set to -90
-
-        if self.swing.pivot3.impulse > 8000 and self.time > 1: # If robot pulls too hard on rod then add a penalty
-            penalty = self.swing.pivot3.impulse # Set penalty to the impulse exerted on the rod
-            print("Penalty given: " + str(round(penalty, 1)))
-            self.time = 20
-        elif action == 4: # If action is to do nothing...
-            penalty = 0 # ...no penalty
-        else:
-            penalty = 1
-        
-        state = int((round(self.velocity, -1) / 10) + 10)
-        if state > 20: state = 20  # Put cap on
-        if state < 0: state = 0  # velocities
-
-        if (self.velocity < 0 and velocity > 0) or (self.velocity > 0 and velocity < 0): # If velocity has changed sign (aka at apex), determine reward
-            reward = angle**2
-        else:
-            reward = 0
-
-        return state, reward - penalty  # Return (state, reward)
+        self.history = pyglet.image.load('history.png')
 
     def on_mouse_press(self, x, y, button, modifiers):
         '''
@@ -336,8 +268,7 @@ class Window(pyglet.window.Window):
                             anchor_x='center', anchor_y='center')  # Create label of current time
         state.draw()  # Draw time label
         self.image.blit(0, 0)  # Draw image
-        try: self.history.blit(890, 0)  # Draw history
-        except: pass
+        self.history.blit(890, 0)  # Draw history
 
     def update(self, dt):
         '''
@@ -369,8 +300,43 @@ class Window(pyglet.window.Window):
         self.angle_history.append(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta)  # Add angle to angle history
         self.angle = int(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta)  # Set current angle correctly
         self.velocity = velocity  # Save current velocity
-        if self.time > self._timeout and not self._timeout == -1:
-            self.reset()  # Exit window if time exceeds timeout
+
+        if self.time > self._timeout and not self._timeout == -1: self.close()  # Exit window if time exceeds timeout
+
+    def env_step(self, action: int, velocity: float):
+        '''
+        Run one step in the Q-learning algorithm.
+        '''
+        if action == 0: self.swing.gear2._set_phase(-self._theta * math.pi / 180 - 1.2) # Extend legs
+        elif action == 1: self.swing.gear2._set_phase(-self._theta * math.pi / 180 + 0.8) # Retract legs
+        elif action == 2: self.swing.gear1._set_phase(self._theta * math.pi / 180 - 0.2) # Extend torso
+        elif action == 3: self.swing.gear1._set_phase(self._theta * math.pi / 180 + 0.6) # Retract torso
+
+        try: angle = int(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta) # Calculate current rod angle
+        except: angle = -90 # If angle is outside of bounds
+
+        if angle > 90: angle = 90 # If above 90, set to 90
+        if angle < -90: angle = -90 # If below 90, set to -90
+
+        if self.swing.pivot3.impulse > 10000 and self.time > 1: # If robot pulls too hard on rod then add a penalty
+            penalty = self.swing.pivot3.impulse # Set penalty to the impulse exerted on the rod
+            print("Penalty given: " + str(round(penalty, 1)))
+            self.time = 20
+        elif action == 4: # If action is to do nothing...
+            penalty = 0 # ...no penalty
+        else:
+            penalty = 1
+        
+        state = int((round(self.velocity, -1) / 10) + 10)
+        if state > 20: state = 20  # Put cap on
+        if state < 0: state = 0  # velocities
+
+        if (self.velocity < 0 and velocity > 0) or (self.velocity > 0 and velocity < 0): # If velocity has changed sign (aka at apex), determine reward
+            reward = angle**2
+        else:
+            reward = 0
+
+        return state, reward - penalty  # Return (state, reward)
 
 #####################
 #### MAIN
@@ -379,12 +345,25 @@ class Window(pyglet.window.Window):
 
 if __name__ == "__main__":
     try:
-        # np.savetxt('q_table.csv', np.zeros((21,5)), delimiter=',') # For resetting q_table
+        np.savetxt('q_table.csv', np.zeros((21,5)), delimiter=',') # For resetting q_table
         q_table = np.loadtxt('q_table.csv', delimiter=',') # Get saved q_table
 
-        window = Window(timeout=20, q_table=q_table)  # Generate window from q_table
-        pyglet.clock.schedule_interval(window.update, 1.0/60)  # Schedule update method to run 60 times a second (FPS of window)
-        pyglet.app.run()  # Run pyglet window
+        for i in range(1, episodes):
+            print("----- Episode " + str(i) + " -----")
+
+            plt.matshow(q_table)  # Generate image from matrix of q_table
+            plt.savefig('q_table.png', bbox_inches='tight', dpi=56)  # Save image for displaying on Pyglet window
+
+            window = Window(timeout=20, q_table=q_table, episode=i)  # Generate window from q_table
+            pyglet.clock.schedule_interval(window.update, 1.0/60)  # Schedule update method to run 60 times a second (FPS of window)
+            pyglet.app.run()  # Run pyglet window
+
+            q_table = window.q_table
+            np.savetxt('q_table.csv', q_table, delimiter=',')  # Save updated q_table
+
+            plt.figure()
+            plt.plot(np.linspace(0, 20, len(window.angle_history)), window.angle_history)  # Plot and save previous angle history
+            plt.savefig('history.png', bbox_inches='tight', dpi=56)  # Save figure
 
     except KeyboardInterrupt:  # Ctrl-C pressed
         print("Simulation closing...")
