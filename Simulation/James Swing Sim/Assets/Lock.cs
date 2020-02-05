@@ -11,8 +11,6 @@ public class Lock : MonoBehaviour
 
 	private Rigidbody2D torso;
 
-	private Rigidbody2D head;
-
 	private Rigidbody2D thigh;
 
 	private Rigidbody2D upperarm;
@@ -26,9 +24,8 @@ public class Lock : MonoBehaviour
         leg = GameObject.Find("Leg").GetComponent<Rigidbody2D>();
         foot = GameObject.Find("Foot").GetComponent<Rigidbody2D>();
         torso = GameObject.Find("Torso").GetComponent<Rigidbody2D>();
-        head = GameObject.Find("Head").GetComponent<Rigidbody2D>();
         thigh = GameObject.Find("Thigh").GetComponent<Rigidbody2D>();
-        upperarm = GameObject.Find("Upperarm").GetComponent<Rigidbody2D>();
+        upperarm = GameObject.Find("UpperArm").GetComponent<Rigidbody2D>();
         forearm = GameObject.Find("Forearm").GetComponent<Rigidbody2D>();
 
     }
@@ -38,7 +35,6 @@ public class Lock : MonoBehaviour
     	leg.freezeRotation = true;
     	foot.freezeRotation = true;
     	torso.freezeRotation = true;
-    	head.freezeRotation = true;
     	thigh.freezeRotation = true;
     	upperarm.freezeRotation = true;
     	forearm.freezeRotation = true;

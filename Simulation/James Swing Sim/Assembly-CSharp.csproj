@@ -68,6 +68,7 @@
      <Compile Include="Assets\Shapes2D\Scripts\PolyMap.cs" />
      <Compile Include="Assets\Shapes2D\Scripts\Shape.cs" />
      <Compile Include="Assets\Shapes2D\Scripts\Shapes2DPrefs.cs" />
+     <Compile Include="Assets\Unlock.cs" />
      <Compile Include="Assets\UsingSpecificKeysRotation.cs" />
      <None Include="Assets\Shapes2D\Shaders\Shape.shader" />
      <None Include="Assets\Shapes2D\Shaders\Common.cginc" />
