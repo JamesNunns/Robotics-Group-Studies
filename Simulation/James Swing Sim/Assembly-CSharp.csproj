@@ -56,6 +56,7 @@
      <Compile Include="Assets\Ankle.cs" />
      <Compile Include="Assets\hip.cs" />
      <Compile Include="Assets\Knee.cs" />
+     <Compile Include="Assets\Lock.cs" />
      <Compile Include="Assets\Shapes2D\Demos\DragCamera.cs" />
      <Compile Include="Assets\Shapes2D\Demos\Flappy Shapes\Bird.cs" />
      <Compile Include="Assets\Shapes2D\Demos\Flappy Shapes\Game.cs" />
