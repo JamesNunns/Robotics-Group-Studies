@@ -1,15 +1,14 @@
-from sys import argv
-
+from Robot_position_test import set_posture
 
 #prompt = '> '
-set_posture = 'extended'
+posture_now = 'extended'
 while True:
     x = raw_input("Switch Position?")
     if x == '':
-        if position == "extended":
+        if posture_now == "extended":
             set_posture("crunched")
             posture_now = "crunched"
-        elif posture_now = "crunched":
+        elif posture_now == "crunched":
             set_posture("extended")
             posture_now = "extended"
     if x != '':
