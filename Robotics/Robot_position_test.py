@@ -3,7 +3,7 @@ from positions_new import positions
 from limb_data_2020 import values
 import time
 
-def set_posture(name_posture, max_speed=0.1):
+def set_posture(name_posture, max_speed=0.6):
     # Select posture from dictionary
     posture = positions[name_posture]
     # Import joint names
@@ -23,7 +23,7 @@ motion.setStiffnesses(["Head", "RArm", "LArm", "RLeg", "LLeg"], 1)
 #motion.setFallManagerEnabled(False)
 tts.say("Connected!")
 
-set_posture("extended", 0.05)
+#set_posture("extended", 0.05)
 
 #for i in xrange(20):
     # Switch between crunched and extended

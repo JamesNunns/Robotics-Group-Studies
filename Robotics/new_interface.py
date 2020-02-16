@@ -10,8 +10,6 @@ from robot_interface import Robot, PositionError
 from encoder_interface import Encoders
 import numpy
 from collections import OrderedDict
-path.insert(0, "Training_functions")
-import SmallEncoders
 
 option = raw_input("Using Real Robot (Yes/No)")
 if option == 'No':
@@ -32,6 +30,7 @@ from jack import Algorithm
 class Interface(Algorithm):
 
     def __init__(self,setup='Testing',period=0.005):
+
         
         self.period = period
 
@@ -128,7 +127,7 @@ class Interface(Algorithm):
             [tuple(current_values.values())], dtype=self.data_type), axis=0)
         
         return switch
-    
+
     def _run_real(self, t, period):
 
         max_runs = t * 1 / period + 1.0
