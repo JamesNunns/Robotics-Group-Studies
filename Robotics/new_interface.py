@@ -2,7 +2,7 @@ from re import search
 from os import listdir
 import time as tme
 from limb_data import values
-from positions import positions
+from positions_new import positions
 from utility_functions import flatten, read_file, current_data_types, get_latest_file, convert_list_dict, centre_of_mass_respect_seat, store
 from sys import path, argv
 from robot_interface import Robot, PositionError
@@ -11,48 +11,44 @@ from encoder_interface import Encoders
 import numpy
 from collections import OrderedDict
 
-
 option = raw_input("Using Real Robot (Yes/No)")
 if option == 'No':
     ###Training Functons###
+    setup = 'Testing'
     path.insert(0, "Training_functions")
     from naoqi import ALProxy
     import BigEncoder
 elif option == 'Yes':
+    setup = 'Real'
     path.insert(0, "hidlibs")
     from pynaoqi.naoqi import ALProxy
     import top_encoder.encoder_functions as BigEncoder
 
 path.insert(0, 'new_Algorithms')
-import jack as Algorithm
+from jack import Algorithm
 
-class Interface():
+class Interface(Algorithm):
 
-    def __init__(self,setup=option,period=0.005):
+    def __init__(self,setup='Testing',period=0.005):
+
         
         self.period = period
 
         self.setup = setup
 
-        Algorithm.__init__(
-            self,
-            BigEncoder,
-            SmallEncoders,
-            values,
-            positions,
-            ALProxy,
-            period
-        )
+        Algorithm.__init__(self,BigEncoder,SmallEncoders,values,positions,ALProxy,period)
 
         self.motion.setStiffnesses("Body", 1.0)
         tme.sleep(4.0)
         try:
-            self.check_setup('seated')
+            self.check_setup('crunched')
         except PositionError as e:
             # When position doesn't set properly
             self.motion.setStiffnesses("Body", 0.0)
             self.speech.say('Failed, loosening')
             raise e
+
+        self.algo_name = 'None'
 
     def get_ang_vel(self, time, current_angle):
         """
@@ -77,6 +73,24 @@ class Interface():
         delta_angle = current_angle - old_values['be']
 
         return delta_angle / delta_time
+
+    def select_algo(self, values, all_data):
+        
+        try:
+            # Remove first dictionary element from algorithm and store it
+            info = self.order.pop(0)
+        except IndexError:
+            # Interface handles exception to break out of loop and stops and save
+            raise AlgorithmFinished
+
+        self.algo_class = info.pop('algo')
+        # Rest of dictionary left are kwargs
+        kwargs = info
+
+        self.algo_name = self.algo_class.__name__
+        algo_class_initialized = self.algo_class(values, all_data, **kwargs)
+        
+        return algo_class_initialized.algo
 
     def initialize_all_data(self):
         """
@@ -113,8 +127,8 @@ class Interface():
             [tuple(current_values.values())], dtype=self.data_type), axis=0)
         
         return switch
-    
-    def run(self, t, period):
+
+    def _run_real(self, t, period):
 
         max_runs = t * 1 / period + 1.0
 
@@ -144,3 +158,78 @@ class Interface():
             except AlgorithmFinished:
                 print('\n\033[1mAlgorithm finished, stopping\033[0m\n')
                 break
+        self.finish_script()
+
+    def __run_test(self, filename, output_directory):
+       
+        # Read old data
+        print('\n\033[1mUsing test mode, will apply algorithm to data from file {}\033[0m\n'.format(filename))
+        data = read_file(output_directory + filename)
+
+
+        self.all_data = self.initialize_all_data()
+
+        # some functions depend on sampling period, therefore extract correct
+        # period and place into algorithm data so that it can be passed through
+        average_cycle_time = numpy.mean(numpy.diff(data['time']))
+        for algorithm in self.order:
+            algorithm['period'] = average_cycle_time
+
+        switch = 'switch'
+        for i in xrange(len(data)):
+            algo = self.algo_name
+
+            # Make current row out of real values from data minus the position and algorithm
+            # as those are the things we are running testing to watch
+            row_no_pos_algo = list(data[i])[:-2]
+            current_values = convert_list_dict(
+                row_no_pos_algo + [algo, self.position])
+
+            try:
+                switch = self.__run_algorithm(switch, current_values)
+            except AlgorithmFinished:
+                print '\n\033[1mAlgorithm finished, stopping now\033[0m\n'
+                break
+
+        # Data loaded in will have ' Org' file so remove that and replace with ' Tst'
+        store(filename[:-4] + ' Tst', self.all_data)
+
+    def finish_script(self):
+        """
+        Prints running time, cycle time, and stores current data to file
+        Args:
+            None
+        Returns:
+            None, but stores to file
+        """
+        # Check whether everything is running on schedule or not
+        time_taken = tme.time() - self.initial_time
+        print('\033[1mFinished in {:.2f}s\033[0m'.format(time_taken))
+        # Check how fast code is running
+        average_cycle_time = numpy.mean(numpy.diff(self.all_data['time']))
+        print('\033[1mExpected sampling period: {:.3f}s\nActual sampling period: {:.3f}s\033[0m'.format(self.period, average_cycle_time))
+
+        # store data in txt file, all original data has ' Org' added to name
+        store(self.filename + ' Org', self.all_data)
+
+    def run(self, **kwargs):
+        
+        if self.setup == 'Testing':
+            latest, output_directory = get_latest_file('Code', test=False)
+            filename = kwargs.get('filename', latest)
+            self.__run_test(filename, output_directory)
+        else:
+            t = kwargs.get('t', 1000.0)
+            self.__run_real(t, self.period)
+
+if __name__ == '__main__':
+    # Raising error after loosening as then script that plots
+    # afterwards doesn't bother
+    interface = Interface(setup, period=0.01)
+    try:
+        interface.run(filename='jack')
+    except KeyboardInterrupt:
+        interface.finish_script()
+        interface.speech.say('Loosening')
+    finally:
+        interface.motion.setStiffnesses("Body", 0.0)
