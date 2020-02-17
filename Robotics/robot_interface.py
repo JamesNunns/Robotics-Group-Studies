@@ -154,7 +154,7 @@ class Robot():
 
         # Normalise speeds to longest time
         max_difference = max(differences_in_angles)
-        speeds = [max_speed * diff / max_difference for diff in differences_in_angles]
+        speeds = [max_speed * difference / max_difference for difference in differences_in_angles]
             
         # Extract name naoqi uses to set positions
         part_name = [self.values[name][0] for name in next_posture_dict.keys()]
