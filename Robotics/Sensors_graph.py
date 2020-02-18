@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.signal import find_peaks, butter, filtfilt
+from scipy.signal import butter, filtfilt, lfilter
+import scipy
+print(scipy.__version__)
 
 
 
@@ -15,55 +17,63 @@ def butter_bandpass(lowcut, highcut, fs, order=5):
     b, a = butter(order, [low, high], btype='band')
     return b, a
 
+def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
+    b, a = butter_bandpass(lowcut, highcut, fs, order=order)
+    y = lfilter(b, a, data)
+    return y
 
-def final_filter(time, values):
-    # Filter requirements.
-    order = 6
-    fs = 1.0/np.mean(np.diff(time[-200:]))
-    lowcut = 0.5 # desired cutoff frequency of the filter, Hz
+
+def test_filter(time, values):
+    # Filter requirements
+    order = 6#strictness of filter
+    fs = 1.0/np.mean(np.diff(time[-200:]))#sampling frequency
+    lowcut = 0.5 # desired cutoff frequencies of the filter, Hz
     highcut = 1.50
     b, a = butter_bandpass(lowcut, highcut, fs, order=order)
-    padded_signal = filtfilt(b, a, values)
-    return padded_signal
+    smoothed_signal = lfilter(b, a, values)
+    return smoothed_signal
 
 
-
-
-
+##################################
+#Read data from csv file
+##################################
+    
 data = pd.read_csv("Sensor_test.csv")
 
 Time = data['Time']
 
 AccX = data['AccX']
-AccX_peaks = find_peaks(AccX, width=10)[0]
-
 AccY = data['AccY']
 AccZ = data['AccZ']
 
-
 GyrX = data['GyrX']
 GyrY = data['GyrY']
-
 
 AngX = data['AngX']
 AngY = data['AngY']
 
 Encoder = data['Encoder']
-Enc_peaks = find_peaks(Encoder)[0]
+
+
+test = test_filter(Time, AngY)
+args = [i for i in range(len(test)) if abs(test[i]) <= 0.007]
+
 
 
 
 ##################################
 #Encoders
 ##################################
+
 fig1, ax1 = plt.subplots()
-ax1.set_xlim(10, 60)
+#ax1.set_xlim(10, 60)
 
 ax1.set_xlabel('Time(s)')
 ax1.set_ylabel('Encoder Reading(degrees)', color='cornflowerblue')
-#ax1.set_ylim( ymin, ymax)
+ax1.set_ylim( -20, 20)
 ax1.plot(Time, Encoder, label = 'Swing Angle', color='cornflowerblue')
-#ax1.plot(Time[Enc_peaks], Encoder[Enc_peaks], 'k.',label = 'Peaks')
+ax1.axhline(y=0)
+#ax1.plot(Time[args], Encoder[args], 'k.')
 
 
 ##################################
@@ -89,10 +99,13 @@ ax1.plot(Time, Encoder, label = 'Swing Angle', color='cornflowerblue')
 ##################################
 #Angles
 ##################################
+ylim = 0.1
 ax2 = ax1.twinx()
-ax2.set_ylabel('Raw Angle Values', color='orange')
-#ax2.set_ylim(-35, -25)
-ax2.plot(Time, final_filter(Time, AngY), color='orange')
+ax2.set_ylabel('Sensor Values', color='orange')
+#ax2.set_ylim(-ylim, ylim)
+
+ax2.plot(Time, test, color='orange')
+#ax2.plot(Time[args], test[args], 'k.')
 #ax2.plot(Time[AngX_peaks], AngX[Ang_peaks], 'k.',label = 'Peaks')
 
 
