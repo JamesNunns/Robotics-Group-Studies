@@ -37,7 +37,7 @@ class Robot():
         self.gyro_required = kwargs.get('gyro_required', False)
 
         self.set_posture_initial('crunched', max_speed = 0.1)
-        self.motion.setMotionConfig( [["ENABLE_DISACTIVATION_OF_FALL_MANAGER", True]] )
+        #self.motion.setMotionConfig( [["ENABLE_DISACTIVATION_OF_FALL_MANAGER", True]] )
         self.motion.setFallManagerEnabled(False)
         #self.speech.say('Battery level at {:.0f}%'.format(self.get_angle('BC')[0]*100))
         print 'Battery level at {:.0f}%'.format(self.get_angle('BC')[0]*100)

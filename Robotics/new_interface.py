@@ -18,11 +18,13 @@ if option == 'No':
     path.insert(0, "Training_functions")
     from naoqi import ALProxy
     import BigEncoder
+    import SmallEncoders
 elif option == 'Yes':
     setup = 'Real'
     path.insert(0, "hidlibs")
     from pynaoqi.naoqi import ALProxy
     import top_encoder.encoder_functions as BigEncoder
+    import bottom_encoder.hingeencoder as SmallEncoders
 
 path.insert(0, 'new_Algorithms')
 from jack import Algorithm
