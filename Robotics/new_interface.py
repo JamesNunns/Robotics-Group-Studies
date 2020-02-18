@@ -29,6 +29,8 @@ elif option == 'Yes':
 path.insert(0, 'new_Algorithms')
 from jack import Algorithm
 
+class AlgorithmFinished(Exception): pass
+
 class Interface(Algorithm):
 
     def __init__(self,setup='Testing',period=0.005):
@@ -112,7 +114,11 @@ class Interface(Algorithm):
 
     def __run_algorithm(self, switch, current_values):
         self.algo_name = Algorithm.__name__
-
+        
+        if switch == 'switch':
+            self.algorithm = self.select_algo(current_values, self.all_data)
+        
+        
         return_values = self.algorithm(current_values, self.all_data[-200:])
 
         if isinstance(return_values, list):
@@ -179,6 +185,7 @@ class Interface(Algorithm):
 
         switch = 'switch'
         for i in xrange(len(data)):
+            
             algo = self.algo_name
 
             # Make current row out of real values from data minus the position and algorithm
@@ -229,7 +236,7 @@ if __name__ == '__main__':
     # afterwards doesn't bother
     interface = Interface(setup, period=0.01)
     try:
-        interface.run(filename='jack')
+        interface.run(filename='Accelerometer Algorithm')
     except KeyboardInterrupt:
         interface.finish_script()
         interface.speech.say('Loosening')
