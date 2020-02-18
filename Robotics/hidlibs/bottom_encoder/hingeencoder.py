@@ -1,23 +1,33 @@
-# angletest.py
-#
-# Authors: Mark Colclough & Max Elliott
-#
+# angletest.py    python 2.7 or 3 version
+# 
 # Test for MCP2210 USB-to-SPI bridge chip, here used to read out
 # Avago/Broadcom AEAT-6012 magnetic angle encoder.
-#                                              Mark Colclough, Feb 2108
-
-# PYTHONPATH=/home/markc/mycode/mcp2210/sp python -i tst.py
+#                                              Mark Colclough, Feb 2018-2020
 
 # Necessary software
 # ------------------
-# The MCP2210 shows up as a USB HID (1 report, 64 bytes both ways). Hence:
-# * udev rule to give user access to hidrawX device
-# * The standard hidapi shared library  http://www.signal11.us/oss/hidapi/
-# * Python ctypes binding for hidapi  https://github.com/apmorton/pyhidapi
-#   (included here in hidlibs)
-# * Python MCP2201 device driver https://github.com/ondra/mcp2210 with my
-#   mods to make it work with the pyhidapi above (included here in hidlibs)
-# * This code, which knows how to extract data from the angle encoder.
+# Support for this device is an utter mess. There are multiple incompatible
+# python hid libraries with clashing names, and multiple botched forks of
+# mcp2210, for various Python versions, all mutually incompatible.
+# The instructions below  work on Ubuntu 18, 2020, but it would be better
+# to redo the whole thing and bypass the hid handling.
+# Upstreams are:
+#       https://github.com/trezor/cython-hidapi
+#       https://github.com/arachnidlabs/mcp2210/  for the py2 version
+#       https://github.com/rdpoor/mcp2210  for the py3 version
+# Note that neither python-hid nor python-hidapi from Ubuntu repos is helpful.
+
+# For Python 2.7
+# * udev rule to give user access to device: 80-microchip.rules
+# * pip install --user mcp2210   Build requires libudev-dev, maybe more, e.g. python-dev libusb-1.0-0-dev libudev-dev
+#     This should get mcp2210-0.1.4  and  hidapi-0.9.0.post2.
+
+# For Python 3.6
+# * udev rule to give user access to device: 80-microchip.rules
+# * pip3 install --user hidapi     gets hidapi-0.9.0.post2  as above
+# * pip3 install --user rdpoor-mcp2210-master/  (get zip from github and unzip locally because mcp2210 from pypi is py2 only)
+#      this gets mcp2210 0.1.5 (commit 2015992, Nov 18, 2018)
+
 
 # Multiple chip selects on MCP2210
 # --------------------------------
@@ -41,26 +51,25 @@
 # 0xf8 is USB transfer in progress.   bridge.cancel_transfer()  should clean things up
 # Making a new device is more reliable though.
 
-from device import MCP2210
+from __future__ import print_function
+import sys, time
+from mcp2210 import MCP2210
 
 # active_cs values for enabling different CS lines (a zero in the bit position
 # takes the CS to zero when SPI is active)
 CS0_ENABLE = 0xfffe
 CS1_ENABLE = 0xfffd
-# FailureToUnderstand
-#CS2_ENABLE = 0xfffc
-#CS3_ENABLE = 0xfffb
-
 CS2_ENABLE = 0xfffb
 CS3_ENABLE = 0xfff7
+chip_select = [CS0_ENABLE, CS1_ENABLE, CS2_ENABLE, CS3_ENABLE]
 
 bridge = MCP2210(0x04d8, 0x00de)
-print bridge.product_name
+print(bridge.product_name)
 
 # Read the present bridge chip configuration and set things we care about
 settings = bridge.chip_settings
 settings.pin_designations[0] = 0x01  # 0x01 makes the pin a CS pin
-settings.pin_designations[1] = 0x01
+settings.pin_designations[1] = 0x01  
 settings.pin_designations[2] = 0x01
 settings.pin_designations[3] = 0x01
 bridge.chip_settings = settings
@@ -68,25 +77,38 @@ bridge.chip_settings = settings
 # Read the present bridge chip SPI settings and set things we care about
 transfer = bridge.transfer_settings
 transfer.bit_rate = 20000  # could slow some more if problems with long wires.
-# Clock idles high, data sampled on first edge (change on second)
-transfer.spi_mode = 2
-transfer.spi_tx_size = 2  # bytes per transfer
-transfer.cs_data_delay = 0  # from CS to data (n * 100 us)
+transfer.spi_mode = 2 # Clock idles high, data sampled on first edge (change on second)
+transfer.spi_tx_size = 2 # bytes per transfer
+transfer.cs_data_delay = 0 # from CS to data (n * 100 us)
 transfer.lb_cs_delay = 0   # last byte to CS de-assert
 transfer.interbyte_delay = 0
 transfer.idle_cs = 0xffff  # All CS lines idle in the high state
-# Disable all CS lines by making their active state high also.
-transfer.active_cs = 0xffff
+transfer.active_cs = 0xffff # Disable all CS lines by making their active state high also.
 bridge.transfer_settings = transfer
 
-# Initialise the cal_factor to zero degrees
+def encoder(channel):
+    transfer.active_cs = chip_select[channel]
+    bridge.transfer_settings = transfer
+    ret = bridge.transfer(b'aa') 
+    ret = bytearray(ret) # keep py2 happy; redundant in py3 where it is already a bytes
+    return ((256 * ret[0] + ret[1]) & 0x7ff8) >> 3 
+
+# Demo to take and tabulate 4 angle transducers
+
 cal_factor0 = 0.0
 cal_factor1 = 0.0
 cal_factor2 = 0.0
 cal_factor3 = 0.0
 
-# Conversion of angle from the encoder data to degrees
-
+def calibrate():
+    global cal_factor0
+    global cal_factor1
+    global cal_factor2
+    global cal_factor3
+    cal_factor0 = encoder(0)
+    cal_factor1 = encoder(1)
+    cal_factor2 = encoder(2)
+    cal_factor3 = encoder(3)
 
 def toDegrees(angle):
     degreeAngle = angle / 4095 * 360
@@ -97,78 +119,32 @@ def toDegrees(angle):
     else:
         return degreeAngle
 
-# Functions to get the raw data from the mcp2210. 0 to 3 represent the different encoders.
-# This takes about 8ms per call, mostly in software layers rather than SPI transactions.
-# Could be improved with a custom library, as there is a lot of nonsense in the mcp2210 lib.
-# Return: encoder value in bytes
-
-
-def getBytes0():
-    transfer.active_cs = CS0_ENABLE
-    bridge.transfer_settings = transfer
-    ret = bridge.transfer('aa')
-    return ((256 * ord(ret[0]) + ord(ret[1])) & 0x7ff8) >> 3
-
-
-def getBytes1():
-    transfer.active_cs = CS1_ENABLE
-    bridge.transfer_settings = transfer
-    ret = bridge.transfer('aa')
-    return ((256 * ord(ret[0]) + ord(ret[1])) & 0x7ff8) >> 3
-
-
-def getBytes2():
-    transfer.active_cs = CS2_ENABLE
-    bridge.transfer_settings = transfer
-    ret = bridge.transfer('aa')
-    return ((256 * ord(ret[0]) + ord(ret[1])) & 0x7ff8) >> 3
-
-
-def getBytes3():
-    transfer.active_cs = CS3_ENABLE
-    bridge.transfer_settings = transfer
-    ret = bridge.transfer('aa')
-    return ((256 * ord(ret[0]) + ord(ret[1])) & 0x7ff8) >> 3
-
-# Functions to get angles from encoders in degrees. It can only read from -180 to +180
-# and will go from -180 to +180 if the angle gets that high. 0 to 3 represent the different encoders.
-# Return: encoder value in degrees
-
-
 def getAngle0():
-    angleBytes = getBytes0()
+    angleBytes = encoder(0)
     return toDegrees(float(angleBytes - cal_factor0))
 
 
 def getAngle1():
-    angleBytes = getBytes1()
+    angleBytes = encoder(1)
     return toDegrees(float(angleBytes - cal_factor1))
 
 
 def getAngle2():
-    angleBytes = getBytes2()
+    angleBytes = encoder(2)
     return toDegrees(float(angleBytes - cal_factor2))
 
 
 def getAngle3():
-    angleBytes = getBytes3()
+    angleBytes = encoder(3)
     return toDegrees(float(angleBytes - cal_factor3))
-
-# Function to get all encoder angles in degrees.
-# Return: all encoder angles in degrees in a 4x1 array
-
-
+    
 def getAngles():
     ang0 = getAngle0()
     ang1 = getAngle1()
     ang2 = getAngle2()
     ang3 = getAngle3()
     return [ang0, ang1, ang2, ang3]
-
-# Combines the two angles on one side of the swing to produce the full hinge value
-# Return: Full angle of hinge in degrees
-
-
+    
 def getAngleRight():
     ang1 = getAngle0()
     ang2 = getAngle1()
@@ -179,16 +155,3 @@ def getAngleLeft():
     ang2 = getAngle2()
     ang3 = getAngle3()
     return ang2 - ang3
-
-# Calibrate function: sets the current position of the encoder to 0.
-
-
-def calibrate():
-    global cal_factor0
-    global cal_factor1
-    global cal_factor2
-    global cal_factor3
-    cal_factor0 = getBytes0()
-    cal_factor1 = getBytes1()
-    cal_factor2 = getBytes2()
-    cal_factor3 = getBytes3()
