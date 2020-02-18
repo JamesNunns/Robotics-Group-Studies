@@ -3,6 +3,7 @@ from encoder_interface import Encoders
 from sys import path
 path.insert(0, 'single_pendulum')
 from single_test_brute import Test 
+from single_damping_small_angles import SmallAngleDamping
 
 class Algorithm(Robot, Encoders):
 
@@ -15,4 +16,5 @@ class Algorithm(Robot, Encoders):
         self.order = [{        
             'algo': Test,
             'duration': 30
-        }]
+        }
+        ]
