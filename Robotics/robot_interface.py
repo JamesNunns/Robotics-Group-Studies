@@ -165,7 +165,7 @@ class Robot():
         # Update self.position with now current position
         self.position = next_posture
         
-    def set_posture_initial(self, next_posture='seated', max_speed=0.2):
+    def set_posture_initial(self, next_posture='crunched', max_speed=0.2):
         """
         Moves nao from whatever position he is currently in to a specified starting position, important
         this is used as otherwise speeds aren't normalised and that will destroy his joints

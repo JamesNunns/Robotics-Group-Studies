@@ -4,7 +4,7 @@ from os import listdir
 from collections import OrderedDict
 import datetime
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 def flatten(values):
     """
