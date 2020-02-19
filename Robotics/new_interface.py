@@ -18,14 +18,19 @@ if option == 'No':
     path.insert(0, "Training_functions")
     from naoqi import ALProxy
     import BigEncoder
+    import SmallEncoders
 elif option == 'Yes':
     setup = 'Real'
     path.insert(0, "hidlibs")
     from pynaoqi.naoqi import ALProxy
     import top_encoder.encoder_functions as BigEncoder
-
+    #import bottom_encoder.hingeencoder as SmallEncoders
+    path.insert(0, "Training_functions")
+    import SmallEncoders
 path.insert(0, 'new_Algorithms')
 from jack import Algorithm
+
+class AlgorithmFinished(Exception): pass
 
 class Interface(Algorithm):
 
@@ -110,13 +115,17 @@ class Interface(Algorithm):
 
     def __run_algorithm(self, switch, current_values):
         self.algo_name = Algorithm.__name__
-
+        
+        if switch == 'switch':
+            self.algorithm = self.select_algo(current_values, self.all_data)
+        
+        
         return_values = self.algorithm(current_values, self.all_data[-200:])
 
         if isinstance(return_values, list):
             switch, speed = return_values
         else:
-            switch, speed = return_values, 1.0
+            switch, speed = return_values, 0.4
 
         # If text returned is a possible position switch to it
         if switch in positions.keys():
@@ -128,7 +137,7 @@ class Interface(Algorithm):
         
         return switch
 
-    def _run_real(self, t, period):
+    def __run_real(self, t, period):
 
         max_runs = t * 1 / period + 1.0
 
@@ -136,25 +145,25 @@ class Interface(Algorithm):
         self.filename = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime())
 
         self.initial_time = tme.time()
-
+        switch = 'switch'
+		
         for event in range(int(max_runs)):
             start_time = tme.time()
 
             # Collect all relevant values
             time = start_time - self.initial_time
-            #ax, ay, az = self.get_acc()
-            #gx, gy, gz = self.get_gyro()
-            #se0, se1, se2, se3 = self.get_small_encoders()
+            ax, ay, az = self.get_acc()
+            gx, gy, gz = self.get_gyro()
+            se0, se1, se2, se3 = 0, 0, 0, 0
             be = self.get_big_encoder()
-            #cmx, cmy = centre_of_mass_respect_seat(self.position, self.masses)
+            cmx, cmy = 0, 0
             av = self.get_ang_vel(time, be)
             algo = self.algo_name
             position = self.position
-            current_values = convert_list_dict(
-                [time, event, be, av, cmx, cmy, algo, position])
+            current_values = convert_list_dict([time, event, ax, ay, az, gx, gy, gz, se0, se1, se2, se3, be, av, cmx, cmy, algo, position])
 
             try:
-                out = self.__run_algorithm(current_values)
+                out = self.__run_algorithm(switch, current_values)
             except AlgorithmFinished:
                 print('\n\033[1mAlgorithm finished, stopping\033[0m\n')
                 break
@@ -177,6 +186,7 @@ class Interface(Algorithm):
 
         switch = 'switch'
         for i in xrange(len(data)):
+            
             algo = self.algo_name
 
             # Make current row out of real values from data minus the position and algorithm
@@ -227,7 +237,7 @@ if __name__ == '__main__':
     # afterwards doesn't bother
     interface = Interface(setup, period=0.01)
     try:
-        interface.run(filename='jack')
+        interface.run(filename='Accelerometer Algorithm')
     except KeyboardInterrupt:
         interface.finish_script()
         interface.speech.say('Loosening')
