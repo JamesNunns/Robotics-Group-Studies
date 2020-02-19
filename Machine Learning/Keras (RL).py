@@ -37,8 +37,8 @@ class DeepQNetwork():
         
         #Neural Net
         self.model = Sequential()
-        self.model.add(Dense(24, input_dim=2, activation='tanh'))
-        self.model.add(Dense(48, activation='tanh'))
+        self.model.add(Dense(52, input_dim=2, activation='tanh'))
+        self.model.add(Dense(128, activation='tanh'))
         self.model.add(Dense(5, activation='linear'))
         
         self.model.compile(loss='mse', optimizer=Adam(lr=self.alpha, decay=self.alpha_decay))
@@ -89,28 +89,30 @@ class DeepQNetwork():
         mean_reward = 0
         rewards = deque(maxlen=100)
         performance = []
-        
-        for e in range(self.n_episodes):
-            state = self.preprocess_state(self.env.reset())
-            done = False
-            score = 0
-            while not done:
-                action = self.choose_action(state, self.get_epsilon(e))
-                next_state, reward, done, _ = self.env.step(action)
-                next_state = self.preprocess_state(next_state)
-                self.remember(state, action, reward, next_state, done)
-                state = next_state
-                score += reward
-                
-            rewards.append(score)
-            mean_reward = np.mean(rewards)
-            
-          
-          
-            if e % 10 == 0:
+    
+        try:
+            for e in range(self.n_episodes):
+                state = self.preprocess_state(self.env.reset())
+                done = False
+                score = 0
+
+                while not done:
+                    action = self.choose_action(state, self.get_epsilon(e))
+                    next_state, reward, done, _ = self.env.step(action)
+                    next_state = self.preprocess_state(next_state)
+                    self.remember(state, action, reward, next_state, done)
+                    state = next_state
+                    score += reward
+                    
+                rewards.append(score)
+                mean_reward = np.mean(rewards)
+
                 performance.append(mean_reward)
                 print(f'Episode {e}: {mean_reward}')
-            self.replay(self.batch_size, self.get_epsilon(e))
+
+                self.replay(self.batch_size, self.get_epsilon(e))
+        except KeyboardInterrupt:
+            pass
 
         return e, performance
     
@@ -120,7 +122,6 @@ if __name__ == '__main__':
     n_episodes = 1000
     n_win_ticks = 195
     max_env_steps = None
-    
     
     gamma = 1        #Discout Factor
     epsilon = 1      #Exploration Factor
@@ -132,17 +133,16 @@ if __name__ == '__main__':
     batch_size = 64
     
     agent = DeepQNetwork(gamma, epsilon, epsilon_decay, epsilon_min, alpha, alpha_decay, batch_size, max_env_steps, n_episodes, n_win_ticks)
-    # agent.run()
-    performance = agent.run()[1]
+    q_learn = agent.run()
 
+    performance = q_learn[1]
     
     #Plotting how well the test did
-    plt.plot(np.arange(0,1000,10),performance,'r',label='fit')
-    plt.scatter(np.arange(0,1000,10),performance, label='average scores')
-    # plt.hlines(y=195,xmin=0,xmax=2000, color='g', label='win score')
-    plt.ylabel('mean score for last 100 episodes')
-    plt.xlabel('number of episodes')
-    plt.title('Quality check of run')
+    plt.plot(np.arange(0, len(performance), 1), performance, 'r', label='Fit')
+    plt.scatter(np.arange(0, len(performance), 1), performance, label='Average')
+    plt.ylabel('Performance')
+    plt.xlabel('Episodes')
+    plt.title('Performance of RL Q-learning using Keras')
     plt.legend(loc=4)
     plt.show()
 
