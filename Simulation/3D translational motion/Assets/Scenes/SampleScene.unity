@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -724,9 +724,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
@@ -749,6 +749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
+  - component: {fileID: 534669906}
   - component: {fileID: 534669903}
   m_Layer: 0
   m_Name: Main Camera
@@ -814,13 +815,25 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0, y: -0.99993205, z: -0, w: 0.011660459}
-  m_LocalPosition: {x: 6.78, y: -6.93, z: 12.23}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0.7395545, z: -0, w: 0.67309666}
+  m_LocalPosition: {x: 17.56, y: -6.19, z: 0.95}
+  m_LocalScale: {x: 1.0022, y: 1.0022, z: 1.0022}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -178.664, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -95.387, z: 0}
+--- !u!114 &534669906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 235513ad5c2f7874994f285e6c03b179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &612082241
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,9 +875,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
@@ -1268,7 +1281,7 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
   m_UseLimits: 0
   m_Limits:
@@ -1384,8 +1397,8 @@ GameObject:
   - component: {fileID: 922909405}
   - component: {fileID: 922909404}
   - component: {fileID: 922909403}
-  - component: {fileID: 922909407}
   - component: {fileID: 922909408}
+  - component: {fileID: 922909407}
   m_Layer: 0
   m_Name: LeftThigh
   m_TagString: Untagged
@@ -1489,10 +1502,10 @@ HingeJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 922909401}
   m_ConnectedBody: {fileID: 817681312}
-  m_Anchor: {x: 0, y: 0, z: -0.85}
+  m_Anchor: {x: -0.5, y: 0.5, z: -0.5}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.5, y: -1.1666663, z: 0}
+  m_ConnectedAnchor: {x: 0.09999943, y: -0.5000003, z: 0.5}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -1501,9 +1514,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
@@ -1911,9 +1924,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
@@ -2347,7 +2360,7 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
   m_UseLimits: 0
   m_Limits:
@@ -2490,9 +2503,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
@@ -2917,9 +2930,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
@@ -3248,10 +3261,10 @@ HingeJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1982456109}
   m_ConnectedBody: {fileID: 817681312}
-  m_Anchor: {x: 0, y: 0, z: -0.85}
+  m_Anchor: {x: -0.5, y: 0.5, z: -0.5}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.5, y: -1.1666663, z: 0}
+  m_ConnectedAnchor: {x: -0.9000006, y: -0.5000003, z: 0.5}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -3260,9 +3273,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
@@ -3615,14 +3628,35 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!138 &2118060360
-FixedJoint:
+--- !u!59 &2118060360
+HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118060358}
   m_ConnectedBody: {fileID: 2081980425}
+  m_Anchor: {x: 0, y: 0.5, z: 0}
+  m_Axis: {x: 1, y: -0.2, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 0, y: -0.50000036, z: 0}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 0
+    targetPosition: 0
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 0
+    force: 1000
+    freeSpin: 0
+  m_UseLimits: 1
+  m_Limits:
+    min: 0
+    max: 0
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_EnableCollision: 0
@@ -3818,10 +3852,10 @@ HingeJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2134409087}
   m_ConnectedBody: {fileID: 922909403}
-  m_Anchor: {x: 0, y: 0.5, z: -0.4}
+  m_Anchor: {x: 0, y: 0.5, z: -0.5}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -0.0000011920929, z: 0.5400001}
+  m_ConnectedAnchor: {x: 0, y: -0.0000011920929, z: 0.49999988}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -3830,9 +3864,9 @@ HingeJoint:
   m_UseMotor: 0
   m_Motor:
     targetVelocity: 0
-    force: 0
+    force: 1000
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_Limits:
     min: 0
     max: 0
