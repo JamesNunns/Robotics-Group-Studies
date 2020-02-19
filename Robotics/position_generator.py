@@ -8,11 +8,16 @@ neutral = '---------------------- Model ---------------------------\n       Join
 def GetPosture(summary = motionProxy.getSummary()):
     '''
     Returns the posture of NAO as a dictionary in the same format as the positions dictionary
-    ------
+    
     Parameters
     ------
     summary: list
-        raw list using motionProxy.getSummary
+        Raw list of current posture generated using "motionProxy.getSummary"
+    
+    Returns
+    ------
+    current_posture: dict.
+        Dictionary of Nao limb data defining the current posture of Nao
     '''
     current_posture = {}
     summary = summary.split()
