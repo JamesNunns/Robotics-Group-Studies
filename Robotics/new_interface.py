@@ -12,14 +12,14 @@ import numpy
 from collections import OrderedDict
 
 option = raw_input("Using Real Robot (Yes/No)")
-if option == 'No':
+if option.upper() == 'NO':
     ###Training Functons###
     setup = 'Testing'
     path.insert(0, "Training_functions")
     from naoqi import ALProxy
     import BigEncoder
     import SmallEncoders
-elif option == 'Yes':
+elif option.upper() == 'YES':
     setup = 'Real'
     path.insert(0, "hidlibs")
     from pynaoqi.naoqi import ALProxy
@@ -142,6 +142,7 @@ class Interface(Algorithm):
         max_runs = t * 1 / period + 1.0
 
         self.all_data = self.initialize_all_data()
+
         self.filename = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime())
 
         self.initial_time = tme.time()
