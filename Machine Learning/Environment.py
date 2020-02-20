@@ -229,7 +229,7 @@ class Swing:
         else: done = False
 
         if self.angle > self.max_angle: self.max_angle = self.angle
-
+          
         # if self.pivot3.impulse > 8000:
         #     penalty = self.pivot3.impulse
         # else:

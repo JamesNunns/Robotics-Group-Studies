@@ -4,6 +4,7 @@ from sys import path
 path.insert(0, 'single_pendulum')
 from single_test_brute import Test 
 from single_damping_small_angles import SmallAngleDamping
+from single_startup_const_period import Start
 
 class Algorithm(Robot, Encoders):
 
@@ -13,7 +14,8 @@ class Algorithm(Robot, Encoders):
         
         Robot.__init__(self, values, positions, ALProxy, masses=False, acc_required=False, gyro_required=False)
 
-        self.order = [{        
+        self.order = [
+        {        
             'algo': Test,
             'duration': 30
         }

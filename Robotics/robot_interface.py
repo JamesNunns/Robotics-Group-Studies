@@ -41,7 +41,7 @@ class Robot():
         self.motion.setFallManagerEnabled(False)
         #self.speech.say('Battery level at {:.0f}%'.format(self.get_angle('BC')[0]*100))
         print 'Battery level at {:.0f}%'.format(self.get_angle('BC')[0]*100)
-        
+
     def check_setup(self, position):
         """
         Checks position values received from Nao match the position values it's meant to have
@@ -57,14 +57,14 @@ class Robot():
         differences = [(key, value, abs(value - position[key])) for (key, value) in zip(position.keys(), values)]
 
         incorrect_positions = [i for i in differences if i[2] > 0.5]
-        if len(incorrect_positions) != 0:        
+        if len(incorrect_positions) != 0:
             # for values in incorrect_positions:
                 # print values[0], 'Actual value: {}'.format(values[1]), 'Difference from expected: {}'.format(values[2])
-            
+
             error_amounts = ['{}, Actual value: {}, Difference from expected: {}'.format(*v) for v in incorrect_positions]
             raise PositionError("Initial check of setup failed\n" + '\n'.join(error_amounts))
-            
-            
+
+
     def get_gyro(self):
         """
         Obtain the current gyroscope data. Returns a tuple containing the (x, y, z) gyroscope data,
@@ -124,7 +124,7 @@ class Robot():
         angle = self.memory.getData(limb_info[1])
         name = limb_info[0]
         return angle, name
-        
+
     def set_posture(self, next_posture, current_posture, max_speed=1.0):
         """
         Changes position from current_posture to next_posture, calculates correct speeds
@@ -141,7 +141,7 @@ class Robot():
         # Extract dictionaries corresponding to both positions
         next_posture_dict = self.positions[next_posture]
         current_posture_dict = self.positions[current_posture]
-        
+
         differences_in_angles = []
         for name in next_posture_dict.keys():
             # Calculate difference in angle for each joint
@@ -155,16 +155,16 @@ class Robot():
         # Normalise speeds to longest time
         max_difference = max(differences_in_angles)
         speeds = [max_speed * difference / max_difference for difference in differences_in_angles]
-            
+
         # Extract name naoqi uses to set positions
         part_name = [self.values[name][0] for name in next_posture_dict.keys()]
-        
+
         # Change position
         for name, value, speed in zip(part_name, next_posture_dict.values(), speeds):
             self.motion.setAngles(name, value, speed)
         # Update self.position with now current position
         self.position = next_posture
-        
+
     def set_posture_initial(self, next_posture='crunched', max_speed=0.2):
         """
         Moves nao from whatever position he is currently in to a specified starting position, important
@@ -179,16 +179,39 @@ class Robot():
         """
         # This sets the stiffness permanently
         self.motion.setStiffnesses("Body", 1.0)
-        
+
         # Calculate his current position
         startup_dict = {}
         for key in self.positions[next_posture].keys():
             startup_dict[key] = self.get_angle(key)[0]
         # Add his current position to the positions dictionary
         self.positions['startup'] = startup_dict
-        
+
         # Switch from current position just added to next_posture
         self.set_posture(next_posture, 'startup', max_speed=max_speed)
-        
-        
-        
+
+    def get_posture(self):
+        '''
+        Returns the posture of NAO as a dictionary in the same format as the positions dictionary
+
+        Parameters
+        ------
+        summary: list
+            Raw list of current posture generated using "motionProxy.getSummary"
+
+        Returns
+        ------
+        current_posture: dict.
+            Dictionary of Nao limb data defining the current posture of Nao
+        '''
+        current_posture = {}
+        summary = self.motion.getSummary()
+        summary = summary.split()
+        summary = summary[7:-14]
+        for i in range(len(summary)/4):
+            for keys in values:
+                if values[keys][0] == summary[4*i]:
+                    current_posture[keys] = summary[4*i + 3]
+        return current_posture
+
+
