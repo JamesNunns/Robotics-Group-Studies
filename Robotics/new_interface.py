@@ -164,7 +164,7 @@ class Interface(Algorithm):
             current_values = convert_list_dict([time, event, ax, ay, az, gx, gy, gz, se0, se1, se2, se3, be, av, cmx, cmy, algo, position])
 
             try:
-                out = self.__run_algorithm(switch, current_values)
+                switch = self.__run_algorithm(switch, current_values)
             except AlgorithmFinished:
                 print('\n\033[1mAlgorithm finished, stopping\033[0m\n')
                 break
