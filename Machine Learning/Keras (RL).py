@@ -150,7 +150,6 @@ if __name__ == '__main__':
     print("Generating agent...")
     agent = DeepQNetwork(gamma, epsilon, epsilon_decay, epsilon_min, alpha, alpha_decay, batch_size, max_env_steps, n_episodes, n_win_ticks)
     print("Done!\n")
-
     q_learn = agent.run()
 
     performance = q_learn[1]
