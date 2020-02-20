@@ -94,10 +94,10 @@ class Swing:
         # Define bodies
         self.top = pymunk.Body(50, 10000, pymunk.Body.STATIC)
         self.bottom = pymunk.Body(50, 10000, pymunk.Body.STATIC)
-        self.rod1 = pymunk.Body(5, 10000)
-        self.rod2 = pymunk.Body(5, 10000)
-        self.rod3 = pymunk.Body(5, 10000)
-        self.seat = pymunk.Body(10, 10000)
+        self.rod1 = pymunk.Body(10, 10000)
+        self.rod2 = pymunk.Body(10, 10000)
+        self.rod3 = pymunk.Body(10, 10000)
+        self.seat = pymunk.Body(15, 10000)
         self.torso = pymunk.Body(10, 10000)
         self.legs = pymunk.Body(10, 10000)
         self.head = pymunk.Body(5, 10000)
@@ -193,11 +193,13 @@ class Swing:
         '''
         self.delete()
         self.create()
+        return [self.angle, self.velocity]
     
     def step(self, action: int, dt: float = 1.0/60):
         '''
         Step one time period in the simulation.
         '''
+        penalty = 5
         if action == 0:  # Legs out, torso in
             self.legs._set_torque(1000000)
         if action == 1:  # Legs in, torso out
@@ -207,24 +209,30 @@ class Swing:
         if action == 3:  # legs in, torso in
             self.torso._set_torque(-1000000)
         if action == 4: # Do nothing
-            pass
+            penalty = 0
 
         self.space.step(dt)
         self.time += dt
 
+        velocity = self.velocity
+        angle = self.angle
         self.velocity = ((self.rod1._get_angle() * (180 / math.pi) - self.theta) - self.angle) / dt
         self.angle = self.rod1._get_angle() * (180 / math.pi) - self.theta
 
+        reward = 0
+        if ((velocity < 0 and self.velocity > 0) or (velocity > 0 and self.velocity < 0)) or ((angle < 0 and self.angle > 0) or (angle > 0 and self.angle < 0)):
+            reward = self.angle**2 + self.velocity**2
+
         observation = [self.angle, self.velocity]
-        if self.time > 60: done = True
+        if self.time > 500: done = True
         else: done = False
 
-        if self.pivot3.impulse > 8000:
-            penalty = self.pivot3.impulse
-        else:
-            penalty = 50
+        # if self.pivot3.impulse > 8000:
+        #     penalty = self.pivot3.impulse
+        # else:
+        #     penalty = 50
 
-        return (observation, self.angle**2 + self.velocity**2 - penalty, done)
+        return (observation, reward - penalty, done, {})
     
     def update(self, model):
         '''
@@ -235,7 +243,7 @@ class Swing:
         else:
             action = np.argmax(self.model.predict(self.prev_obs.reshape(-1, len(self.prev_obs)))[0])
 
-        new_observation, reward, done = self.step(action)
+        new_observation, reward, done, _ = self.step(action)
         self.prev_obs = np.array(new_observation)
         window.clear()
         self.space.debug_draw(options)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class CustomRotation : MonoBehaviour
@@ -230,7 +231,7 @@ public class CustomRotation : MonoBehaviour
 		for (int i = 0; i < 11; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
 		{
-			if (allAngles[i] < allJoints[i].angle + 91 && allAngles[i] > allJoints[i].angle + 89)
+			if (allAngles[i] < allJoints[i].angle + 91.5f && allAngles[i] > allJoints[i].angle + 88.5f)
 			{
 				Lock(allJoints[i]);
 			}
