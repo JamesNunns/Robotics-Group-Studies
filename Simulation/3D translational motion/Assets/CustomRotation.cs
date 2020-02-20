@@ -145,10 +145,21 @@ public class CustomRotation : MonoBehaviour
 		/// Nao defines its angles
 		if (Shoulders.Contains(joint))
 		{
-			ang += 90;
+			ang += 40;
 		}
 		if (Elbows.Contains(joint))
 		{
+			ang *= -1;
+			ang += 180;
+			ang = -90 + ang;
+		}
+		if (Hips.Contains(joint))
+		{
+			ang = -90 - ang;
+		}
+		if (Ankles.Contains(joint))
+		{
+			ang *= -1;
 			ang = 90 - ang;
 		}
 		if (Hips.Contains(joint))
@@ -218,15 +229,15 @@ public class CustomRotation : MonoBehaviour
 		/// These are test inputs, they can be changed
 		if (Input.GetKey("m"))
 		{
-			MoveSymmetric(Hips, -50, 100);
+			MoveSymmetric(Elbows, -90, 100);
 		}
 		if (Input.GetKey("n"))
 		{
-			MoveSymmetric(Knees, 70, 100);
+			MoveSymmetric(Elbows, 0, 100);
 		}	
 		if (Input.GetKey("p"))
 		{
-			MoveSymmetric(Knees, 20, 100);
+			MoveSymmetric(Elbows, 20, 100);
 		}
 		for (int i = 0; i < 11; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
@@ -236,6 +247,7 @@ public class CustomRotation : MonoBehaviour
 				Lock(allJoints[i]);
 			}
 		}
+		print((allJoints[3].angle + 90, allAngles[3]));
 
 	}
 }
