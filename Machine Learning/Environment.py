@@ -90,6 +90,7 @@ class Swing:
         
         # Define initial angle
         angle = Angle(self.theta)
+        self.max_angle = 0
 
         # Define bodies
         self.top = pymunk.Body(50, 10000, pymunk.Body.STATIC)
@@ -199,7 +200,7 @@ class Swing:
         '''
         Step one time period in the simulation.
         '''
-        penalty = 5
+        penalty = 4
         if action == 0:  # Legs out, torso in
             self.legs._set_torque(1000000)
         if action == 1:  # Legs in, torso out
@@ -221,11 +222,13 @@ class Swing:
 
         reward = 0
         if ((velocity < 0 and self.velocity > 0) or (velocity > 0 and self.velocity < 0)) or ((angle < 0 and self.angle > 0) or (angle > 0 and self.angle < 0)):
-            reward = self.angle**2 + self.velocity**2
+            reward = 2*self.angle**2 + self.velocity**2
 
         observation = [self.angle, self.velocity]
         if self.time > 500: done = True
         else: done = False
+
+        if self.angle > self.max_angle: self.max_angle = self.angle
 
         # if self.pivot3.impulse > 8000:
         #     penalty = self.pivot3.impulse

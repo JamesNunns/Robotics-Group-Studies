@@ -85,13 +85,20 @@ class DeepQNetwork():
     def run(self):
         ''' runs the environment time step and chooses action and remembers outcome
             also feeds back into replay function to fit the model  '''
-        
+
+        print("Running Q-Learning algorithm...")
+
         mean_reward = 0
         rewards = deque(maxlen=100)
         performance = []
     
+        print("\n  |--------------|---------|-------------|")
+        print("  |    Epoch     |  Score  |  Max Angle  |")
+        print("  |--------------|---------|-------------|")
+
         try:
             for e in range(self.n_episodes):
+                print("  |  Episode " + str(e + 1) + str(" " * (4 - (len(str(e + 1))))), end="", flush=True)
                 state = self.preprocess_state(self.env.reset())
                 done = False
                 score = 0
@@ -103,36 +110,47 @@ class DeepQNetwork():
                     self.remember(state, action, reward, next_state, done)
                     state = next_state
                     score += reward
-                    
+                
                 rewards.append(score)
                 mean_reward = np.mean(rewards)
-
                 performance.append(mean_reward)
-                print(f'Episode {e}: {mean_reward}')
+
+                print("|" + str(" " * (8 - (len(str(int(mean_reward)))))) + str(int(mean_reward)) + " ", end="", flush=True)
 
                 self.replay(self.batch_size, self.get_epsilon(e))
-        except KeyboardInterrupt:
-            pass
 
+                print("|" + str(" " * (7 - (len(str(int(self.env.max_angle)))))) + str(int(self.env.max_angle)) + "      |")
+                
+        except KeyboardInterrupt:
+            print("\nExited with " + str(e) + " episodes.")
+
+        print("\nDone!\n")
         return e, performance
     
     
 if __name__ == '__main__':
-    
+    print("\n------------------------------------------")
+    print("          DEEP Q-LEARNING USING             ")
+    print("                NEURAL NETS                 ")
+    print("------------------------------------------\n")
+
     n_episodes = 1000
     n_win_ticks = 195
     max_env_steps = None
     
-    gamma = 1        #Discout Factor
-    epsilon = 1      #Exploration Factor
-    epsilon_decay =  0.995     #Less Explorative with time
-    epsilon_min =  0.01        #Still non-zero after long times
-    alpha =  0.01           #Learning Rate
-    alpha_decay = 0.01      #Using previous actions to predict more with time
+    gamma = 1                   # Discout Factor
+    epsilon = 1                 # Exploration Factor
+    epsilon_decay =  0.995      # Less Explorative with time
+    epsilon_min =  0.01         # Still non-zero after long times
+    alpha =  0.01               # Learning Rate
+    alpha_decay = 0.01          # Using previous actions to predict more with time
     
     batch_size = 64
-    
+
+    print("Generating agent...")
     agent = DeepQNetwork(gamma, epsilon, epsilon_decay, epsilon_min, alpha, alpha_decay, batch_size, max_env_steps, n_episodes, n_win_ticks)
+    print("Done!\n")
+
     q_learn = agent.run()
 
     performance = q_learn[1]
