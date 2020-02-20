@@ -16,6 +16,9 @@ class Algorithm(Robot, Encoders):
 
         self.order = [
         {        
+            'algo': Start,
+            'duration': 30
+        },{        
             'algo': Test,
             'duration': 30
         }

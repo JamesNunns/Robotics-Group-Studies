@@ -190,7 +190,7 @@ class Robot():
         # Switch from current position just added to next_posture
         self.set_posture(next_posture, 'startup', max_speed=max_speed)
 
-    def get_posture(summary = motionProxy.getSummary()):
+    def get_posture(self):
         '''
         Returns the posture of NAO as a dictionary in the same format as the positions dictionary
 
@@ -205,6 +205,7 @@ class Robot():
             Dictionary of Nao limb data defining the current posture of Nao
         '''
         current_posture = {}
+        summary = self.motion.getSummary()
         summary = summary.split()
         summary = summary[7:-14]
         for i in range(len(summary)/4):
@@ -212,3 +213,5 @@ class Robot():
                 if values[keys][0] == summary[4*i]:
                     current_posture[keys] = summary[4*i + 3]
         return current_posture
+
+
