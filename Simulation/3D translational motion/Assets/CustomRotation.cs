@@ -225,7 +225,7 @@ public class CustomRotation : MonoBehaviour
 		}	
 		if (Input.GetKey("p"))
 		{
-			MoveSymmetric(Hips, -50, 100);
+			MoveSymmetric(Knees, 20, 100);
 		}
 		for (int i = 0; i < 11; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
