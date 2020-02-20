@@ -11,10 +11,12 @@ class Test():
 
     
     def algo(self,values,all_data):
-        
-        #if values['time'] > 30:#self.duration:
         print values['time'], values['be']
-        if values['be'] < 0:
-            return 'crunched'
-        elif values['be'] > 0:
-            return 'extended'
+        if values['time'] < self.duration:
+            if values['be'] < 0:
+                return 'crunched'
+            elif values['be'] > 0:
+                return 'extended'
+        else:
+            return 'switch'
+        
