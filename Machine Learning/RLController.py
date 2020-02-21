@@ -20,27 +20,30 @@ class Agent:
         '''
         self.neural_net = neural_net
         self.memory = []
+        self.performance = []
 
         self.epsilon = 1                # Exploration factor
         self.epsilon_decay =  0.995     # Less exploration with time
         self.epsilon_min =  0.01        # Still non-zero exploration after long time
 
         self.state = deque(maxlen=2)
+        self.state.append(np.reshape([0, 0], [1, 2]))
         self.action = 4
     
-    def perform_action(self, state: list, next_state: list, reward: float):
+    def perform_action(self, state: list, reward: float, done: bool):
         '''
         Takes state as [angle, velocity] and reward representing reward of previous action.
         Returns outputs as [leg_angle, torso_angle].
         '''
         self.state.append(np.reshape(state, [1, 2]))
-        self.memory.append((self.state[0], self.action, reward, self.state[1]))
+        self.memory.append((self.state[0], self.action, reward, self.state[1], done))
+        self.performance.append(reward)
 
-        self.epsilon = max(self.epsilon_min, min(self.epsilon, 1.0 - math.log10((len(self.memory)) * self.epsilon_decay))) # Decay epsilon to reduce exploration
-        if np.random.random() <= epsilon:
+        self.epsilon = max(self.epsilon_min, min(self.epsilon, 1.0 - math.log10((len(self.memory)) * self.epsilon_decay / 10000))) # Decay epsilon to reduce exploration
+        if np.random.random() <= self.epsilon:
             self.action = random.randrange(0, 4)                     # Explore action space
         else:
-            self.action = np.argmax(self.neural_net.predict(state))  # Explore rewarding states
+            self.action = np.argmax(self.neural_net.predict(self.state[1]))  # Explore rewarding states
         
         if self.action == 0:        # Legs out
             output = [1, 0]
@@ -87,7 +90,7 @@ class Controller(list):
         x_batch, y_batch = [], []
         mini_batch = random.sample(agent.memory, min(len(agent.memory), batch_size))
     
-        for state, action, reward, next_state in mini_batch:
+        for state, action, reward, next_state, done in mini_batch:
             y_target = agent.neural_net.predict(state)
             if done:
                 y_target[0][action] = reward
@@ -106,3 +109,22 @@ class Controller(list):
             self.replay(agent)
         
         return self
+
+
+
+
+
+# if __name__ == "__main__":
+#     '''
+#     Testing.
+#     '''
+#     c = Controller()
+#     c.make_agent()
+
+#     for i in range(20):
+#         print(c[0].perform_action([1,i], i, False))
+#         c.step()
+    
+#     print(c[0].perform_action([1,i], i, True))
+#     c.step()
+#     print(c[0].performance)
