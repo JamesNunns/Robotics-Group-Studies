@@ -69,7 +69,7 @@ class Controller(list):
         '''
         self.alpha =  0.01               # Learning rate
         self.alpha_decay = 0.01          # Using previous actions to predict more with time
-        self.gamma = 1                   # Discout Factor
+        self.gamma = 1                   # Discout factor
     
     def make_agent(self):
         '''
