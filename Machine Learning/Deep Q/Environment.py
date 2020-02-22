@@ -206,14 +206,14 @@ class Swing:
         '''
         Step one time period in the simulation.
         '''
-        penalty = 10
-        if action == 0:  # Legs out, torso in
+        penalty = 5
+        if action == 0:  # Legs out
             self.legs._set_torque(1000000)
-        if action == 1:  # Legs in, torso out
+        if action == 1:  # Legs in
             self.legs._set_torque(-1000000)
-        if action == 2:  # Legs out, torso out
+        if action == 2:  # Torso out
             self.torso._set_torque(1000000)
-        if action == 3:  # legs in, torso in
+        if action == 3:  # Torso in
             self.torso._set_torque(-1000000)
         if action == 4: # Do nothing
             penalty = 0

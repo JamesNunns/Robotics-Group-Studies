@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
 from Environment import Swing
+import pandas as pd
 
 
 
@@ -31,13 +32,14 @@ class DeepQ:
         self.alpha_decay = 0.01         # Using previous actions to predict more with time
         self.gamma = 1                  # Discout factor
         self.epsilon = 1                # Exploration factor
-        self.epsilon_decay =  0.95      # Less exploration with time
+        self.epsilon_decay =  0.98      # Less exploration with time
         self.epsilon_min =  0.01        # Still non-zero exploration after long time
 
         # Memory
         self.memory = []
         self.rewards = deque(maxlen=100)
         self.performance = []
+        self.actions = []
         self.epoch = 0
 
         # Swing simulation environment
@@ -122,6 +124,7 @@ class DeepQ:
 
                     score += reward
                 
+                self.actions.append(actions)
                 self.rewards.append(score)
                 self.performance.append(np.mean(self.rewards))
                 self.replay()
@@ -141,16 +144,35 @@ class DeepQ:
         print("\nDone!\n")
         return e, self.performance
     
-    def render(self, title: str, timeout: int = 60):
+    def render_sim(self, title: str, timeout: int = 60):
         '''
         Render simulation of the current neural network.
         '''
         self.env.render(self.neural_net, title, timeout)
+    
+    def render_actions(self):
+        '''
+        Render percentage stacked area chart showing action chosen at each epoch.
+        '''
+        print("Plotting graph of actions over epochs...", end=" ", flush=True)
 
+        data = pd.DataFrame({'legs_out':[i[0] for i in self.actions], 'legs_in':[i[1] for i in self.actions], 'torso_out':[i[2] for i in self.actions], 'torso_in':[i[3] for i in self.actions], 'nothing':[i[4] for i in self.actions], }, index=range(0, self.epoch))
+        data_perc = data.divide(data.sum(axis=1), axis=0)
+
+        plt.stackplot(range(0, self.epoch),  data_perc["legs_out"],  data_perc["legs_in"],  data_perc["torso_out"],  data_perc["torso_in"],  data_perc["nothing"], labels=['Legs out', 'Legs in', 'Torso out', 'Torso in', 'Nothing'])
+        plt.legend(loc='upper left')
+        plt.margins(0, 0)
+        plt.title("Choice of action at increasing epoch")
+        plt.xlabel("Epoch")
+        plt.ylabel("Probability")
+        plt.show()
+
+        print("Done!\n")
 
 
 if __name__ == "__main__":
     q = DeepQ()
     for i in range(10):
         q.run(100)
-        q.render("Episode " + str((i + 1) * 100), 60)
+        q.render_actions()
+        q.render_sim("Episode " + str((i + 1) * 100), 60)
