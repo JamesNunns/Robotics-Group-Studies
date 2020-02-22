@@ -70,15 +70,21 @@ class Swing:
         '''
         Initialise the pymunk space and angle and create swing / robot
         '''
+        print("Generating environment...", end=" ", flush=True)
+
         self.space = space
         self.space.gravity = 0, -1000  # Set gravity of space
         self.space.damping = 0.9
         self.theta = theta
+        self.timeout = 500
+        self.title = "Simulation"
 
         self.prev_obs = []
         self.model = None
 
         self.create()
+
+        print("Done!")
     
     def create(self):
         '''
@@ -200,14 +206,14 @@ class Swing:
         '''
         Step one time period in the simulation.
         '''
-        penalty = 4
-        if action == 0:  # Legs out, torso in
+        penalty = 5
+        if action == 0:  # Legs out
             self.legs._set_torque(1000000)
-        if action == 1:  # Legs in, torso out
+        if action == 1:  # Legs in
             self.legs._set_torque(-1000000)
-        if action == 2:  # Legs out, torso out
+        if action == 2:  # Torso out
             self.torso._set_torque(1000000)
-        if action == 3:  # legs in, torso in
+        if action == 3:  # Torso in
             self.torso._set_torque(-1000000)
         if action == 4: # Do nothing
             penalty = 0
@@ -222,14 +228,14 @@ class Swing:
 
         reward = 0
         if ((velocity < 0 and self.velocity > 0) or (velocity > 0 and self.velocity < 0)) or ((angle < 0 and self.angle > 0) or (angle > 0 and self.angle < 0)):
-            reward = 2*self.angle**2 + self.velocity**2
+            reward = 2 * self.angle**2 + self.velocity**2
 
         observation = [self.angle, self.velocity]
-        if self.time > 500: done = True
+        if self.time > self.timeout: done = True
         else: done = False
 
         if self.angle > self.max_angle: self.max_angle = self.angle
-          
+
         # if self.pivot3.impulse > 8000:
         #     penalty = self.pivot3.impulse
         # else:
@@ -251,83 +257,9 @@ class Swing:
         window.clear()
         self.space.debug_draw(options)
 
-    def render(self, model):
-        '''
-        Render environment based on neural network model.
-        '''
-        print("Rendering simulation...")
+        if done: window.close()
 
-        self.model = model
-        self.reset()
-        pyglet.clock.schedule_interval(self.update, 1.0/60)
-        pyglet.app.run()
-
-        print("Done!")
-
-    # @window.event
-    # def on_draw():
-
-
-
-
-
-#####################
-#### PYGLET
-#####################
-
-class Window(pyglet.window.Window):
-    '''
-    The 'Window' class which represents a pyglet window for our swing
-    simulation.
-    '''
-    def __init__(self, algorithm, timeout: int = -1, theta: int = 0, title: str = "Simulation"):
-        '''
-        Initialise the Pyglet window / create Pymunk space / generate
-        swing and robot.
-        '''
-        super().__init__(1200, 720, "Simulation", resizable=False)  # Init Pyglet window
-
-        self.space = pymunk.Space()  # Init Pymunk space for 2D physics engine
-        self.space.gravity = 0, -1000  # Set gravity of space
-        self.space.damping = 0.9
-
-        # Class attributes
-        self._timeout = timeout
-        self._theta = theta
-
-        self.title = title
-        self.algorithm = algorithm
-        self.reset()  # Initialise the simulation environment
-
-    def on_mouse_press(self, x, y, button, modifiers):
-        '''
-        Event for mouse press inside the Pyglet window.
-        '''
-        b = pymunk.Body(10, 10)  # Declare a black body
-        b_shape = pymunk.Circle(b, 10)  # Create a circle shape
-        b.position = x, y  # Set body position to coordinates of mouse press
-        self.space.add(b, b_shape)  # Add body / cirle shape to space
-        print(x, y)  # Print coordinates of mouse press
-    
-    def on_key_press(self, symbol, modifiers):
-        if symbol == key.LEFT:
-            self.legs = -1
-            print("Kicking forward")
-        if symbol == key.RIGHT:
-            self.legs = 1
-            print("Kicking backward")
-
-    def on_key_release(self, symbol, modifiers):
-        if symbol == key.LEFT or symbol == key.RIGHT:
-            self.legs = 0
-
-    def on_draw(self):
-        '''
-        Method called each time the screen is drawn (i.e. each frame).
-        '''
-        self.clear()  # Clear screen
-        self.space.debug_draw(options)  # Draw space objects (Pymunk bodies, shapes, pivots, gears etc.)
-        
+        # Draw text
         title = pyglet.text.Label(self.title,
                                   font_name='Helvetica',
                                   font_size=32, x=1065, y=660,
@@ -349,99 +281,17 @@ class Window(pyglet.window.Window):
                                   anchor_x='left', anchor_y='center')  # Create label of current angle
         velocity.draw()  # Draw angle label
 
-        try:
-            self.image1.blit(0, 0)  # Draw image1
-            self.image2.blit(890, 0)  # Draw image2
-        except:
-            pass
-
-    def update(self, dt):
+    def render(self, model, title: str = "Simulation", timeout: int = 500):
         '''
-        Method called by Pyglet clock scheduler that updates
-        the screen at the specified frame rate.
+        Render environment based on neural network model.
         '''
-        self.algorithm.env_step(self)
+        print("Rendering simulation...", end=" ", flush=True)
 
-        self.space.step(dt)  # Move Pymunk space forward one time step
-        self.time += dt  # Add time step to total time
-        self.velocity = (self.angle_history[-2] - self.angle_history[-1]) * 60  # Calculate velocity of main rod
+        self.model = model
+        self.title = title
+        self.timeout = timeout
+        self.reset()
+        pyglet.clock.schedule_interval(self.update, 1.0/60)
+        pyglet.app.run()
 
-        self.angle_history.append(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta)  # Add angle to angle history
-        self.angle = int(self.swing.rod1._get_angle() * (180 / math.pi) - self._theta)  # Set current angle correctly
-
-        if self.time > self._timeout and not self._timeout == -1:
-            self.algorithm.final(self)  # Send final environment to algorithm class
-            self.reset()  # Exit window if time exceeds timeout
-
-    def action(self, action: int):
-        '''
-        Make an action in the simulation.
-        '''
-        if action == 0:  # Legs out, torso in
-            self.legs = 1
-            self.torso = -1
-        if action == 1:  # Legs in, torso out
-            self.legs = -1
-            self.torso = 1
-        if action == 2:  # Legs out, torso out
-            self.legs = 1
-            self.torso = 1
-        if action == 3:  # legs in, torso in
-            self.legs = -1
-            self.torso = -1
-        if action == 4: # Do nothing
-            self.legs = 0
-            self.torso = 0
-
-        if self.legs == 1: self.swing.legs._set_torque(1000000)  # Legs forward
-        if self.legs == -1: self.swing.legs._set_torque(-1000000)  # Legs backward
-        if self.torso == 1: self.swing.torso._set_torque(1000000)  # Torso forward
-        if self.torso == -1: self.swing.torso._set_torque(-1000000)  # Torso backward
-
-    def reset(self):
-        '''
-        Reset the environment.
-        '''
-        self.legs = 0  # -1 = backward, 0 = stationary, 1 = forwards
-        self.torso = 0  # -1 = backward, 0 = stationary, 1 = forwards
-        self.velocity = 0
-        self.angle = self._theta  # Current angle
-        self.angle_history = [self.angle, self.angle]  # Angle history (for plotting over time)
-        self.time = 0  # Simulation time
-
-        try: self.swing.delete()
-        except: pass
-        self.swing = Swing(self.space, self._theta)  # Generate the swing/robot
-
-        # Load images
-        try:
-            self.image1 = pyglet.image.load('image1.png')
-            self.image2 = pyglet.image.load('image2.png')
-        except:
-            self.image1 = None
-            self.image2 = None
-
-
-#####################
-#### MAIN
-#####################
-
-class Algorithm:
-    '''
-    Example algorithm class.
-    '''
-    def __init__(self):
-        pass
-    
-    def env_step(self, env):
-        env.action(-1)
-
-    def final(self):
-        print("Episode over")
-
-
-if __name__ == "__main__":
-    window = Window(Algorithm())
-
-    pyglet.clock.schedule_interval(window.update, 1.0/60)
-    pyglet.app.run()
+        print("Done!\n")
