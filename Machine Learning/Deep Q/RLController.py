@@ -14,10 +14,13 @@ class Agent:
     'Agent' class that represents the actions taken by a single neural network.
     '''
 
-    def __init__(self, neural_net):
+    def __init__(self, neural_net, input_size: int, output_size: int):
         '''
         Initialise class with the neural network.
         '''
+        self.input_size = input_size
+        self.output_size = output_size
+
         self.neural_net = neural_net
         self.memory = []
         self.performance = []
@@ -27,34 +30,31 @@ class Agent:
         self.epsilon_min =  0.01        # Still non-zero exploration after long time
 
         self.state = deque(maxlen=2)
-        self.state.append(np.reshape([0, 0], [1, 2]))
-        self.action = 4
+        self.state.append(np.reshape([0] * self.input_size, [1, self.input_size]))
+        self.action = 0
     
     def perform_action(self, state: list, reward: float, done: bool):
         '''
         Takes state as [angle, velocity] and reward representing reward of previous action.
         Returns outputs as [leg_angle, torso_angle].
         '''
-        self.state.append(np.reshape(state, [1, 2]))
+        self.state.append(np.reshape(state, [1, self.input_size]))
         self.memory.append((self.state[0], self.action, reward, self.state[1], done))
         self.performance.append(reward)
 
         self.epsilon = max(self.epsilon_min, min(self.epsilon, 1.0 - math.log10((len(self.memory)) * self.epsilon_decay / 10000))) # Decay epsilon to reduce exploration
         if np.random.random() <= self.epsilon:
-            self.action = random.randrange(0, 4)                     # Explore action space
+            self.action = random.randrange(0, (self.output_size * 2) + 1)                     # Explore action space
         else:
             self.action = np.argmax(self.neural_net.predict(self.state[1]))  # Explore rewarding states
         
-        if self.action == 0:        # Legs out
-            output = [1, 0]
-        elif self.action == 1:      # Legs in
-            output = [-1, 0]
-        elif self.action == 2:      # Torso out
-            output = [0, 1]
-        elif self.action == 3:      # Torso in
-            output = [0, -1]
-        else:                       # Do nothing
-            output = [0, 0]
+        output = [0] * self.output_size
+        if self.action == 0:
+            pass
+        elif self.action % 2 == 1:  # Odd number
+            output[self.action // 2] = 1
+        elif self.action % 2 == 0:  # Even number
+            output[(self.action // 2) - 1] = -1
         
         return output
 
@@ -63,25 +63,28 @@ class Controller(list):
     'Controller' class that manages the updating of neural networks for a list of agents.
     '''
 
-    def __init__(self):
+    def __init__(self, input_size: int, output_size: int):
         '''
         Initialise the class with learning parameters.
         '''
+        self.input_size = input_size
+        self.output_size = output_size
+
         self.alpha =  0.01               # Learning rate
         self.alpha_decay = 0.01          # Using previous actions to predict more with time
-        self.gamma = 1                   # Discout Factor
+        self.gamma = 1                   # Discout factor
     
     def make_agent(self):
         '''
         Create agent using Keras neural network.
         '''
         neural_net = Sequential()
-        neural_net.add(Dense(52, input_dim=2, activation='tanh'))
+        neural_net.add(Dense(52, input_dim=self.input_size, activation='tanh'))
         neural_net.add(Dense(128, activation='tanh'))
-        neural_net.add(Dense(5, activation='linear'))
+        neural_net.add(Dense((self.output_size * 2) + 1, activation='linear'))
         neural_net.compile(loss='mse', optimizer=Adam(lr=self.alpha, decay=self.alpha_decay))
          
-        super().append(Agent(neural_net))
+        super().append(Agent(neural_net, self.input_size, self.output_size))
 
     def replay(self, agent: Agent, batch_size: int = 64):
         '''
@@ -118,7 +121,7 @@ class Controller(list):
 #     '''
 #     Testing.
 #     '''
-#     c = Controller()
+#     c = Controller(2, 2)
 #     c.make_agent()
 
 #     for i in range(20):
