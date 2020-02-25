@@ -206,8 +206,73 @@ public class CustomRotation : MonoBehaviour
 	/// This method will move both joints together if they are a pair
 	/// <\summary>
 	{
-		Move(joints[0], ang, speed);
-		Move(joints[1], ang, speed);
+		/// direction sets motion to be clockwise or anti
+		float direction = 1;
+		HingeJoint joint = joints[0];
+		HingeJoint joint1 = joints[1];
+
+		/// Some angles have to be changed because of how
+		/// Nao defines its angles
+		/// Also, set the speed to be in degrees per second
+		if (Shoulders.Contains(joint))
+		{
+			ang += 40;
+			speed *= 246;
+		}
+		else if (Elbows.Contains(joint))
+		{
+			ang *= -1;
+			ang += 180;
+			ang = -90 + ang;
+			speed *= 246;
+		}
+		else if (Hips.Contains(joint))
+		{
+			ang = 180 + ang;
+			speed *= 378;
+		}
+		else if (Ankles.Contains(joint))
+		{
+			ang *= -1;
+			ang = 90 - ang;
+			speed *= 378;
+		}
+		else if (joint == Neck)
+		{
+			ang *= -1;
+			ang += 90;
+			speed *= 246;
+		}
+		else
+		{
+			speed *= 378;
+		}
+		for (int i = 0; i < 11; i++)
+		/// Set the angle in the list allAngles to the correct limit angle
+		{
+			if (joints.Contains(allJoints[i]))
+			{
+				allAngles[i] = ang;
+			}
+		}	
+		/// Turn off joint limits temporarily
+		joint.useLimits = false;
+		joint1.useLimits = false;
+		/// Define a motor for the joint
+		JointMotor motor = joint.motor;
+		JointMotor motor1 = joint1.motor;
+		if (ang < joint.angle + 90)
+		/// Determine direction of rotation
+			{
+				direction = -1;
+			}
+		/// Set the motor velocity, and switch the motor on
+		motor.targetVelocity = speed*direction;
+		motor1.targetVelocity = speed*direction;
+		joint.motor = motor;
+		joint1.motor = motor;
+		joint.useMotor = true;
+		joint1.useMotor = true;
 	}
 
 	void Lock(HingeJoint joint)
@@ -235,11 +300,11 @@ public class CustomRotation : MonoBehaviour
 		/// These are test inputs, they can be changed
 		if (Input.GetKey("m"))
 		{
-			MoveSymmetric(Hips, -90, 0.5f);
+			MoveSymmetric(Knees, 90, 1f);
 		}
 		if (Input.GetKey("n"))
 		{
-			MoveSymmetric(Hips, 0, 0.5f);
+			MoveSymmetric(Knees, 0, 1f);
 		}	
 		if (Input.GetKey("p"))
 		{
@@ -248,7 +313,7 @@ public class CustomRotation : MonoBehaviour
 		for (int i = 0; i < 11; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
 		{
-			if (allAngles[i] < allJoints[i].angle + 91.5f && allAngles[i] > allJoints[i].angle + 88.5f)
+			if (allAngles[i] < allJoints[i].angle + 95f && allAngles[i] > allJoints[i].angle + 85f)
 			{
 				Lock(allJoints[i]);
 			}
