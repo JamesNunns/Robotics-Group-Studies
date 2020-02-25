@@ -28,9 +28,35 @@ elif option.upper() == 'YES':
     path.insert(0, "Training_functions")
     import SmallEncoders #Import fake smallencoder as algo does not need them
 path.insert(0, 'new_Algorithms')
-from jack import Algorithm #Import dictionary of algorithms
 
 class AlgorithmFinished(Exception): pass
+
+# Allows user to select the algorithm file in Algorithms that they want to run
+files = listdir('new_Algorithms')
+# Search for files that are .py files and begin with algorithm_
+list_algorithms = [x for x in files if search(
+    r"(?=\.py$)", x)]
+algo_dict = {}
+for i, algo in enumerate(list_algorithms):
+    algo_dict[i] = algo[:-3]
+# Create dictionary with number key and name of algorithm for value
+text = ["{} {}".format(key, algo_dict[key]) for key in algo_dict]
+
+# By running this script with the final command line argument '@n' will run the nth algorithm that would
+# otherwise appear in the list.
+if argv[-1][0] is not "@":
+    algorithm = str(
+        input(
+            '\033[1mWhich algorithm would you like to run? Pick number corresponding to algorithm\033[0m: \n{}\n'.format(
+                "\n".join(text))))
+else:
+    algorithm = argv[-1][1:]
+
+# Imports correct Algorithm class that interface inherits from
+algorithm_import = algo_dict[int(algorithm)]
+print("\033[1mRunning " + algorithm_import + "\n\033[0m")
+path.insert(0, 'new_Algorithms')
+Algorithm = __import__(algorithm_import).Algorithm
 
 class Interface(Algorithm):
 
