@@ -1,0 +1,28 @@
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\James Swing Sim\Assets\Plugins\PythonInterface.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\James Swing Sim\Assets\Plugins\PythonInterface.pdb
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\PythonInterface.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\PythonInterface.pdb
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.Modules.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.SQLite.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.Wpf.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Microsoft.Dynamic.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Microsoft.Scripting.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Microsoft.Scripting.Metadata.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\UnityEngine.CoreModule.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\UnityEngine.SharedInternalsModule.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.Modules.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.SQLite.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\IronPython.Wpf.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Microsoft.Dynamic.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Microsoft.Scripting.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Microsoft.Scripting.Metadata.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\UnityEngine.CoreModule.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\bin\Debug\UnityEngine.SharedInternalsModule.xml
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.csproj.CopyComplete
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.dll
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.pdb
+C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.csprojAssemblyReference.cache

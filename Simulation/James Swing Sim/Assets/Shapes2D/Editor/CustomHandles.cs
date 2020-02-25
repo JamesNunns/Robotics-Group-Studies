@@ -1,7 +1,8 @@
-namespace Shapes2D {
+namespace Shapes2D
+{
 
-    using UnityEngine;
     using UnityEditor;
+    using UnityEngine;
 
     // http://answers.unity3d.com/questions/463207/how-do-you-make-a-custom-handle-respond-to-the-mou.html
     public class CustomHandles
@@ -52,99 +53,99 @@ namespace Shapes2D {
 
             switch (Event.current.GetTypeForControl(id))
             {
-            case EventType.MouseDown:
-                if (HandleUtility.nearestControl == id && (Event.current.button == 0 || Event.current.button == 1))
-                {
-                    GUIUtility.hotControl = id;
-                    s_DragHandleMouseCurrent = s_DragHandleMouseStart = Event.current.mousePosition;
-                    s_DragHandleWorldStart = position;
-                    s_DragHandleHasMoved = false;
-
-                    Event.current.Use();
-                    EditorGUIUtility.SetWantsMouseJumping(1);
-
-                    if (Event.current.button == 0)
-                        result = DragHandleResult.LMBPress;
-                    else if (Event.current.button == 1)
-                        result = DragHandleResult.RMBPress;
-                }
-                break;
-
-            case EventType.MouseUp:
-                if (GUIUtility.hotControl == id && (Event.current.button == 0 || Event.current.button == 1))
-                {
-                    GUIUtility.hotControl = 0;
-                    Event.current.Use();
-                    EditorGUIUtility.SetWantsMouseJumping(0);
-
-                    if (Event.current.button == 0)
-                        result = DragHandleResult.LMBRelease;
-                    else if (Event.current.button == 1)
-                        result = DragHandleResult.RMBRelease;
-
-                    if (Event.current.mousePosition == s_DragHandleMouseStart)
+                case EventType.MouseDown:
+                    if (HandleUtility.nearestControl == id && (Event.current.button == 0 || Event.current.button == 1))
                     {
-                        bool doubleClick = (s_DragHandleClickID == id) &&
-                            (Time.realtimeSinceStartup - s_DragHandleClickTime < s_DragHandleDoubleClickInterval);
+                        GUIUtility.hotControl = id;
+                        s_DragHandleMouseCurrent = s_DragHandleMouseStart = Event.current.mousePosition;
+                        s_DragHandleWorldStart = position;
+                        s_DragHandleHasMoved = false;
 
-                        s_DragHandleClickID = id;
-                        s_DragHandleClickTime = Time.realtimeSinceStartup;
+                        Event.current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(1);
 
                         if (Event.current.button == 0)
-                            result = doubleClick ? DragHandleResult.LMBDoubleClick : DragHandleResult.LMBClick;
+                            result = DragHandleResult.LMBPress;
                         else if (Event.current.button == 1)
-                            result = doubleClick ? DragHandleResult.RMBDoubleClick : DragHandleResult.RMBClick;
+                            result = DragHandleResult.RMBPress;
                     }
-                }
-                break;
+                    break;
 
-            case EventType.MouseDrag:
-                if (GUIUtility.hotControl == id)
-                {
-                    s_DragHandleMouseCurrent = Event.current.mousePosition;
-                    Vector3 worldPos = HandleUtility.GUIPointToWorldRay(s_DragHandleMouseCurrent).origin;
-                    position = Handles.matrix.inverse.MultiplyPoint(worldPos);
+                case EventType.MouseUp:
+                    if (GUIUtility.hotControl == id && (Event.current.button == 0 || Event.current.button == 1))
+                    {
+                        GUIUtility.hotControl = 0;
+                        Event.current.Use();
+                        EditorGUIUtility.SetWantsMouseJumping(0);
 
-                    if (Camera.current.transform.forward == Vector3.forward || Camera.current.transform.forward == -Vector3.forward)
-                        position.z = s_DragHandleWorldStart.z;
-                    if (Camera.current.transform.forward == Vector3.up || Camera.current.transform.forward == -Vector3.up)
-                        position.y = s_DragHandleWorldStart.y;
-                    if (Camera.current.transform.forward == Vector3.right || Camera.current.transform.forward == -Vector3.right)
-                        position.x = s_DragHandleWorldStart.x;
+                        if (Event.current.button == 0)
+                            result = DragHandleResult.LMBRelease;
+                        else if (Event.current.button == 1)
+                            result = DragHandleResult.RMBRelease;
 
-                    if (Event.current.button == 0)
-                        result = DragHandleResult.LMBDrag;
-                    else if (Event.current.button == 1)
-                        result = DragHandleResult.RMBDrag;
+                        if (Event.current.mousePosition == s_DragHandleMouseStart)
+                        {
+                            bool doubleClick = (s_DragHandleClickID == id) &&
+                                (Time.realtimeSinceStartup - s_DragHandleClickTime < s_DragHandleDoubleClickInterval);
 
-                    s_DragHandleHasMoved = true;
+                            s_DragHandleClickID = id;
+                            s_DragHandleClickTime = Time.realtimeSinceStartup;
 
-                    GUI.changed = true;
-                    Event.current.Use();
-                }
-                break;
+                            if (Event.current.button == 0)
+                                result = doubleClick ? DragHandleResult.LMBDoubleClick : DragHandleResult.LMBClick;
+                            else if (Event.current.button == 1)
+                                result = doubleClick ? DragHandleResult.RMBDoubleClick : DragHandleResult.RMBClick;
+                        }
+                    }
+                    break;
 
-            case EventType.Repaint:
-                Color currentColour = Handles.color;
-                if (id == GUIUtility.hotControl && s_DragHandleHasMoved)
-                    Handles.color = colorSelected;
+                case EventType.MouseDrag:
+                    if (GUIUtility.hotControl == id)
+                    {
+                        s_DragHandleMouseCurrent = Event.current.mousePosition;
+                        Vector3 worldPos = HandleUtility.GUIPointToWorldRay(s_DragHandleMouseCurrent).origin;
+                        position = Handles.matrix.inverse.MultiplyPoint(worldPos);
 
-                Handles.matrix = Matrix4x4.identity;
-                #if UNITY_5_6_OR_NEWER
+                        if (Camera.current.transform.forward == Vector3.forward || Camera.current.transform.forward == -Vector3.forward)
+                            position.z = s_DragHandleWorldStart.z;
+                        if (Camera.current.transform.forward == Vector3.up || Camera.current.transform.forward == -Vector3.up)
+                            position.y = s_DragHandleWorldStart.y;
+                        if (Camera.current.transform.forward == Vector3.right || Camera.current.transform.forward == -Vector3.right)
+                            position.x = s_DragHandleWorldStart.x;
+
+                        if (Event.current.button == 0)
+                            result = DragHandleResult.LMBDrag;
+                        else if (Event.current.button == 1)
+                            result = DragHandleResult.RMBDrag;
+
+                        s_DragHandleHasMoved = true;
+
+                        GUI.changed = true;
+                        Event.current.Use();
+                    }
+                    break;
+
+                case EventType.Repaint:
+                    Color currentColour = Handles.color;
+                    if (id == GUIUtility.hotControl && s_DragHandleHasMoved)
+                        Handles.color = colorSelected;
+
+                    Handles.matrix = Matrix4x4.identity;
+#if UNITY_5_6_OR_NEWER
                     capFunc(id, screenPosition, Quaternion.identity, handleSize, EventType.Repaint);
-                #else
+#else
                     capFunc(id, screenPosition, Quaternion.identity, handleSize);
-                #endif
-                Handles.matrix = cachedMatrix;
+#endif
+                    Handles.matrix = cachedMatrix;
 
-                Handles.color = currentColour;
-                break;
+                    Handles.color = currentColour;
+                    break;
 
-            case EventType.Layout:
-                Handles.matrix = Matrix4x4.identity;
-                HandleUtility.AddControl(id, HandleUtility.DistanceToCircle(screenPosition, handleSize));
-                Handles.matrix = cachedMatrix;
-                break;
+                case EventType.Layout:
+                    Handles.matrix = Matrix4x4.identity;
+                    HandleUtility.AddControl(id, HandleUtility.DistanceToCircle(screenPosition, handleSize));
+                    Handles.matrix = cachedMatrix;
+                    break;
             }
 
             return position;
