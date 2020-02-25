@@ -9,14 +9,13 @@ class Test():
 
         self.duration = kwargs.get('duration', float('inf'))
 
-    
+
     def algo(self,values,all_data):
         print values['time'], values['be']
-        if values['time'] < self.duration:
+        if values['time'] - self.start_time < self.duration:
             if values['be'] < 0:
                 return 'crunched'
             elif values['be'] > 0:
                 return 'extended'
         else:
             return 'switch'
-        

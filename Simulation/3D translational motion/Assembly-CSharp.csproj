@@ -53,7 +53,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\CustomRotation.cs" />
+     <Compile Include="Assets\CustomRotationLeft.cs" />
+     <Compile Include="Assets\CustomRotationRight.cs" />
      <Compile Include="Assets\GroupCommand.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/james/Robotics-Group-Studies/Simulation/3D translational motion/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

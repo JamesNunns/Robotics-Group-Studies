@@ -16,34 +16,66 @@ if option.upper() == 'NO':
     ###Training Functons###
     setup = 'Testing'
     path.insert(0, "Training_functions")
-    from naoqi import ALProxy
-    import BigEncoder
-    import SmallEncoders
+    from naoqi import ALProxy #Import Fake SDK
+    import BigEncoder #Import fake bigencoder
+    import SmallEncoders #Import fake smallencoder
 elif option.upper() == 'YES':
     setup = 'Real'
     path.insert(0, "hidlibs")
-    from pynaoqi.naoqi import ALProxy
-    import top_encoder.encoder_functions as BigEncoder
+    from pynaoqi.naoqi import ALProxy #Import robot's SDK
+    import top_encoder.encoder_functions as BigEncoder #Import bigencoder
     #import bottom_encoder.hingeencoder as SmallEncoders
     path.insert(0, "Training_functions")
-    import SmallEncoders
+    import SmallEncoders #Import fake smallencoder as algo does not need them
 path.insert(0, 'new_Algorithms')
-from jack import Algorithm
 
 class AlgorithmFinished(Exception): pass
+
+# Allows user to select the algorithm file in Algorithms that they want to run
+files = listdir('new_Algorithms')
+# Search for files that are .py files and begin with algorithm_
+list_algorithms = [x for x in files if search(
+    r"(?=\.py$)", x)]
+algo_dict = {}
+for i, algo in enumerate(list_algorithms):
+    algo_dict[i] = algo[:-3]
+# Create dictionary with number key and name of algorithm for value
+text = ["{} {}".format(key, algo_dict[key]) for key in algo_dict]
+
+# By running this script with the final command line argument '@n' will run the nth algorithm that would
+# otherwise appear in the list.
+if argv[-1][0] is not "@":
+    algorithm = str(
+        input(
+            '\033[1mWhich algorithm would you like to run? Pick number corresponding to algorithm\033[0m: \n{}\n'.format(
+                "\n".join(text))))
+else:
+    algorithm = argv[-1][1:]
+
+# Imports correct Algorithm class that interface inherits from
+algorithm_import = algo_dict[int(algorithm)]
+print("\033[1mRunning " + algorithm_import + "\n\033[0m")
+path.insert(0, 'new_Algorithms')
+Algorithm = __import__(algorithm_import).Algorithm
 
 class Interface(Algorithm):
 
     def __init__(self,setup='Testing',period=0.005):
-
+        """
+        Initialising the interface coresponding to the desired setup
         
-        self.period = period
+        Args:
+            setup: Either 'Testing' or 'Real' 
+            period: Sampling Period of the interface
+        """
+        self.period = period #Setting period const
 
-        self.setup = setup
+        self.setup = setup #Setting setup string
 
+        ##Initialising the selected Algorithm##
         Algorithm.__init__(self,BigEncoder,SmallEncoders,values,positions,ALProxy,period)
 
-        self.motion.setStiffnesses("Body", 1.0)
+        self.motion.setStiffnesses("Body", 1.0) #Stiffening the Robot
         tme.sleep(4.0)
         try:
             self.check_setup('crunched')
@@ -57,7 +89,7 @@ class Interface(Algorithm):
 
     def get_ang_vel(self, time, current_angle):
         """
-        Function to get the current angular velocity, taking last recorded value and new
+        Function to calculate the current angular velocity, taking last recorded value and new
         value.
         Args:
             time: time since start of algorithm
@@ -80,7 +112,16 @@ class Interface(Algorithm):
         return delta_angle / delta_time
 
     def select_algo(self, values, all_data):
+        """
+        Function to initialise a new Algorithm from the dictionary
         
+        Args
+            values: Dictionary containing the data for the locations of the Robot limbs
+            all_data: Dictionary containing the values collected about the swing/Robot
+        Returns
+            algo_class_initialized.algo : Calling the algo function of the Algorithm 
+
+        """
         try:
             # Remove first dictionary element from algorithm and store it
             info = self.order.pop(0)
@@ -94,7 +135,7 @@ class Interface(Algorithm):
 
         self.algo_name = self.algo_class.__name__
         algo_class_initialized = self.algo_class(values, all_data, **kwargs)
-        
+
         return algo_class_initialized.algo
 
     def initialize_all_data(self):
@@ -115,11 +156,11 @@ class Interface(Algorithm):
 
     def __run_algorithm(self, switch, current_values):
         self.algo_name = Algorithm.__name__
-        
+
         if switch == 'switch':
             self.algorithm = self.select_algo(current_values, self.all_data)
-        
-        
+
+
         return_values = self.algorithm(current_values, self.all_data[-200:])
 
         if isinstance(return_values, list):
@@ -134,7 +175,7 @@ class Interface(Algorithm):
         # Add current values to list of all values
         self.all_data = numpy.append(self.all_data, numpy.array(
             [tuple(current_values.values())], dtype=self.data_type), axis=0)
-        
+
         return switch
 
     def __run_real(self, t, period):
@@ -147,13 +188,13 @@ class Interface(Algorithm):
 
         self.initial_time = tme.time()
         switch = 'switch'
-		
+
         for event in range(int(max_runs)):
             start_time = tme.time()
 
             # Collect all relevant values
             time = start_time - self.initial_time
-            ax, ay, az = self.get_acc()
+            ax, ay, az = self.get_acc('y')
             gx, gy, gz = self.get_gyro()
             se0, se1, se2, se3 = 0, 0, 0, 0
             be = self.get_big_encoder()
@@ -171,7 +212,7 @@ class Interface(Algorithm):
         self.finish_script()
 
     def __run_test(self, filename, output_directory):
-       
+
         # Read old data
         print('\n\033[1mUsing test mode, will apply algorithm to data from file {}\033[0m\n'.format(filename))
         data = read_file(output_directory + filename)
@@ -187,7 +228,7 @@ class Interface(Algorithm):
 
         switch = 'switch'
         for i in xrange(len(data)):
-            
+
             algo = self.algo_name
 
             # Make current row out of real values from data minus the position and algorithm
@@ -224,7 +265,7 @@ class Interface(Algorithm):
         store(self.filename + ' Org', self.all_data)
 
     def run(self, **kwargs):
-        
+
         if self.setup == 'Testing':
             latest, output_directory = get_latest_file('Code', test=False)
             filename = kwargs.get('filename', latest)
