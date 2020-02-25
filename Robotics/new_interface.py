@@ -16,34 +16,40 @@ if option.upper() == 'NO':
     ###Training Functons###
     setup = 'Testing'
     path.insert(0, "Training_functions")
-    from naoqi import ALProxy
-    import BigEncoder
-    import SmallEncoders
+    from naoqi import ALProxy #Import Fake SDK
+    import BigEncoder #Import fake bigencoder
+    import SmallEncoders #Import fake smallencoder
 elif option.upper() == 'YES':
     setup = 'Real'
     path.insert(0, "hidlibs")
-    from pynaoqi.naoqi import ALProxy
-    import top_encoder.encoder_functions as BigEncoder
+    from pynaoqi.naoqi import ALProxy #Import robot's SDK
+    import top_encoder.encoder_functions as BigEncoder #Import bigencoder
     #import bottom_encoder.hingeencoder as SmallEncoders
     path.insert(0, "Training_functions")
-    import SmallEncoders
+    import SmallEncoders #Import fake smallencoder as algo does not need them
 path.insert(0, 'new_Algorithms')
-from jack import Algorithm
+from jack import Algorithm #Import dictionary of algorithms
 
 class AlgorithmFinished(Exception): pass
 
 class Interface(Algorithm):
 
     def __init__(self,setup='Testing',period=0.005):
+        """
+        Initialising the interface coresponding to the desired setup
+        
+        Args:
+            setup: Either 'Testing' or 'Real' 
+            period: Sampling Period of the interface
+        """
+        self.period = period #Setting period const
 
+        self.setup = setup #Setting setup string
 
-        self.period = period
-
-        self.setup = setup
-
+        ##Initialising the selected Algorithm##
         Algorithm.__init__(self,BigEncoder,SmallEncoders,values,positions,ALProxy,period)
 
-        self.motion.setStiffnesses("Body", 1.0)
+        self.motion.setStiffnesses("Body", 1.0) #Stiffening the Robot
         tme.sleep(4.0)
         try:
             self.check_setup('crunched')
@@ -57,7 +63,7 @@ class Interface(Algorithm):
 
     def get_ang_vel(self, time, current_angle):
         """
-        Function to get the current angular velocity, taking last recorded value and new
+        Function to calculate the current angular velocity, taking last recorded value and new
         value.
         Args:
             time: time since start of algorithm
@@ -80,7 +86,16 @@ class Interface(Algorithm):
         return delta_angle / delta_time
 
     def select_algo(self, values, all_data):
+        """
+        Function to initialise a new Algorithm from the dictionary
+        
+        Args
+            values: Dictionary containing the data for the locations of the Robot limbs
+            all_data: Dictionary containing the values collected about the swing/Robot
+        Returns
+            algo_class_initialized.algo : Calling the algo function of the Algorithm 
 
+        """
         try:
             # Remove first dictionary element from algorithm and store it
             info = self.order.pop(0)

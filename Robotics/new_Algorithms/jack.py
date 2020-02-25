@@ -5,7 +5,7 @@ path.insert(0, 'single_pendulum')
 from single_test_brute import Test 
 from single_damping_small_angles import SmallAngleDamping
 from single_startup_const_period import Start
-
+from single_angluar_vel import Velocity
 class Algorithm(Robot, Encoders):
 
     def __init__(self, BigEncoder, SmallEncoders, values, positions, ALProxy, period):
@@ -16,7 +16,7 @@ class Algorithm(Robot, Encoders):
 
         self.order = [
         {        
-            'algo': Test,
+            'algo': Velocity,
             'duration': 30
         }
         ]
