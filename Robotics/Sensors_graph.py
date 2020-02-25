@@ -99,12 +99,12 @@ ax1.axhline(y=0)
 ##################################
 #Angles
 ##################################
-ylim = 0.1
+#ylim = 0.1
 ax2 = ax1.twinx()
 ax2.set_ylabel('Sensor Values', color='orange')
 #ax2.set_ylim(-ylim, ylim)
-
-ax2.plot(Time, test, color='orange')
+ax2.plot(Time, AccX, color='orange')
+#ax2.plot(Time, test, color='orange')
 #ax2.plot(Time[args], test[args], 'k.')
 #ax2.plot(Time[AngX_peaks], AngX[Ang_peaks], 'k.',label = 'Peaks')
 
