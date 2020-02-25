@@ -143,33 +143,39 @@ public class CustomRotation : MonoBehaviour
 
 		/// Some angles have to be changed because of how
 		/// Nao defines its angles
+		/// Also, set the speed to be in degrees per second
 		if (Shoulders.Contains(joint))
 		{
 			ang += 40;
+			speed *= 246;
 		}
-		if (Elbows.Contains(joint))
+		else if (Elbows.Contains(joint))
 		{
 			ang *= -1;
 			ang += 180;
 			ang = -90 + ang;
+			speed *= 246;
 		}
-		if (Hips.Contains(joint))
+		else if (Hips.Contains(joint))
 		{
-			ang = -90 - ang;
+			ang = 180 + ang;
+			speed *= 378;
 		}
-		if (Ankles.Contains(joint))
+		else if (Ankles.Contains(joint))
 		{
 			ang *= -1;
 			ang = 90 - ang;
+			speed *= 378;
 		}
-		if (Hips.Contains(joint))
-		{
-			ang = 90 - ang;
-		}
-		if (joint == Neck)
+		else if (joint == Neck)
 		{
 			ang *= -1;
 			ang += 90;
+			speed *= 246;
+		}
+		else
+		{
+			speed *= 378;
 		}
 		for (int i = 0; i < 11; i++)
 		/// Set the angle in the list allAngles to the correct limit angle
@@ -229,15 +235,15 @@ public class CustomRotation : MonoBehaviour
 		/// These are test inputs, they can be changed
 		if (Input.GetKey("m"))
 		{
-			MoveSymmetric(Elbows, -90, 100);
+			MoveSymmetric(Hips, -90, 0.5f);
 		}
 		if (Input.GetKey("n"))
 		{
-			MoveSymmetric(Elbows, 0, 100);
+			MoveSymmetric(Hips, 0, 0.5f);
 		}	
 		if (Input.GetKey("p"))
 		{
-			MoveSymmetric(Elbows, 20, 100);
+			MoveSymmetric(Elbows, 20, 0.3f);
 		}
 		for (int i = 0; i < 11; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
@@ -247,7 +253,6 @@ public class CustomRotation : MonoBehaviour
 				Lock(allJoints[i]);
 			}
 		}
-		print((allJoints[3].angle + 90, allAngles[3]));
 
 	}
 }
