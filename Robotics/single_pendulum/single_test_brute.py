@@ -9,7 +9,7 @@ class Test():
 
         self.duration = kwargs.get('duration', float('inf'))
 
-    
+
     def algo(self,values,all_data):
         print values['time'], values['be']
         if values['time'] < self.duration:
@@ -19,4 +19,3 @@ class Test():
                 return 'extended'
         else:
             return 'switch'
-        

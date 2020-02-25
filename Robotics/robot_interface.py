@@ -36,6 +36,9 @@ class Robot():
         self.acc_required = kwargs.get('acc_required', False)
         self.gyro_required = kwargs.get('gyro_required', False)
 
+        accX_0, accY_0, accZ_0 = 0, 0, 0
+        self.calibrate_acc()
+
         self.set_posture_initial('crunched', max_speed = 0.1)
         #self.motion.setMotionConfig( [["ENABLE_DISACTIVATION_OF_FALL_MANAGER", True]] )
         self.motion.setFallManagerEnabled(False)
@@ -87,14 +90,14 @@ class Robot():
         else:
             return [0.0, 0.0, 0.0]
 
-    def get_acc(self):
+    def get_acc(self, plane):
         """
         Obtain the current accelerometer data. Returns a list containing the (x, y, z) acceleromenter data,
         in m/s.
         Args:
-            None
+            name of the undesired accelerometer
         Returns:
-            list containing x, y, and z acceleration
+            list containing x, y, and z acceleration (0.0 for undesired accelerometers)
         Example:
             > self.get_acc()
             [0.0, 1.1, 0.5]
@@ -102,9 +105,18 @@ class Robot():
         if self.acc_required: # This is slow and limits interface heavily
             # same again, not sure if this works but would be good to save time
             # x_data, y_data, z_data = self.memory.getData([self.values['ACX'][1], self.values['ACY'][1], self.values['ACZ'][1]])
-            x_data = self.memory.getData(self.values['ACX'][1])
-            y_data = self.memory.getData(self.values['ACY'][1])
-            z_data = self.memory.getData(self.values['ACZ'][1])
+            if plane == 'z':
+                x_data = self.memory.getData(self.values['ACX'][1]) - accX_0
+                y_data = self.memory.getData(self.values['ACY'][1]) - accY_0
+                z_data = 0.0
+            elif plane == 'x':
+                x_data = 0.0
+                y_data = self.memory.getData(self.values['ACY'][1]) - accY_0
+                z_data = self.memory.getData(self.values['ACZ'][1]) - accZ_0
+            elif plane == 'y':
+                x_data = self.memory.getData(self.values['ACX'][1]) - accX_0
+                y_data = 0.0
+                z_data = self.memory.getData(self.values['ACZ'][1]) - accZ_0
             return [x_data, y_data, z_data]
         else:
             return [0.0, 0.0, 0.0]
@@ -214,4 +226,12 @@ class Robot():
                     current_posture[keys] = summary[4*i + 3]
         return current_posture
 
-
+    def calibrate_acc(self):
+        '''
+        A function that takes no arguments and calibrates the accelerometers to zero
+        '''
+        global accX_0, accY_0, accZ_0
+        if self.acc_required:
+            accX_0, accY_0, accZ_0 = self.memory.getData(self.values['ACX'][1]), self.memory.getData(self.values['ACY'][1]), self.memory.getData(self.values['ACZ'][1])
+        else:
+            accX_0, accY_0, accZ_0 = 0, 0, 0
