@@ -28,9 +28,35 @@ elif option.upper() == 'YES':
     path.insert(0, "Training_functions")
     import SmallEncoders #Import fake smallencoder as algo does not need them
 path.insert(0, 'new_Algorithms')
-from jack import Algorithm #Import dictionary of algorithms
 
 class AlgorithmFinished(Exception): pass
+
+# Allows user to select the algorithm file in Algorithms that they want to run
+files = listdir('new_Algorithms')
+# Search for files that are .py files and begin with algorithm_
+list_algorithms = [x for x in files if search(
+    r"(?=\.py$)", x)]
+algo_dict = {}
+for i, algo in enumerate(list_algorithms):
+    algo_dict[i] = algo[:-3]
+# Create dictionary with number key and name of algorithm for value
+text = ["{} {}".format(key, algo_dict[key]) for key in algo_dict]
+
+# By running this script with the final command line argument '@n' will run the nth algorithm that would
+# otherwise appear in the list.
+if argv[-1][0] is not "@":
+    algorithm = str(
+        input(
+            '\033[1mWhich algorithm would you like to run? Pick number corresponding to algorithm\033[0m: \n{}\n'.format(
+                "\n".join(text))))
+else:
+    algorithm = argv[-1][1:]
+
+# Imports correct Algorithm class that interface inherits from
+algorithm_import = algo_dict[int(algorithm)]
+print("\033[1mRunning " + algorithm_import + "\n\033[0m")
+path.insert(0, 'new_Algorithms')
+Algorithm = __import__(algorithm_import).Algorithm
 
 class Interface(Algorithm):
 
@@ -107,7 +133,7 @@ class Interface(Algorithm):
         # Rest of dictionary left are kwargs
         kwargs = info
 
-        self.algo_name = self.algo_class.__name__
+        self.algo_name = self.algo_class.__name__ #Colecting the name of the algorithm
         algo_class_initialized = self.algo_class(values, all_data, **kwargs)
 
         return algo_class_initialized.algo
@@ -129,18 +155,28 @@ class Interface(Algorithm):
         return all_data
 
     def __run_algorithm(self, switch, current_values):
-        self.algo_name = Algorithm.__name__
+        """
+        Function to run the selected algorithm.
 
-        if switch == 'switch':
-            self.algorithm = self.select_algo(current_values, self.all_data)
+        Args:
+            switch: previous Output of Algorithm, either; 'switch', 'crunched' or 'extended'
+            current_values: current values of the Robot
+        Returns:
+            switch: new Output of Algorithm, either; 'switch', 'crunched' or 'extended'
+        """
 
+        self.algo_name = Algorithm.__name__ #Collects the algorithm name
 
+        if switch == 'switch': #If the output of the algo is 'switch' it will call select_algo
+            self.algorithm = self.select_algo(current_values, self.all_data)#To change algorithm
+
+        #Collects the retuned values from the algorithm        
         return_values = self.algorithm(current_values, self.all_data[-200:])
 
         if isinstance(return_values, list):
-            switch, speed = return_values
+            switch, speed = return_values #If algo defines a speed the interface will use it
         else:
-            switch, speed = return_values, 0.4
+            switch, speed = return_values, 0.4 #Sets a defult speed
 
         # If text returned is a possible position switch to it
         if switch in positions.keys():
@@ -153,17 +189,23 @@ class Interface(Algorithm):
         return switch
 
     def __run_real(self, t, period):
+        """
+        Function to run the interface with the real Robot
 
-        max_runs = t * 1 / period + 1.0
+        Args:
+            t: Time period for the algo to elapse over
+            period: The sample period of the git 
+        """
+        max_runs = t * 1 / period + 1.0 #Calculated the max runs for the time duration
 
-        self.all_data = self.initialize_all_data()
+        self.all_data = self.initialize_all_data() #Initializes all the data
 
-        self.filename = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime())
+        self.filename = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime()) #Creates an output file
 
-        self.initial_time = tme.time()
-        switch = 'switch'
+        self.initial_time = tme.time() #Collects the initial time
+        switch = 'switch' #Sets the initial output as switch to select the first algo
 
-        for event in range(int(max_runs)):
+        for event in range(int(max_runs)): 
             start_time = tme.time()
 
             # Collect all relevant values
@@ -177,15 +219,25 @@ class Interface(Algorithm):
             algo = self.algo_name
             position = self.position
             current_values = convert_list_dict([time, event, ax, ay, az, gx, gy, gz, se0, se1, se2, se3, be, av, cmx, cmy, algo, position])
-
+            
+            #Tries to run the algo if the file allows
             try:
-                switch = self.__run_algorithm(switch, current_values)
+                switch = self.__run_algorithm(switch, current_values) 
+            #If not it will pass the AlgorithmFinished exception
             except AlgorithmFinished:
                 print('\n\033[1mAlgorithm finished, stopping\033[0m\n')
                 break
-        self.finish_script()
+        self.finish_script() #Calls the finish script function
 
     def __run_test(self, filename, output_directory):
+        """
+        Function to run the interface with a fake robot and fake encoders
+
+        Args:
+            filename: The name of the file containing prvious data to run the interface off
+            output_directory: name of the Directory containg the data file
+        
+        """
 
         # Read old data
         print('\n\033[1mUsing test mode, will apply algorithm to data from file {}\033[0m\n'.format(filename))
@@ -223,6 +275,8 @@ class Interface(Algorithm):
     def finish_script(self):
         """
         Prints running time, cycle time, and stores current data to file
+        Note that the file produced does NOT work on windows so cant be shared through git
+        with the main repository
         Args:
             None
         Returns:
@@ -239,6 +293,9 @@ class Interface(Algorithm):
         store(self.filename + ' Org', self.all_data)
 
     def run(self, **kwargs):
+        """
+        Function to run the entire interface
+        """
 
         if self.setup == 'Testing':
             latest, output_directory = get_latest_file('Code', test=False)
