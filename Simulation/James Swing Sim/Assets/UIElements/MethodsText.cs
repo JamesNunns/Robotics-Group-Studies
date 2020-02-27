@@ -9,6 +9,7 @@ public class MethodsText : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        spawner = GameObject.Find("SwingSpawner");
         spawnController = spawner.GetComponent<SpawnSwing>();
     }
 

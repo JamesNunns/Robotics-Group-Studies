@@ -67,7 +67,8 @@ public class EntityController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        reward = fitnessFunctionToUse(swing, this);
+        //TODO: Fix implementation of reward get
+        //reward = fitnessFunctionToUse(swing, this);
         MoveSelf();
     }
 

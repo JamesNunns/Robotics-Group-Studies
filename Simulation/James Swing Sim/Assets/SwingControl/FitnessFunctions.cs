@@ -7,17 +7,10 @@ namespace PythonInterface.Interfaces
     public class FitnessFunctions
     {
         //FitnessFunctions class aims to house all potential fitness functions, which then allows easy selection at runtime
-        public delegate float FitnessFunctionDelegate(GameObject swing, EntityController entity);
-        public List<FitnessFunctionDelegate> fitnessFunctionList;
+        public delegate float FitnessFunctionDelegate(List<float> angles, List<float> velocities, List<float> actions);
+        public List<FitnessFunctionDelegate> fitnessFunctionList = new List<FitnessFunctionDelegate>();
 
-        //TODO: Add proper fitness function
-
-        public float ExampleFitnessFunction(GameObject swing, EntityController entity)
-        {
-            return (float)0;
-        }
-
-        public List<string> fitnessFunctionNames;
+        public List<string> fitnessFunctionNames = new List<string>();
 
         FitnessFunctionDelegate findFitness;
 
@@ -41,5 +34,16 @@ namespace PythonInterface.Interfaces
             findFitness = fitnessFunctionList.Where(f => f.ToString() == fitnessFuncToUse).FirstOrDefault();
             return findFitness;
         }
+
+
+        //TODO: Add proper fitness function
+
+        public float ExampleFitnessFunction(List<float> angles, List<float> velocities, List<float> actions)
+        {
+            return (float)0;
+        }
+
+
+        //Add more fitness functions below:
     }
 }

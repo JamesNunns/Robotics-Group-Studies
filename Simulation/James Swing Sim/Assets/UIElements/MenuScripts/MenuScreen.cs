@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuScreen : MonoBehaviour
@@ -19,32 +20,27 @@ public class MenuScreen : MonoBehaviour
     public GameObject spawner;
     public GameObject Swing;
 
+    List<Dropdown.OptionData> methodOptions = new List<Dropdown.OptionData>();
+    List<Dropdown.OptionData> fitnessOptions = new List<Dropdown.OptionData>();
+
     //TODO: Change dictionaries to dedicated class system
-    List<Dictionary<string, string>> methodParams;
+    List<Dictionary<string, string>> methodParams = new List<Dictionary<string, string>>();
 #pragma warning restore CS0649 // Add readonly modifier
 
     Dictionary<string, string> deepQ = new Dictionary<string, string>();
+    Dictionary<string, string> test = new Dictionary<string, string>();
 
     string path = @"..\James Swing Sim\Assets\PythonClasses";
     List<string> filesInPath;
     FitnessFunctions functions;
-    public MenuScreen()
+
+    private void Start()
     {
         //Generate options for the Method Dropdown
         filesInPath = new List<string>(Directory.GetFiles(path).Where(f => !f.Contains(".meta"))); //finds all non .meta files in the directory given by path
-        foreach (string fullFName in filesInPath)
-        {
-            MethodDropdown.options.Add(new Dropdown.OptionData(Path.GetFileNameWithoutExtension(fullFName))); //adds each file name without extensions to the dropdown options list
-        }
-        
 
         //Generate options for the fitness Dropdown
         functions = new FitnessFunctions();
-        foreach (FitnessFunctions.FitnessFunctionDelegate f in functions.fitnessFunctionList)
-        {
-            FitnessDropdown.options.Add(new Dropdown.OptionData(f.ToString()));
-        }
-
 
         //Define dictionary of args for RLController.py
         deepQ.Add("entityName", "Agent");
@@ -54,10 +50,34 @@ public class MenuScreen : MonoBehaviour
         deepQ.Add("makeEntityFN", "make_agent");
         methodParams.Add(deepQ);
 
+        test.Add("entityName", "Agent");
+        test.Add("controllerName", "Controller");
+        test.Add("thinkFN", "perform_action");
+        test.Add("genStepFN", "step");
+        test.Add("makeEntityFN", "make_agent");
+        methodParams.Add(test);
+
         //TODO: Add the options to load from a file, should that file exist
         //TODO: Add quit button on other page, which saves the current state down to JSON file
 
+        MethodDropdown.ClearOptions();
+        FitnessDropdown.ClearOptions();
 
+        //MethodDropdown = GameObject.Find("pySelectOptions").GetComponent<Dropdown>();
+        foreach (string fullFName in filesInPath)
+        {
+            MethodDropdown.options.Add(new Dropdown.OptionData(Path.GetFileNameWithoutExtension(fullFName))); //adds each file name without extensions to the dropdown options list
+        }
+
+
+        //FitnessDropdown = GameObject.Find("FitnessFuncOptions").GetComponent<Dropdown>();
+        foreach (string f in functions.fitnessFunctionNames)
+        {
+            FitnessDropdown.options.Add(new Dropdown.OptionData(f));
+        }
+
+        MethodDropdown.RefreshShownValue();
+        FitnessDropdown.RefreshShownValue();
     }
 
     private void Awake()
@@ -73,7 +93,7 @@ public class MenuScreen : MonoBehaviour
 
     private void LaunchSim()
     {
-        string methodString = filesInPath[MethodDropdown.value];
+        string methodString = Path.GetFileName(filesInPath[MethodDropdown.value]);
         FitnessFunctions.FitnessFunctionDelegate fitnessMethod = functions.fitnessFunctionList[FitnessDropdown.value];
         GameObject newSpawner = Instantiate(spawner);
 
@@ -84,9 +104,10 @@ public class MenuScreen : MonoBehaviour
         string entityName = paramDict["entityName"];
         string thinkFuncName = paramDict["thinkFN"];
 
-        SpawnSwing swingSpawnScript = new SpawnSwing(methodString, path, newSpawner, Swing, fitnessMethod, controllerName, makeEntityName, genStepFuncName, entityName, thinkFuncName);
+        SpawnSwing swingSpawnScript = new SpawnSwing(methodString, path + @"\", newSpawner, Swing, fitnessMethod, controllerName, makeEntityName, genStepFuncName, entityName, thinkFuncName);
         DontDestroyOnLoad(newSpawner);
         //TODO: Load other scene
+        SceneManager.LoadScene("SwingSim", LoadSceneMode.Single);
     }
 }
 
