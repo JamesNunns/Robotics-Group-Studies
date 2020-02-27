@@ -3,8 +3,11 @@ from encoder_interface import Encoders
 from sys import path
 path.insert(0, 'single_pendulum')
 from single_test_brute import Test 
-from single_test_brute_2 import Test_swapped 
 from single_damping_small_angles import SmallAngleDamping
+from single_startup_const_period import Start
+from single_angluar_vel import Velocity
+
+from single_nothing import Nothing
 
 class Algorithm(Robot, Encoders):
 
@@ -12,6 +15,15 @@ class Algorithm(Robot, Encoders):
 
         Encoders.__init__(self, BigEncoder, SmallEncoders, small_encoders_required=False)
         
-        Robot.__init__(self, values, positions, ALProxy, masses=False, acc_required=False, gyro_required=False)
+        Robot.__init__(self, values, positions, ALProxy, masses=False, acc_required=True, gyro_required=False)
 
-        self.order = [{'algo': Test,'duration': 30}, {'algo': Test_swapped,'duration': 30}]
+        self.order = [
+        {
+			'algo': Nothing,
+			'duration': 20
+        },
+        {        
+            'algo': Test,
+            'duration': 30
+        }
+        ]

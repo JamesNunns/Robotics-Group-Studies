@@ -29,11 +29,12 @@ def GetPosture(summary):
 posture_now = neutral
 posture_dict = GetPosture(posture_now)
 
-with open("positions_new_COPY.py", "r") as read_file:
+with open("positions_new.py", "r") as read_file:
     lines = read_file.readlines()
-with open("positions_new_COPY.py", "w") as vfile:
+with open("positions_new.py", "w") as vfile:
     vfile.writelines([item for item in lines[:-1]])
     vfile.write("\t'%s': {" % (new_name))
     for key, value in posture_dict.items():
-		vfile.write("\n\t\t\'{}\':{},".format(key, value))
+		if key != 'LHYP' and key != 'LHR' and key != 'RHYP' and key != 'RHR':
+			vfile.write("\n\t\t\'{}\':{},".format(key, value))
     vfile.write('}\n\n\t\t}')
