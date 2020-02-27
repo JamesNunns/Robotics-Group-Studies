@@ -29,16 +29,16 @@ class Start():
                 # first kick needed after a quarter period, not half
                 self.first_kick = False  # go to half period kicks
                 self.last_move = t       # reset time of last kick
-                if values['pos'] == 'seated':
+                if values['pos'] == 'crunched':
                     return 'extended'
                 else:
-                    return 'seated'
+                    return 'crunched'
 
             if t > self.last_move + self.wait_time:
                 # kicks after first kick use quarter period
                 self.last_move = t  # reset time of last kick
                 if values['pos'] == 'extended':
-                    return 'seated'
+                    return 'crunched'
                 else:
                     return 'extended'
 
@@ -47,8 +47,3 @@ class Start():
                 print 'last move', self.last_move
                 print 'Switch on duration'
                 return 'switch'
-            if t > 10:
-                if last_maxima(all_data['time'], all_data['be'], time_values='values', dt=self.period) > self.max_angle:
-                    print 'last move', self.last_move
-                    print 'Switched on max angle'
-                    return 'switch'
