@@ -200,8 +200,10 @@ class Interface(Algorithm):
 
         self.all_data = self.initialize_all_data() #Initializes all the data
 
-        self.filename = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime()) #Creates an output file
-
+        self.fname = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime()) #Creates an output file
+        
+        self.filename = self.fname + '.txt'
+        
         self.initial_time = tme.time() #Collects the initial time
         switch = 'switch' #Sets the initial output as switch to select the first algo
 
@@ -270,7 +272,7 @@ class Interface(Algorithm):
                 break
 
         # Data loaded in will have ' Org' file so remove that and replace with ' Tst'
-        store(filename[:-4] + ' Tst', self.all_data)
+        store(filename[:-4] + ' Tst.txt', self.all_data)
 
     def finish_script(self):
         """
@@ -294,7 +296,8 @@ class Interface(Algorithm):
 
     def run(self, **kwargs):
         """
-        Function to run the entire interface
+        Function to run the entire interface.
+        Checks the desired setup and runs the correct function for the Fake/Real Robot
         """
 
         if self.setup == 'Testing':
@@ -306,8 +309,7 @@ class Interface(Algorithm):
             self.__run_real(t, self.period)
 
 if __name__ == '__main__':
-    # Raising error after loosening as then script that plots
-    # afterwards doesn't bother
+    #If the Script fails the robot will loosen
     interface = Interface(setup, period=0.01)
     try:
         interface.run(filename='Accelerometer Algorithm')
