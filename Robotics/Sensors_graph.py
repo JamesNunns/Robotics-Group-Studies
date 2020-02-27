@@ -1,9 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from scipy.signal import butter, filtfilt, lfilter
-import scipy
-print(scipy.__version__)
+from scipy.signal import butter, filtfilt, lfilter, find_peaks, fftconvolve
 
 
 
@@ -22,7 +20,6 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
     y = lfilter(b, a, data)
     return y
 
-
 def test_filter(time, values):
     # Filter requirements
     order = 6#strictness of filter
@@ -32,6 +29,12 @@ def test_filter(time, values):
     b, a = butter_bandpass(lowcut, highcut, fs, order=order)
     smoothed_signal = lfilter(b, a, values)
     return smoothed_signal
+
+def smooth(y, box_pts, edge):
+    box = np.ones(box_pts)/box_pts
+    y_smooth = np.convolve(y, box, mode=edge)
+    return y_smooth
+    
 
 
 ##################################
@@ -55,7 +58,12 @@ AngY = data['AngY']
 Encoder = data['Encoder']
 
 
-test = test_filter(Time, AngY)
+test = test_filter(Time, AccX)
+
+Time_array = np.asarray(Time)
+peaks = find_peaks(test)[0]
+test_array = np.asarray(test)
+
 args = [i for i in range(len(test)) if abs(test[i]) <= 0.007]
 
 
@@ -70,8 +78,9 @@ fig1, ax1 = plt.subplots()
 
 ax1.set_xlabel('Time(s)')
 ax1.set_ylabel('Encoder Reading(degrees)', color='cornflowerblue')
-ax1.set_ylim( -20, 20)
+ax1.set_ylim( -50, 50)
 ax1.plot(Time, Encoder, label = 'Swing Angle', color='cornflowerblue')
+#ax1.plot(Time, AccX, color='cornflowerblue', linewidth=8)
 ax1.axhline(y=0)
 #ax1.plot(Time[args], Encoder[args], 'k.')
 
@@ -99,13 +108,16 @@ ax1.axhline(y=0)
 ##################################
 #Angles
 ##################################
-#ylim = 0.1
+ylim = 8
 ax2 = ax1.twinx()
 ax2.set_ylabel('Sensor Values', color='orange')
-#ax2.set_ylim(-ylim, ylim)
-ax2.plot(Time, AccX, color='orange')
-#ax2.plot(Time, test, color='orange')
-#ax2.plot(Time[args], test[args], 'k.')
+ax2.set_ylim(-ylim, ylim)
+#ax2.plot(Time, smooth(AccZ, 20, 'same'), color='orange', linewidth=2)
+ax2.plot(Time, test, color='red', linewidth=2)
+ax2.plot(Time[peaks], test[peaks], 'k.')
 #ax2.plot(Time[AngX_peaks], AngX[Ang_peaks], 'k.',label = 'Peaks')
+
+
+
 
 
