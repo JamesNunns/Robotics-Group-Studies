@@ -35,5 +35,6 @@ with open("positions_new_COPY.py", "w") as vfile:
     vfile.writelines([item for item in lines[:-1]])
     vfile.write("\t'%s': {" % (new_name))
     for key, value in posture_dict.items():
-		vfile.write("\n\t\t\'{}\':{},".format(key, value))
+		if key != 'LHYP' and key != 'LHR' and key != 'RHYP' and key != 'RHR':
+			vfile.write("\n\t\t\'{}\':{},".format(key, value))
     vfile.write('}\n\n\t\t}')
