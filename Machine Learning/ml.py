@@ -5,10 +5,10 @@ Created on Thu Feb 27 15:33:07 2020
 @author: Henry S
 """
 
-from keras.models import load_models
+from keras.models import load_model
 import numpy as np
 
-MODEL = load_models('net.h5')
+MODEL = load_model('net.h5')
 
 def get_action(state):
     '''
