@@ -8,6 +8,7 @@ from collections import deque
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
+from keras.models import load_model
 from Environment import Swing
 import pandas as pd
 
@@ -39,6 +40,7 @@ class DeepQ:
         self.memory = []
         self.rewards = deque(maxlen=100)
         self.performance = []
+        self.max_angles = []
         self.actions = []
         self.epoch = 0
 
@@ -127,6 +129,7 @@ class DeepQ:
                 self.actions.append(actions)
                 self.rewards.append(score)
                 self.performance.append(np.mean(self.rewards))
+                self.max_angles.append(self.env.max_angle)
                 self.replay()
 
                 print("|" + str(" " * (8 - (len(str(int(np.mean(self.rewards))))))) + str(int(np.mean(self.rewards))) + " ", end="", flush=True)
@@ -160,6 +163,8 @@ class DeepQ:
         data_perc = data.divide(data.sum(axis=1), axis=0)
 
         plt.stackplot(range(0, self.epoch),  data_perc["legs_out"],  data_perc["legs_in"],  data_perc["torso_out"],  data_perc["torso_in"],  data_perc["nothing"], labels=['Legs out', 'Legs in', 'Torso out', 'Torso in', 'Nothing'])
+        plt.plot(range(0, self.epoch), (np.array(self.performance) - np.min(self.performance)) / np.max(np.array(self.performance) - np.min(self.performance)), 'black', label='Performance')
+        plt.plot(range(0, self.epoch), (np.array(self.max_angles) - np.min(self.max_angles)) / np.max(np.array(self.max_angles) - np.min(self.max_angles)), 'w', label='Max Angle')
         plt.legend(loc='upper left')
         plt.margins(0, 0)
         plt.title("Choice of action at increasing epoch")
@@ -168,11 +173,29 @@ class DeepQ:
         plt.show()
 
         print("Done!\n")
+    
+    def save(self, name: str = "DeepQ"):
+        '''
+        Save the current neural network model.
+        '''
+        self.neural_net.save(name + ".h5")
+        print("Saved to " + str(name) + ".h5\n")
+    
+    def load(self, name: str = "DeepQ"):
+        '''
+        Load a saved neural network model.
+        '''
+        self.neural_net = load_model(name + ".h5")
+        print("Loaded " + file + '.h5\n')
 
 
 if __name__ == "__main__":
     q = DeepQ()
-    for i in range(10):
-        q.run(100)
-        q.render_actions()
-        q.render_sim("Episode " + str((i + 1) * 100), 60)
+    q.run(1000)
+    q.save()
+    q.render_actions()
+    q.render_sim("Simulation")
+    # for i in range(10):
+    #     q.run(100)
+    #     q.render_actions()
+    #     q.render_sim("Episode " + str((i + 1) * 100), 60)

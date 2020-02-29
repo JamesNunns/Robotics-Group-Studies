@@ -90,6 +90,7 @@ class Swing:
         '''
         Generate swing and robot and add to space.
         '''
+        self.actions = [0, 0, 0, 0, 0]
         self.velocity = 0
         self.angle = 0
         self.time = 0
@@ -206,7 +207,7 @@ class Swing:
         '''
         Step one time period in the simulation.
         '''
-        penalty = 1
+        penalty = 25
         if action == 0:  # Legs out
             self.legs._set_torque(1000000)
         if action == 1:  # Legs in
@@ -218,6 +219,7 @@ class Swing:
         if action == 4: # Do nothing
             penalty = 0
 
+        self.actions[action] += 1
         self.space.step(dt)
         self.time += dt
 
@@ -228,7 +230,7 @@ class Swing:
 
         reward = 0
         if ((velocity < 0 and self.velocity > 0) or (velocity > 0 and self.velocity < 0)) or ((angle < 0 and self.angle > 0) or (angle > 0 and self.angle < 0)):
-            reward = 2 * self.angle**2 + self.velocity**2
+            reward = 2 * self.angle**3 + self.velocity**3
 
         observation = [self.angle, self.velocity]
         if self.time > self.timeout: done = True
@@ -250,6 +252,7 @@ class Swing:
         if len(self.prev_obs) == 0:
             action = random.randrange(0,4)
         else:
+            # prev_obs = np.reshape(self.prev_obs, [1, 2])
             action = np.argmax(self.model.predict(self.prev_obs.reshape(-1, len(self.prev_obs)))[0])
 
         new_observation, reward, done, _ = self.step(action)
@@ -281,7 +284,7 @@ class Swing:
                                   anchor_x='left', anchor_y='center')  # Create label of current angle
         velocity.draw()  # Draw angle label
 
-    def render(self, model, title: str = "Simulation", timeout: int = 500):
+    def render(self, model, title: str = "Simulation", timeout: int = 20):
         '''
         Render environment based on neural network model.
         '''

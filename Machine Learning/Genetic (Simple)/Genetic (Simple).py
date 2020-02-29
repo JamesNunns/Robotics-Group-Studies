@@ -32,16 +32,16 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-import tensorflow as tf
-from tensorflow import keras
+# import tensorflow as tf
+import keras
 from keras.models     import Sequential
 from keras.layers     import Dense
 from keras.optimizers import Adam
 from keras.models     import load_model
 
-import gym
-gym.logger.set_level(40)
-env = gym.make('CartPole-v1')
+from Environment import Swing
+# gym.logger.set_level(40)
+env = Swing()
 env.reset()
 
 
@@ -404,7 +404,7 @@ def NEAT(init_population=None,              #allows for input of an initial list
         for model in new_population:
             
             #find and record fitness value for each model
-            fitness = run_sim(model, goal_steps=500, render=False, games=10, _print=False)
+            fitness = run_sim(model, goal_steps=500000000, render=False, games=1, _print=False)
             
             chromosomes.append(Chromosome(model, fitness))
             fitness_dist.append(fitness)
@@ -452,9 +452,9 @@ def play_cart(model, goal_steps=500, render=False, games=100, _print=True):
         score = 0
         prev_obs = []
         for step_index in range(goal_steps):
-            if render: env.render()
+            # if render: env.render(model)
             if len(prev_obs)==0:
-                action = random.randrange(0,2)
+                action = random.randrange(0, 5)
             else:
                 action = np.argmax(model.predict(prev_obs))
                 
@@ -483,7 +483,7 @@ def model_data_preparation(goal_steps=500, score_requirement=60, initial_games=1
         game_memory = []
         previous_observation = []
         for step_index in range(goal_steps):
-            action = random.randrange(0, 2)
+            action = random.randrange(0, 5)
             observation, reward, done, info = env.step(action)
             
             if len(previous_observation) > 0:
@@ -532,18 +532,25 @@ play_cart(NN_opened, goal_steps, render=True, games=100)
 '''    
 
 
-'''
+# net = NeuralNet(file='Neural_Network.h5')
+# env.render(net.model, timeout=500)
+
 #optional generation of initial population
 init_population = generate_population(population_size=20,
                                       max_layer_size=5,
                                       max_nodes=32,
-                                      input_size=4,
-                                      output_size=2)
-'''
+                                      input_size=2,
+                                      output_size=5)
+
 
 #runs evolutionary algorithm
-NEAT(init_population=None,
-     input_size=4, 
-     output_size=2, 
-     max_generations=20, 
-     population_size=20)
+best_model, init_population = NEAT(init_population=init_population,
+                                    input_size=2, 
+                                    output_size=5, 
+                                    max_generations=20, 
+                                    population_size=50,
+                                    render_runs=1,
+                                    breed_ratio=0.5)
+
+best_model.save()
+env.render(best_model, timeout=5000)
