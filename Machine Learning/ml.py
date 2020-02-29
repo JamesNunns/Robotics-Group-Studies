@@ -13,7 +13,7 @@ class ML:
         self.model = load_model('net.h5')
         print("Done!")
 
-    def get_action(self, state: list) -> int:
+    def get_action(self, state: list = None) -> int:
         '''
         Takes the current state, [angle, angular velocity], and returns an integer depending on the calculated optimal move.
         Note that angle has units of degrees and angular velocity has units of degrees/second.
