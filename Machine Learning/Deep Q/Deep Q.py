@@ -174,14 +174,14 @@ class DeepQ:
 
         print("Done!\n")
     
-    def save(self, name: str = "DeepQ"):
+    def save(self, name: str = "Deep Q"):
         '''
         Save the current neural network model.
         '''
         self.neural_net.save(name + ".h5")
         print("Saved to " + str(name) + ".h5\n")
     
-    def load(self, name: str = "DeepQ"):
+    def load(self, name: str = "Deep Q"):
         '''
         Load a saved neural network model.
         '''

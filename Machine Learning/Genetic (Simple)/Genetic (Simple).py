@@ -532,7 +532,7 @@ play_cart(NN_opened, goal_steps, render=True, games=100)
 '''    
 
 
-net = NeuralNet(file='Neural_Network.h5')
+net = NeuralNet(file='Genetic (Simple).h5')
 env.render(net.model, timeout=500)
 
 #optional generation of initial population
