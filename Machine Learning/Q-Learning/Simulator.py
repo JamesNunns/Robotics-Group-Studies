@@ -76,13 +76,13 @@ class Swing:
         # Define bodies
         self.top = pymunk.Body(50, 10000, pymunk.Body.STATIC)
         self.bottom = pymunk.Body(50, 10000, pymunk.Body.STATIC)
-        self.rod1 = pymunk.Body(5, 10000)
-        self.rod2 = pymunk.Body(5, 10000)
-        self.rod3 = pymunk.Body(5, 10000)
-        self.seat = pymunk.Body(20, 10000)
-        self.torso = pymunk.Body(20, 10000)
-        self.legs = pymunk.Body(20, 10000)
-        self.head = pymunk.Body(10, 10000)
+        self.rod1 = pymunk.Body(10, 10000)
+        self.rod2 = pymunk.Body(10, 10000)
+        self.rod3 = pymunk.Body(10, 10000)
+        self.seat = pymunk.Body(15, 10000)
+        self.torso = pymunk.Body(10, 10000)
+        self.legs = pymunk.Body(10, 10000)
+        self.head = pymunk.Body(5, 10000)
 
         # Create shapes
         self.top_shape = pymunk.Poly.create_box(self.top, size=(1200, 50))

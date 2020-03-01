@@ -1,21 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Feb 21 15:10:27 2020
-
 @author: samwh
-
-
 Section 1: Class to construct and manipulate Tensorflow models
 Section 2: Classes and functions required for NEAT algorithm
 Section 3: Functions required for OpenAI cartpole gym environment
-
 Note:
     - Currently the algorithm is deliberately bottlenecked by starting each model
     without prior training (all weights start with random values) and only using a 
     small population size - this is so it doesn't just solve the cartpole instantly.
     - Mutations occur probabilistically so the number of generations required to 
     find a solution varies quite a lot
-
 Plans for changes:
     - Experiment with different initial populations and mutation parameters
     - Maybe add a progress bar for each generation
@@ -55,7 +50,6 @@ OR training a new network from a 'training_data' array with specified 'architect
 e.g.     network_name = NeuralNet(training_data=array_name, architecture=[10,10,10]) 
 OR creating an untrained neural net with specified 'input_size', 'output_size' and 'architecture'
 e.g.     network_name = NeuralNet(input_size=4, output_size=2, architecture=[10,10,10])
-
 To train a model, call 'fit(training_data)' where training_data is a list of inputs and outputs 
 Network can be saved to a .h5 file by calling the 'save(file_name)' method
 To make a prediction, call 'predict(input_data)' method where input_data is an array of observations
@@ -168,7 +162,6 @@ class NeuralNet():
 Classes and functions for evolutionary algorithm. The main function 'NEAT()' runs the algorithm.
 ALter the 'run_sim()' function to use a different simulation environment - currently using the
 OpenAI cartpole env; this function must accept a Tensorflow model and return a 'fitness' value.
-
 Current process for each generation:
     - Generate new population by randomly mutating best models of previous generation
     - Include 'parent' models from previous generation in new population
@@ -520,15 +513,12 @@ score_requirement=10
 initial_games=1000
         
 training_data = model_data_preparation(goal_steps, score_requirement, initial_games)
-
 NN = NeuralNet(architecture=[128,52,20], training_data=training_data)
 print(NN.weights)
 NN.save()
-
 NN_opened = NeuralNet(file='Network_Weights.h5')
 print('Layer architecture: ', NN_opened.get_architecture())
 play_cart(NN_opened, goal_steps, render=True, games=100)
-
 '''    
 
 
