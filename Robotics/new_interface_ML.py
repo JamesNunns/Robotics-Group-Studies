@@ -192,11 +192,11 @@ class Interface(Algorithm):
                 self.move_limbs(joint, torso[joint]*-0.0174533, speed)
 
         if switch == "legs_out":
-            for joint in torso
+            for joint in legs
                 self.move_limbs(joint, -0.0174533, speed)
 
         if switch == "legs_in":
-            for joint in torso
+            for joint in legs
                 self.move_limbs(joint, 0.0174533, speed)
 
 
