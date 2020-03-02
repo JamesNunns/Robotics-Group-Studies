@@ -137,6 +137,30 @@ class Robot():
         name = limb_info[0]
         return angle, name
 
+    def move_limbs(self, limb_name, angle, percent_max_speed):
+        """
+        Moves limbs by given angles
+        Args:
+            limb_name: string
+                shorthand key of the desired limb as given in the limb_data dictionary
+            angle: float
+                the angle to move the desired limb in radians
+            percent_max_speed: float
+                percentage of max speed given as a decimal between 0 and 1
+        Returns:
+            None
+        """
+        current_angle, long_name = self.get_angle(limb_name)
+        if current_angle + angle <= self.positions['maxs'][limb_name] and current_angle + angle >= self.positions['mins'][limb_name]:
+            self.motion.changeAngles(long_name, angle, percent_max_speed)
+        elif current_angle + angle > self.positions['maxs'][limb_name]:
+            self.motion.changeAngles(long_name, self.positions['maxs'][limb_name] - current_angle, percent_max_speed)
+        elif current_angle + angle < self.positions['mins'][limb_name]:
+            self.motion.changeAngles(long_name, self.positions['mins'][limb_name] - current_angle, percent_max_speed)
+
+
+
+
     def set_posture(self, next_posture, current_posture, max_speed=1.0):
         """
         Changes position from current_posture to next_posture, calculates correct speeds
