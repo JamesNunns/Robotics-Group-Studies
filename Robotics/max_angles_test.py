@@ -1,4 +1,4 @@
-from positions_new import positions
+from positions_sym import positions
 
 positions_maxs = ['crunched', 'extended']
 
@@ -16,4 +16,4 @@ for key in crunched:
         min_dict[key] = extended[key]
         max_dict[key] = crunched[key]
 
-print min_dict
+print max_dict
