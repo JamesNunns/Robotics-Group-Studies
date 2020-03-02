@@ -1,3 +1,4 @@
+import sys
 class Machine_Learning():
     
     def __init__(self,values,all_data,**kwargs):
@@ -8,7 +9,8 @@ class Machine_Learning():
         self.previous_be = values['be']
         self.duration = kwargs.get('duration', float('inf'))
         self.previous_vel = values['av']
-        import ML
+        sys.path.insert(0, "/home/robgc/Desktop/Project/Robotics-Group-Studies/Machine Learning/")
+        from ml import ML
         self.ml = ML()
 
     def algo(self,values,all_data):

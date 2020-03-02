@@ -21,16 +21,16 @@ def move_legs(angle, percent_max_speed=0.4):
 while True:
     key = raw_input("q = torso out\tw = torso in\to = legs in\tp = legs out\n")
     if key == "q":
-        move_torso(1)
+        move_torso(5)
         print "Torso Out\n"
     elif key == "w":
-        move_torso(-1)
+        move_torso(-5)
         print "Torso In\n"
     elif key == "o":
-        move_legs(1)
+        move_legs(5)
         print "Legs In\n"
     elif key == "p":
-        move_legs(-1)
+        move_legs(-5)
         print "Legs Out\n"
     else:
         print "Unrecognised Key"
