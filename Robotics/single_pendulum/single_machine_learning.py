@@ -47,6 +47,7 @@ class Machine_Learning():
                 self.move_torso(-0.0174533, 0.4)
             elif action == 4:
                 pass
-
+        else:
+            return 'switch'
 
            # 0.0174533 "one degree in radians"
