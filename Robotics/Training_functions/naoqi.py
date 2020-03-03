@@ -45,5 +45,9 @@ class ALProxy():
             if values[key][0] == names:
                 position[values[key][1]] = angles
 
+    def changeAngles(self, long_name, angle, percent_max_speed):
+        
+        position[long_name] += angle
+
     def setFallManagerEnabled(self, boolean):
         pass
