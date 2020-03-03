@@ -184,19 +184,19 @@ class Interface(Algorithm):
             self.set_posture(switch, self.position, speed)
 
         if switch == "torso_out":
-            for joint in torso
+            for joint in torso:
                 self.move_limbs(joint, torso[joint]*0.0174533, speed)
         
         if switch == "torso_in":
-            for joint in torso
+            for joint in torso:
                 self.move_limbs(joint, torso[joint]*-0.0174533, speed)
 
         if switch == "legs_out":
-            for joint in legs
+            for joint in legs:
                 self.move_limbs(joint, -0.0174533, speed)
 
         if switch == "legs_in":
-            for joint in legs
+            for joint in legs:
                 self.move_limbs(joint, 0.0174533, speed)
 
 
