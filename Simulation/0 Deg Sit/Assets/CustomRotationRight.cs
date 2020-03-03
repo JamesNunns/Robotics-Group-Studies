@@ -39,9 +39,10 @@ public class CustomRotationRight : MonoBehaviour
 	List<HingeJoint> allJoints = new List<HingeJoint>();
 	List<float> allAngles = new List<float>();
 
-	Dictionary<HingeJoint, float> low_cm = new Dictionary<HingeJoint, float>();
-	Dictionary<HingeJoint, float> high_cm= new Dictionary<HingeJoint, float>();
-
+	Dictionary<HingeJoint, float> low_cm_upper = new Dictionary<HingeJoint, float>();
+	Dictionary<HingeJoint, float> low_cm_lower = new Dictionary<HingeJoint, float>();
+	Dictionary<HingeJoint, float> high_cm_upper = new Dictionary<HingeJoint, float>();
+	Dictionary<HingeJoint, float> high_cm_lower = new Dictionary<HingeJoint, float>();
 
 
 	void Start()
@@ -83,19 +84,22 @@ public class CustomRotationRight : MonoBehaviour
 		allAngles.Add(rightHipAngle);
 		allAngles.Add(neckAngle);
 
-		low_cm.Add(rightElbow, Mathf.Rad2Deg*(0.050664f));
-		low_cm.Add(rightShoulder, Mathf.Rad2Deg*(0.995608f));
-		low_cm.Add(rightKnee, Mathf.Rad2Deg*(1.56f));
-		low_cm.Add(rightAnkle, Mathf.Rad2Deg*(0.921976f));
-		low_cm.Add(rightHip, Mathf.Rad2Deg*(-0.052198f));
-		low_cm.Add(Neck, Mathf.Rad2Deg*(-0.671952f));
+		low_cm_upper.Add(rightElbow, Mathf.Rad2Deg*(0.050664f));
+		low_cm_upper.Add(rightShoulder, Mathf.Rad2Deg*(0.995608f));
+		low_cm_upper.Add(rightHip, Mathf.Rad2Deg*(-0.2f));
+		low_cm_upper.Add(Neck, Mathf.Rad2Deg*(-0.671952f));
 
-		high_cm.Add(rightElbow, Mathf.Rad2Deg*(1.356098f));
-		high_cm.Add(rightShoulder, Mathf.Rad2Deg*(1.322266f));
-		high_cm.Add(rightKnee, Mathf.Rad2Deg*(-0.092082f));
-		high_cm.Add(rightAnkle, Mathf.Rad2Deg*(-1.141338f));
-		high_cm.Add(rightHip, Mathf.Rad2Deg*(-1.5708f));
-		high_cm.Add(Neck, Mathf.Rad2Deg*(0.253068f));
+		low_cm_lower.Add(rightKnee, Mathf.Rad2Deg*(1.56f));
+		low_cm_lower.Add(rightAnkle, Mathf.Rad2Deg*(0.921976f));
+
+		high_cm_upper.Add(rightElbow, Mathf.Rad2Deg*(1.356098f));
+		high_cm_upper.Add(rightShoulder, Mathf.Rad2Deg*(1.322266f));
+		high_cm_upper.Add(rightHip, Mathf.Rad2Deg*(-1.5708f));
+		high_cm_upper.Add(Neck, Mathf.Rad2Deg*(0.253068f));
+
+		high_cm_lower.Add(rightKnee, Mathf.Rad2Deg*(-0.092082f));
+		high_cm_lower.Add(rightAnkle, Mathf.Rad2Deg*(-1.141338f));
+		
 
 	}
 
@@ -171,10 +175,10 @@ public class CustomRotationRight : MonoBehaviour
 
 	void changePosition(Dictionary<HingeJoint, float> position, float speed)
 	{
-		for (int i = 0; i < 6; i++)
-		{
-			allJoints[i].useLimits = false;
-		}
+		//for (int i = 0; i < position.Count; i++)
+		//{
+		//	allJoints[i].useLimits = false;
+		//}
 		foreach (KeyValuePair<HingeJoint, float> item in position)
 		{
 			Move(item.Key, item.Value, speed);
@@ -213,13 +217,21 @@ public class CustomRotationRight : MonoBehaviour
 		{
 			Move(rightKnee, 90, 1f);
 		}	
+		if (Input.GetKey("u"))
+		{
+			changePosition(low_cm_lower, 0.5f);
+		}	
+		if (Input.GetKey("i"))
+		{
+			changePosition(high_cm_lower, 0.5f);
+		}
 		if (Input.GetKey("p"))
 		{
-			changePosition(low_cm, 0.5f);
+			changePosition(low_cm_upper, 0.5f);
 		}
 		if (Input.GetKey("o"))
 		{
-			changePosition(high_cm, 0.5f);
+			changePosition(high_cm_upper, 0.5f);
 		}
 		for (int i = 0; i < 6; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
