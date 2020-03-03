@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SwingSim.unity
+    guid: aebd857742c15874d93a7911906fb63c
+  - enabled: 1
+    path: Assets/Scenes/MenuSystem.unity
+    guid: d21a095695c4e084c91e3578a3550c7a
   m_configObjects: {}
