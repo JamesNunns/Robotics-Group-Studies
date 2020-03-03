@@ -1,2 +1,12 @@
-torso = {'RHP': 1.0, 'LHP': 1.0, 'RSP': 0.480417754569, 'LSP': 0.0496083550914, 'RSR': 1.12532637076, 'LSR': -1.10966057441, 'RER': -2.13838120104, 'LER': 2.18263145891, 'REY': -0.258485639687, 'LEY': 0.853785900783, 'RWY': 0.167101827676, 'LWY': -0.180156657963}
+from positions_sym import positions
+
+crunched_pos = positions['crunched']
+extended_pos = positions['extended']
+torso_list = {'RHP', 'LHP', 'RSP', 'LSP', 'RSR', 'LSR', 'RER', 'LER', 'REY', 'LEY', 'RWY', 'LWY'}
+hips = extended_pos['RHP'] - crunched_pos['RHP']
+torso_dict = {}
+for joint in torso_list:
+    value = (extended_pos[joint] - crunched_pos[joint])/hips
+    torso_dict[joint] = value
+
 legs = ['RKP', 'LKP']
