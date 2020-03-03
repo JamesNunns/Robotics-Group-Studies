@@ -1,10 +1,10 @@
-from Webots_interface import Robot
+from robot_interface import Robot
 from naoqi import ALProxy
 from positions_sym import positions
 from limb_data_2020 import values
 
 
-Robot = Robot(values, positions, ALProxy, "127.0.0.1", 9559)
+Robot = Robot(values, positions, ALProxy, "192.168.1.3", 9559)
 
 
 def move_torso(angle=1, percent_max_speed=0.4):

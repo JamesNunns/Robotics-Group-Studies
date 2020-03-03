@@ -2,7 +2,7 @@ from re import search
 from os import listdir
 import time as tme
 from limb_data import values
-from positions_new import positions
+from positions_sym import positions
 from utility_functions import flatten, read_file, current_data_types, get_latest_file, convert_list_dict, centre_of_mass_respect_seat, store
 from sys import path, argv
 from robot_interface import Robot, PositionError
@@ -10,7 +10,7 @@ from robot_interface import Robot, PositionError
 from encoder_interface import Encoders
 import numpy
 from collections import OrderedDict
-from torso_and_legs import torso, legs
+from torso_and_legs import torso_dict, legs
 
 option = raw_input("Using Real Robot (Yes/No)")
 if option.upper() == 'NO':
@@ -19,7 +19,7 @@ if option.upper() == 'NO':
     path.insert(0, "Training_functions")
     from naoqi import ALProxy #Import Fake SDK
     import BigEncoder #Import fake bigencoder
-    import SmallEncoders #Import fake smallencoder
+     #Import fake smallencoder
 elif option.upper() == 'YES':
     setup = 'Real'
     path.insert(0, "hidlibs")
@@ -61,7 +61,7 @@ Algorithm = __import__(algorithm_import).Algorithm
 
 class Interface(Algorithm):
 
-    def __init__(self,setup='Testing',period=0.005):
+    def __init__(self,setup='Testing',period=0.1):
         """
         Initialising the interface coresponding to the desired setup
         
@@ -103,14 +103,20 @@ class Interface(Algorithm):
         """
         # No angular velocity if no old data
         if len(self.all_data) < 5:
-            return 0
+			return 0
 
-        old_values = self.all_data[-5]
+		old_values = self.all_data[-5]
 
-        delta_time = time - old_values['time']
-        delta_angle = current_angle - old_values['be']
-
-        return delta_angle / delta_time
+		delta_time = time - old_values['time']
+		delta_angle = current_angle - old_values['be']
+		ang_vel = delta_angle / delta_time
+		if ang_vel == 0.0:
+			old_old_values = self.all_data[-15]
+			if old_old_values['av'] < 0:
+				ang_vel = -1
+			else:
+				ang_vel = 1
+        return ang_vel
 
     def select_algo(self, values, all_data):
         """
@@ -184,20 +190,20 @@ class Interface(Algorithm):
             self.set_posture(switch, self.position, speed)
 
         if switch == "torso_out":
-            for joint in torso:
-                self.move_limbs(joint, torso[joint]*0.0174533, speed)
+            for joint in torso_dict:
+                self.move_limbs(joint, torso_dict[joint]*5*0.0174533, speed)
         
         if switch == "torso_in":
-            for joint in torso:
-                self.move_limbs(joint, torso[joint]*-0.0174533, speed)
+            for joint in torso_dict:
+                self.move_limbs(joint, torso_dict[joint]*5*-0.0174533, speed)
 
         if switch == "legs_out":
             for joint in legs:
-                self.move_limbs(joint, -0.0174533, speed)
+                self.move_limbs(joint, -5*0.0174533, speed)
 
         if switch == "legs_in":
             for joint in legs:
-                self.move_limbs(joint, 0.0174533, speed)
+                self.move_limbs(joint, 5*0.0174533, speed)
 
 
 
@@ -329,11 +335,11 @@ class Interface(Algorithm):
 
 if __name__ == '__main__':
     #If the Script fails the robot will loosen
-    interface = Interface(setup, period=0.01)
+    interface = Interface(setup, period=0.1)
     try:
-        interface.run(filename='Accelerometer Algorithm')
+        interface.run(filename='27-02-2020 15:59:56 Org')
     except KeyboardInterrupt:
         interface.finish_script()
-        interface.speech.say('Loosening')
+        interface.speech.say('Tightening')
     finally:
-        interface.motion.setStiffnesses("Body", 0.0)
+        interface.motion.setStiffnesses("Body", 1.0)
