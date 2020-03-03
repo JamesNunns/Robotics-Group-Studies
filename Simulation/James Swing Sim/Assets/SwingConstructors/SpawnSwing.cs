@@ -11,9 +11,9 @@ public class SpawnSwing : MonoBehaviour
     public GameObject spawner;
     public GameObject swing;
 
-    public float swingSep = 5;
+    public float swingSep = 0.1f;
     public int swingToMake;
-    public float Lifetime = 100;
+    public float Lifetime = 120f;
     public int generations = 0;
 
     public List<IEntity> entities = new List<IEntity>();
@@ -24,7 +24,7 @@ public class SpawnSwing : MonoBehaviour
     public string Method;
 
     public IGenerationController generationController;
-    private float elapsedTime;
+    private float elapsedTime = 0f;
 
     public int PopSize { get; private set; }
 
@@ -70,6 +70,7 @@ public class SpawnSwing : MonoBehaviour
 
     void FixedUpdate()
     {
+        spawner.transform.position = new Vector3 { x = 0, y = 0, z = 0 };
         if (elapsedTime >= Lifetime)
         {
             entityRewards = null;
@@ -81,7 +82,7 @@ public class SpawnSwing : MonoBehaviour
                 }
                 generationController.NextGeneration(entityRewards, entities);
             }
-            elapsedTime = 0;
+            elapsedTime = 0f;
 
             MakeSwing(PopSize);
             generations += 1;

@@ -20,6 +20,20 @@ public class MenuScreen : MonoBehaviour
     public GameObject MethodText;
     public GameObject GenText;
 
+    GameObject UI;
+
+    GameObject newSpawner;
+    SpawnSwing swingSpawnScript;
+    MethodsText MText;
+    Text MethodTxt;
+    GenerationText GenerText;
+    Text GenTxt;
+
+    GameObject MethodObject;
+    GameObject GenObject;
+
+
+
     //string path = @"..\James Swing Sim\Assets\PythonClasses";
     FitnessFunctions functions; //Class for holding all potential fitness functions
 
@@ -102,23 +116,47 @@ public class MenuScreen : MonoBehaviour
             y = 0,
             z = 0
         };
-        GameObject newSpawner = Instantiate(spawner, position, new Quaternion());
+
+        /*GameObject newSpawner = Instantiate(spawner, position, new Quaternion());
         SpawnSwing swingSpawnScript = newSpawner.AddComponent<SpawnSwing>();
         swingSpawnScript.Construct(methodString, newSpawner, Swing, fitnessMethod, populationSize);
 
-        GameObject NewMethodText = Instantiate(MethodText);
+        position = new Vector3 { x = 300, y = 120, z = 0 };
+        GameObject NewMethodText = Instantiate(MethodText, position, new Quaternion());
         MethodsText MText = NewMethodText.AddComponent<MethodsText>();
         MText.Construct(swingSpawnScript, NewMethodText.GetComponent<Text>());
 
-        GameObject NewGenText = Instantiate(GenText);
+        position = new Vector3 { x = -300, y = 120, z = 0 };
+        GameObject NewGenText = Instantiate(GenText, position, new Quaternion());
         GenerationText GenerText = NewGenText.AddComponent<GenerationText>();
-        GenerText.Construct(swingSpawnScript, NewMethodText.GetComponent<Text>());
+        GenerText.Construct(swingSpawnScript, NewMethodText.GetComponent<Text>());*/
 
-        DontDestroyOnLoad(newSpawner);
+        /*DontDestroyOnLoad(newSpawner);
         DontDestroyOnLoad(NewMethodText);
-        DontDestroyOnLoad(NewGenText);
+        DontDestroyOnLoad(NewGenText);*/
 
         SceneManager.LoadScene("SwingSim", LoadSceneMode.Single);
+
+        UI = SceneManager.GetActiveScene().GetRootGameObjects()[1];//.Where(o=>o.name.Substring(6) == "Canvas").FirstOrDefault();//GameObject.FindObjectOfType<GameObject>();
+        if (UI == null)
+        {
+            throw new System.Exception("The UI is null");
+        }
+        newSpawner = Instantiate(spawner, position, new Quaternion());
+        swingSpawnScript = newSpawner.AddComponent<SpawnSwing>();
+        swingSpawnScript.Construct(methodString, newSpawner, Swing, fitnessMethod, populationSize);
+
+        MethodObject = new GameObject();
+        MethodTxt = MethodObject.AddComponent<Text>();
+        MText = MethodObject.AddComponent<MethodsText>();
+        MethodTxt.transform.position = new Vector3 { x = -300, y = 220, z = 0 };
+        MText.Construct(swingSpawnScript, MethodTxt);
+
+        GenObject = new GameObject();
+        GenTxt = GenObject.AddComponent<Text>();
+        GenerText = GenObject.AddComponent<GenerationText>();
+        GenTxt.transform.position = new Vector3 { x = 300, y = 220, z = 0 };
+        GenerText.Construct(swingSpawnScript, GenTxt);
     }
 }
 

@@ -312,8 +312,17 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.16f1/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Keras">
+      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Keras.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Numpy.Bare">
+      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Numpy.Bare.dll</HintPath>
+    </Reference>
+    <Reference Include="Python.Runtime">
+      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Python.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
@@ -329,15 +338,6 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
-    </Reference>
-    <Reference Include="Python.Runtime">
-      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Python.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Numpy.Bare">
-      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Numpy.Bare.dll</HintPath>
-    </Reference>
-    <Reference Include="Keras">
-      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Keras.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.16f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{B1FC476C-60CB-7E08-74C5-501497D11477}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -311,8 +310,17 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.16f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
+    <Reference Include="Keras">
+      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Keras.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Numpy.Bare">
+      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Numpy.Bare.dll</HintPath>
+    </Reference>
+    <Reference Include="Python.Runtime">
+      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Python.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
@@ -322,15 +330,6 @@
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
-    </Reference>
-    <Reference Include="Python.Runtime">
-      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Python.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Numpy.Bare">
-      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Numpy.Bare.dll</HintPath>
-    </Reference>
-    <Reference Include="Keras">
-      <HintPath>C:/Users/Tom/Documents/GitHub/Robotics-Group-Studies/Simulation/James Swing Sim/Assets/Plugins/Keras.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.16f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
