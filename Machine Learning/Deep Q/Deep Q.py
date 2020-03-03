@@ -1,4 +1,3 @@
-import gym
 import keras
 import random
 import math
@@ -9,7 +8,6 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.optimizers import Adam
 from keras.models import load_model
-from Environment import Swing
 import pandas as pd
 
 
@@ -19,7 +17,7 @@ class DeepQ:
     Deep Q-Learning algorithm using Keras to update a neural network episodically.
     '''
     
-    def __init__(self):
+    def __init__(self, environment):
         '''
         Initialise the environment and neural network.
         '''
@@ -45,7 +43,7 @@ class DeepQ:
         self.epoch = 0
 
         # Swing simulation environment
-        self.env = Swing(theta=0)
+        self.env = environment
 
         # Neural network
         self.neural_net = self.generate_network()
@@ -190,12 +188,24 @@ class DeepQ:
 
 
 if __name__ == "__main__":
-    q = DeepQ()
-    q.run(1000)
+    environment = input("Environment (gym / pymunk / unity): ")
+
+    import os, sys, inspect
+    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.insert(0, parentdir)
+
+    if environment == 'gym': # Run Gym sim
+        import gym
+        q = DeepQ(gym.make('CartPole-v0')) # TODO Make gym work
+    elif environment == 'pymunk': # Run Pymunk sim
+        from Pymunk import Swing
+        q = DeepQ(Swing())
+    elif environment == 'unity': # Run Unity sim
+        from Unity import Unity
+        q = DeepQ(Unity())
+    
+    q.run(100)
     q.save()
     q.render_actions()
     q.render_sim("Simulation")
-    # for i in range(10):
-    #     q.run(100)
-    #     q.render_actions()
-    #     q.render_sim("Episode " + str((i + 1) * 100), 60)
