@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2119092393586922703}
-  - component: {fileID: 2119092393586922700}
   m_Layer: 0
   m_Name: SwingSpawner
   m_TagString: Untagged
@@ -31,25 +30,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2119092393586922700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2119092393586922701}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1649a23eb4f3544c8e78be0805724a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawner: {fileID: 2119092393586922701}
-  swing: {fileID: 4825273085608336439, guid: ef537bfedeb531c4c88e0eca6dc20d6f, type: 3}
-  position: {fileID: 2119092393586922703}
-  swingSep: 10
-  swingToMake: 30
-  Lifetime: 5
-  generations: 0
-  filePath: 
-  entities: []
-  entityRewards: []

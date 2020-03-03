@@ -4,18 +4,21 @@ using UnityEngine.UI;
 public class GenerationText : MonoBehaviour
 {
     public Text txt;
-    public GameObject spawner;
     public SpawnSwing spawnController;
-    // Start is called before the first frame update
-    void Start()
+
+    public void Construct(SpawnSwing spawner, Text TXT)
     {
-        spawner = GameObject.Find("SwingSpawner");
-        spawnController = spawner.GetComponent<SpawnSwing>();
+        spawnController = spawner;
+        txt = TXT;
     }
 
+
+    /// <summary>
+    /// Uptades the text displaying generation number and current population
+    /// </summary>
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        txt.text = ("Generations: " + spawnController.generations + "@Population: " + spawnController.swingToMake).Replace("@", System.Environment.NewLine).ToString();
+        txt.text = ("Generations: " + spawnController.generations + "@Population: " + spawnController.PopSize).Replace("@", System.Environment.NewLine).ToString();
     }
 }

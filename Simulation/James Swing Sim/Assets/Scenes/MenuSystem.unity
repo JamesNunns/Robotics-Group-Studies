@@ -2619,6 +2619,10 @@ MonoBehaviour:
   QuitButton: {fileID: 344343358}
   spawner: {fileID: 3572036789614455713, guid: e938e9a06ca45414c8842f0831416df9, type: 3}
   Swing: {fileID: 4825273085608336439, guid: ef537bfedeb531c4c88e0eca6dc20d6f, type: 3}
+  popInput: {fileID: 1512276151}
+  MethodText: {fileID: 7993153148279213064, guid: 6e08ac43edb755446a7683db9290c150,
+    type: 3}
+  GenText: {fileID: 6207952230279400644, guid: 8dc91b4383a2a474f9529813a9877cb6, type: 3}
 --- !u!1 &1591822199
 GameObject:
   m_ObjectHideFlags: 0

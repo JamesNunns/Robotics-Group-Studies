@@ -25,4 +25,3 @@ C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\
 C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.csproj.CopyComplete
 C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.dll
 C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.pdb
-C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Simulation\PythonInterface\obj\Debug\PythonInterface.csprojAssemblyReference.cache

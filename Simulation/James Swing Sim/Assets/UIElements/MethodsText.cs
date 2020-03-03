@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// MethodsText controls the text describing selected method and fitness function
+/// </summary>
 public class MethodsText : MonoBehaviour
 {
     public Text txt;
-    public GameObject spawner;
     public SpawnSwing spawnController;
-    // Start is called before the first frame update
-    void Start()
+
+    public void Construct(SpawnSwing spawner, Text TXT)
     {
-        spawner = GameObject.Find("SwingSpawner");
-        spawnController = spawner.GetComponent<SpawnSwing>();
+        spawnController = spawner;
+        txt = TXT;
     }
 
-    // Update is called once per frame
-    void Update()
+
+    /// <summary>
+    /// Updates the text every call to FixedUpdate
+    /// </summary>
+    void FixedUpdate()
     {
-        string fName = spawnController.generationController.FileName;
-        txt.text = ("Method Used: " + fName.Remove(fName.Length - 3) + "@Fitness Function: " + spawnController.fitness.ToString()).Replace("@", System.Environment.NewLine).ToString();
+        txt.text = ("Method Used: " + spawnController.Method + "@Fitness Function: " + nameof(spawnController.fitness)).Replace("@", System.Environment.NewLine).ToString();
     }
 }

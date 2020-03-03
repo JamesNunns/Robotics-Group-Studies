@@ -1,71 +1,101 @@
-﻿using PythonInterface.Interfaces;
+﻿using Interfaces;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Script to control the swing spawning object
+/// </summary>
 public class SpawnSwing : MonoBehaviour
 {
     public GameObject spawner;
     public GameObject swing;
 
-    public Transform position;
-    public float swingSep;
+    public float swingSep = 5;
     public int swingToMake;
-    public float Lifetime;
-    public int generations;
-    public string filePath;
+    public float Lifetime = 100;
+    public int generations = 0;
 
-    public List<EntityController> entities;
+    public List<IEntity> entities = new List<IEntity>();
     public FitnessFunctions.FitnessFunctionDelegate fitness;
     public List<float> entityRewards;
     public List<dynamic> pyEntities;
     EntityController entity;
+    public string Method;
 
-    public GenericGenerationController generationController;
-    public SpawnSwing(string methodFile, string path, GameObject spawnObject, GameObject Swing, FitnessFunctions.FitnessFunctionDelegate fitnessFuncToUse, string controllerName, string makeEntityName, string genStepFuncName, string entityName, string thinkFuncName, int startGeneration = 0, List<EntityController> startEntities = null)
+    public IGenerationController generationController;
+    private float elapsedTime;
+
+    public int PopSize { get; private set; }
+
+    /// <summary>
+    /// Constructor for class
+    /// </summary>
+    /// <param name="method">String name for the "method" algorithm to be used</param>
+    /// <param name="spawnObject">GameObject responsible for spawning the Swingers</param>
+    /// <param name="Swing">Swing GameObject to be spawned</param>
+    /// <param name="fitnessFuncToUse">Fitness function to be used when determining reward</param>
+    /// <param name="PopulationSize">Total population of each generation</param>
+    /// <param name="startGeneration">Generation to start at (when loading from a saved state)</param>
+    /// <param name="startEntities">EntityControllers loaded from a saved state</param>
+    public void Construct(string method, GameObject spawnObject, GameObject Swing, FitnessFunctions.FitnessFunctionDelegate fitnessFuncToUse, int PopulationSize, int startGeneration = 0, List<EntityController> startEntities = null)
     {
         fitness = fitnessFuncToUse;
-        EntityController testSwing = new EntityController(Swing, null, fitness);
-        filePath = path + methodFile;
-        generationController = new GenericGenerationController(path, methodFile, controllerName, genStepFuncName, makeEntityName, thinkFuncName, testSwing.inputLength, testSwing.outputLength);
+        Method = method;
+        int inputLength = Swing.transform.Find("Swing").gameObject.GetComponentsInChildren<HingeJoint2D>().Length * 2;
+        int outputLength = Swing.transform.Find("Robot").gameObject.GetComponentsInChildren<HingeJoint2D>().Length;
+        InterfaceController interfaceController = new InterfaceController(method, inputLength, outputLength);
+        generationController = interfaceController.GetGenMethod();
         spawner = spawnObject;
         generations = startGeneration;
-        entities = startEntities;
+        if (startEntities != null)
+        {
+            foreach (EntityController e in startEntities)
+            {
+                entities.Add(e.swingAI);
+            }
+        }
         swing = Swing;
+        PopSize = PopulationSize;
     }
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(Cycle());
-
-        //MLMethod = ai.Methods.Where(f => f.ToString() == MethodToUse).FirstOrDefault();
+        MakeSwing(PopSize);
+        generations += 1;
     }
-    IEnumerator Cycle()
+    /// <summary>
+    /// Cycles through creating and destroying generations
+    /// </summary>
+
+    void FixedUpdate()
     {
-        while (true)
+        if (elapsedTime >= Lifetime)
         {
-            //TODO: make this flexible with an entitiesLeftToAdd int to take into account varying sizes of the input population when loading from a save
-            if (entities is null)
-            {
-                MakeSwing(swingToMake);
-                generations += 1;
-            }
-            yield return new WaitForSeconds(Lifetime);
             entityRewards = null;
-            pyEntities = null;
-            foreach (EntityController e in entities)
+            if (entities != null)
             {
-                entityRewards.Add(e.KillSelf());
-                dynamic currPyEntity = e.swingAI.PyEntity;
-                pyEntities.Add(currPyEntity);
+                foreach (EntityController e in entities)
+                {
+                    entityRewards.Add(e.KillSelf());
+                }
+                generationController.NextGeneration(entityRewards, entities);
             }
-            generationController.NextGeneration(entityRewards, pyEntities);
+            elapsedTime = 0;
+
+            MakeSwing(PopSize);
+            generations += 1;
+        }
+        else
+        {
+            elapsedTime += Time.fixedDeltaTime;
         }
     }
 
+    /// <summary>
+    /// Creates all needed swing objects in a generation
+    /// </summary>
+    /// <param name="swingsToMake">Number of swing objects to make</param>
     void MakeSwing(int swingsToMake)
     {
         int fullSquare;
@@ -80,9 +110,19 @@ public class SpawnSwing : MonoBehaviour
             {
                 for (int j = 0; j < width; j++)
                 {
-                    GameObject newSwing = Instantiate(swing, position.position, position.rotation);
-                    entity = new EntityController(newSwing, generationController.MakeEntity(), fitness);
-                    entities.Add(entity);
+                    GameObject newSwing = Instantiate(swing, spawner.transform.position, spawner.transform.rotation);
+                    if ((i + j >= entities.Count) | (entities == null))
+                    {
+
+                        entity = newSwing.AddComponent<EntityController>();
+                        entity.Construct(newSwing, generationController.MakeEntity(), fitness);
+                        entities.Add(entity.swingAI);
+                    }
+                    else
+                    {
+                        entity = newSwing.AddComponent<EntityController>();
+                        entity.Construct(newSwing, entities[i + j], fitness);
+                    }
                     spawner.transform.Translate(Vector3.right * swingSep);
                 }
                 spawner.transform.Translate(Vector3.left * swingSep * width);
@@ -93,9 +133,19 @@ public class SpawnSwing : MonoBehaviour
             {
                 for (int j = 0; j < swingsLeft; j++) //Finish an incomplete row
                 {
-                    GameObject newSwing = Instantiate(swing, position.position, position.rotation);
-                    entity = new EntityController(newSwing, generationController.MakeEntity(), fitness);
-                    entities.Add(entity);
+                    GameObject newSwing = Instantiate(swing, spawner.transform.position, spawner.transform.rotation);
+                    if ((i + j >= entities.Count) | (entities == null))
+                    {
+
+                        entity = newSwing.AddComponent<EntityController>();
+                        entity.Construct(newSwing, generationController.MakeEntity(), fitness);
+                        entities.Add(entity.swingAI);
+                    }
+                    else
+                    {
+                        entity = newSwing.AddComponent<EntityController>();
+                        entity.Construct(newSwing, entities[i + j], fitness);
+                    }
                     spawner.transform.Translate(Vector3.right * swingSep);
                 }
                 spawner.transform.Translate(Vector3.left * swingSep * swingsLeft);
