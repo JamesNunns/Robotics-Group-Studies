@@ -213,14 +213,14 @@ public class CustomRotationRight : MonoBehaviour
 		if (Input.GetKey("m"))
 		{
 			Move(rightKnee, -80, 0.8f);
-			Move(rightShoulder, 45, 0.8f);
-			Move(rightElbow, -50, 0.8f);
+			//Move(rightShoulder, 45, 0.8f);
+			//Move(rightElbow, -50, 0.8f);
 		}
 		if (Input.GetKey("n"))
 		{
 			Move(rightKnee, 0, 0.8f);
-			Move(rightShoulder, 60, 0.8f);
-			Move(rightElbow, -100, 0.8f);
+			//Move(rightShoulder, 60, 0.8f);
+			//Move(rightElbow, -100, 0.8f);
 		}	
 		if (Input.GetKey("p"))
 		{

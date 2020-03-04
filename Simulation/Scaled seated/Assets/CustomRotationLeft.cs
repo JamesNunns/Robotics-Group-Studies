@@ -197,14 +197,14 @@ public class CustomRotationLeft : MonoBehaviour
 		if (Input.GetKey("m")) ///crunches
 		{
 			Move(leftKnee, -80, 0.8f);
-			Move(leftShoulder, 45, 0.8f);
-			Move(leftElbow, -50, 0.8f);
+			//Move(leftShoulder, 45, 0.8f);
+			//Move(leftElbow, -50, 0.8f);
 		}
 		if (Input.GetKey("n")) ///extends
 		{
 			Move(leftKnee, 0, 0.8f);
-			Move(leftShoulder, 60, 0.8f);
-			Move(leftElbow, -100, 0.8f);
+			//Move(leftShoulder, 60, 0.8f);
+			//Move(leftElbow, -100, 0.8f);
 		}	
 		if (Input.GetKey("p"))
 		{

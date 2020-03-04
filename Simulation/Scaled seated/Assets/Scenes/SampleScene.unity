@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -817,13 +817,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0, y: -0.8496926, z: -0, w: -0.5272785}
-  m_LocalPosition: {x: 4.0025, y: -0.66, z: 3.0203}
+  m_LocalRotation: {x: -0, y: -0.7107438, z: -0, w: -0.7034509}
+  m_LocalPosition: {x: 2.25, y: -0.39, z: 0.03}
   m_LocalScale: {x: 1.0022, y: 1.0022, z: 1.0022}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -243.644, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -269.409, z: 0}
 --- !u!114 &534669906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1699,7 +1699,7 @@ HingeJoint:
   m_UseLimits: 1
   m_Limits:
     min: 0
-    max: 0
+    max: 5
     bounciness: 0
     bounceMinVelocity: 0.2
     contactDistance: 0
@@ -3458,7 +3458,7 @@ HingeJoint:
   m_UseLimits: 1
   m_Limits:
     min: 0
-    max: 0
+    max: 5
     bounciness: 0
     bounceMinVelocity: 0.2
     contactDistance: 0
