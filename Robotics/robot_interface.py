@@ -35,7 +35,6 @@ class Robot():
         self.masses = kwargs.get('masses', True)
         self.acc_required = kwargs.get('acc_required', False)
         self.gyro_required = kwargs.get('gyro_required', False)
-
         accX_0, accY_0, accZ_0 = 0, 0, 0
         self.calibrate_acc()
 
@@ -154,12 +153,9 @@ class Robot():
         if current_angle + angle <= self.positions['maxs'][limb_name] and current_angle + angle >= self.positions['mins'][limb_name]:
             self.motion.changeAngles(long_name, angle, percent_max_speed)
         elif current_angle + angle > self.positions['maxs'][limb_name]:
-            self.motion.changeAngles(long_name, self.positions['maxs'][limb_name] - current_angle, percent_max_speed)
+            self.motion.setAngles(long_name, self.positions['maxs'][limb_name], percent_max_speed)
         elif current_angle + angle < self.positions['mins'][limb_name]:
-            self.motion.changeAngles(long_name, self.positions['mins'][limb_name] - current_angle, percent_max_speed)
-
-
-
+            self.motion.setAngles(long_name, self.positions['mins'][limb_name], percent_max_speed)
 
     def set_posture(self, next_posture, current_posture, max_speed=1.0):
         """
@@ -259,3 +255,8 @@ class Robot():
             accX_0, accY_0, accZ_0 = self.memory.getData(self.values['ACX'][1]), self.memory.getData(self.values['ACY'][1]), self.memory.getData(self.values['ACZ'][1])
         else:
             accX_0, accY_0, accZ_0 = 0, 0, 0
+            
+    def acc_to_encoder(self, plane='y'):
+        acc_values = self.get_acc(plane)
+        
+        
