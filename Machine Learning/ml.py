@@ -5,15 +5,15 @@ class ML:
     '''
     Machine learning class that uses a neural network to output trained actions based on current states.
     '''
-    def __init__(self, neural_net) -> None:
+    def __init__(self, neural_net):
         '''
         Initialise the neural network.
         '''
-        print("Loading neural network...", end=" ", flush=True)
+        # print("Loading neural network...", end=" ", flush=True)
         self.model = load_model('net.h5')
-        print("Done!")
+        # print("Done!")
 
-    def get_action(self, state: list = None) -> int:
+    def get_action(self, state = None):
         '''
         Takes the current state, [angle, angular velocity], and returns an integer depending on the calculated optimal move.
         Note that angle has units of degrees and angular velocity has units of degrees/second.

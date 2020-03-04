@@ -39,7 +39,7 @@ from keras.layers     import Dense
 from keras.optimizers import Adam
 from keras.models     import load_model
 
-from Environment import Swing
+from Pymunk import Swing
 # gym.logger.set_level(40)
 env = Swing()
 env.reset()

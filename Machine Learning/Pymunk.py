@@ -70,7 +70,7 @@ class Swing:
         '''
         Initialise the pymunk space and angle and create swing / robot
         '''
-        print("Generating environment...", end=" ", flush=True)
+        print("Generating Pymunk wrapper...", end=" ", flush=True)
 
         self.space = space
         self.space.gravity = 0, -1000  # Set gravity of space
