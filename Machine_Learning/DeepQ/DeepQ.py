@@ -187,7 +187,7 @@ class DeepQ:
         print("Loaded " + file + '.h5\n')
 
 
-if __name__ == "__main__":
+def main():
     environment = input("Environment (gym / pymunk / unity): ")
 
     import os, sys, inspect

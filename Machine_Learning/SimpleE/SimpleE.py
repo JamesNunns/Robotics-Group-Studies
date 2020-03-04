@@ -39,11 +39,7 @@ from keras.layers     import Dense
 from keras.optimizers import Adam
 from keras.models     import load_model
 
-from Pymunk import Swing
 # gym.logger.set_level(40)
-env = Swing()
-env.reset()
-
 
 ###############################################################################
 
@@ -186,9 +182,9 @@ class Chromosome():
 
 #function to run simulation with optional rendering and return a fitness value  
 #currently this simply calls the 'play_cart' function which runs the cartpole gym env
-def run_sim(model, goal_steps=500, render=False, games=100, _print=False):
+def run_sim(model, env, goal_steps=500, render=False, games=100, _print=False):
     
-    fitness = play_cart(model, goal_steps, render, games, _print)
+    fitness = play_cart(model, env, goal_steps, render, games, _print)
     
     return fitness
     
@@ -377,6 +373,7 @@ def NEAT(init_population=None,              #allows for input of an initial list
          _print=True,                       #print details of each generation
          render=True,                       #render best model of generation
          render_runs=5,                     #number of simulation runs for best model
+         env=None,
          
          #mutation variables:
          add_layer_prob=0.1,        
@@ -404,7 +401,7 @@ def NEAT(init_population=None,              #allows for input of an initial list
         for model in new_population:
             
             #find and record fitness value for each model
-            fitness = run_sim(model, goal_steps=500000000, render=False, games=1, _print=False)
+            fitness = run_sim(model, env, goal_steps=500000000, render=False, games=1, _print=False)
             
             chromosomes.append(Chromosome(model, fitness))
             fitness_dist.append(fitness)
@@ -429,7 +426,7 @@ def NEAT(init_population=None,              #allows for input of an initial list
             print('Best score for gen {}:'.format(gen), best_fitness)
             print('Best model architecture:', best_model.architecture, '\n')
         
-        run_sim(model=best_model, goal_steps=500, render=render, games=render_runs, _print=False)
+        run_sim(model=best_model, env=env, goal_steps=500, render=render, games=render_runs, _print=False)
         
     return best_model, init_population
 
@@ -443,7 +440,7 @@ https://blog.tanka.la/2018/10/19/build-your-first-ai-game-bot-using-openai-gym-k
 '''
 
 #Function to trial neural model over specified number of games, using OpenAI gym
-def play_cart(model, goal_steps=500, render=False, games=100, _print=True):
+def play_cart(model, env, goal_steps=500, render=False, games=100, _print=True):
     
     scores = []
     choices = []
@@ -473,7 +470,7 @@ def play_cart(model, goal_steps=500, render=False, games=100, _print=True):
     
 
 #Data preparation for initial network training, using OpenAI gym 'Cartpole'
-def model_data_preparation(goal_steps=500, score_requirement=60, initial_games=10000):
+def model_data_preparation(env, goal_steps=500, score_requirement=60, initial_games=10000):
             
     training_data = []
     accepted_scores = []
@@ -532,25 +529,49 @@ play_cart(NN_opened, goal_steps, render=True, games=100)
 '''    
 
 
-net = NeuralNet(file='Genetic (Simple).h5')
-env.render(net.model, timeout=500)
-
-#optional generation of initial population
-init_population = generate_population(population_size=20,
-                                      max_layer_size=5,
-                                      max_nodes=32,
-                                      input_size=2,
-                                      output_size=5)
 
 
-#runs evolutionary algorithm
-best_model, init_population = NEAT(init_population=init_population,
-                                    input_size=2, 
-                                    output_size=5, 
-                                    max_generations=20, 
-                                    population_size=50,
-                                    render_runs=1,
-                                    breed_ratio=0.5)
 
-best_model.save()
-env.render(best_model, timeout=5000)
+def main():
+    environment = input("Environment (gym / pymunk / unity): ")
+
+    import os, sys, inspect
+    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.insert(0, parentdir)
+
+    #optional generation of initial population
+    init_population = generate_population(population_size=20,
+                                            max_layer_size=5,
+                                            max_nodes=32,
+                                            input_size=2,
+                                            output_size=5)
+
+    if environment == 'gym': # Run Gym sim
+        import gym
+        env = gym.make('CartPole-v0')
+    elif environment == 'pymunk': # Run Pymunk sim
+        from Pymunk import Swing
+        env = Swing()
+    elif environment == 'unity': # Run Unity sim
+        from Unity import Unity
+        env = Unity()
+
+    env.reset()
+    best_model, init_population = NEAT(init_population=init_population,
+                                        input_size=2, 
+                                        output_size=5, 
+                                        max_generations=20, 
+                                        population_size=50,
+                                        render_runs=1,
+                                        breed_ratio=0.5,
+                                        env=env)
+
+
+
+
+# net = NeuralNet(file='Genetic (Simple).h5')
+# env.render(net.model, timeout=500)
+
+# best_model.save()
+# env.render(best_model, timeout=5000)
