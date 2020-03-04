@@ -103,19 +103,19 @@ class Interface(Algorithm):
         """
         # No angular velocity if no old data
         if len(self.all_data) < 5:
-			return 0
-
-		old_values = self.all_data[-5]
-
-		delta_time = time - old_values['time']
-		delta_angle = current_angle - old_values['be']
-		ang_vel = delta_angle / delta_time
-		if ang_vel == 0.0:
-			old_old_values = self.all_data[-15]
-			if old_old_values['av'] < 0:
-				ang_vel = -1
-			else:
-				ang_vel = 1
+    		return 0
+    
+  		old_values = self.all_data[-5]
+          
+  		delta_time = time - old_values['time']
+  		delta_angle = current_angle - old_values['be']
+  		ang_vel = delta_angle / delta_time
+  		if ang_vel == 0.0:
+  			old_old_values = self.all_data[-15]
+  			if old_old_values['av'] < 0:
+  				ang_vel = -1
+  			else:
+  				ang_vel = 1
         return ang_vel
 
     def select_algo(self, values, all_data):
@@ -204,9 +204,24 @@ class Interface(Algorithm):
         if switch == "legs_in":
             for joint in legs:
                 self.move_limbs(joint, 5*0.0174533, speed)
+        
+        if switch == "legs_retracted":
+            for joint in legs:
+                self.move_limbs(joint, 500*0.0174533, speed) 
+        
+        if switch == "legs_extended":
+            for joint in legs:
+                self.move_limbs(joint, -500*0.0174533, speed) 
+        
+        if switch == "torso_extended":
+            for joint in torso_dict:
+                self.move_limbs(joint, torso_dict[joint]*500*0.0174533, speed)
 
 
-
+        if switch == "torso_retracted":
+            for joint in torso_dict:
+                self.move_limbs(joint, torso_dict[joint]*-500*0.0174533, speed)
+                
         # Add current values to list of all values
         self.all_data = numpy.append(self.all_data, numpy.array(
             [tuple(current_values.values())], dtype=self.data_type), axis=0)

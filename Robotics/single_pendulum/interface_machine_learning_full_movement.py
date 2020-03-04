@@ -10,7 +10,7 @@ class Machine_Learning():
         self.previous_be = values['be']
         self.duration = kwargs.get('duration', float('inf'))
         self.previous_vel = values['av']
-        sys.path.insert(0, "/home/demo/Documents/Robotics_2020/Robotics-Group-Studies/Machine_Learning")
+        sys.path.insert(0, "../Machine_Learning")
         from ml import ML
         self.ml = ML()
 
@@ -18,13 +18,13 @@ class Machine_Learning():
         if values['time'] - self.start_time < self.duration:
             action = self.ml.get_action([ values['be'], values['av'] ])
             if action == 0:
-                return "legs_in"
+                return "legs_retracted"
             elif action == 1:
-                return "legs_out"
+                return "legs_extended"
             elif action == 2:
-                return "torso_out"
+                return "torso_extended"
             elif action == 3:
-                return "torso_in"
+                return "torso_retracted"
             elif action == 4:
                 pass
 		print values['time'], values['be'], values['av'], action
