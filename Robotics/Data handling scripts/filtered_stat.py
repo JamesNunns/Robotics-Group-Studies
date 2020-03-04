@@ -20,6 +20,9 @@ AngY = data['AngY']
 
 Encoder = data['Encoder']
 
+plt.figure()
+plt.plot(Time, AccZ)
+
 fftz = np.fft.fft(AccZ)
 Nz = AccZ.size
 freqsz = np.fft.fftfreq(Nz, 0.038)

@@ -255,8 +255,3 @@ class Robot():
             accX_0, accY_0, accZ_0 = self.memory.getData(self.values['ACX'][1]), self.memory.getData(self.values['ACY'][1]), self.memory.getData(self.values['ACZ'][1])
         else:
             accX_0, accY_0, accZ_0 = 0, 0, 0
-            
-    def acc_to_encoder(self, plane='y'):
-        acc_values = self.get_acc(plane)
-        
-        
