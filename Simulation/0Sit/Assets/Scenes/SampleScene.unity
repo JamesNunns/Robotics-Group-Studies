@@ -141,7 +141,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 61041570}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.6, y: -4.75, z: 2.6}
+  m_LocalPosition: {x: 3.65, y: -4.75, z: 2.6}
   m_LocalScale: {x: 0.2, y: 0.5, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1190391470}
@@ -773,7 +773,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &612082244
 BoxCollider:
@@ -1078,7 +1078,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!138 &817681313
 FixedJoint:
@@ -1179,7 +1179,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &897436978
 BoxCollider:
@@ -1250,7 +1250,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0.5}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -2.9624987, y: -0.25499916, z: -1.6001594}
+  m_ConnectedAnchor: {x: -2.712499, y: -0.25499916, z: -1.6001594}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -1324,7 +1324,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &922909404
 BoxCollider:
@@ -1536,7 +1536,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!136 &1038010059
 CapsuleCollider:
@@ -1657,7 +1657,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 1, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0000023841858, y: -1, z: 0}
+  m_ConnectedAnchor: {x: 0.0000023841858, y: -1, z: 0.00000026077032}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -1764,7 +1764,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054003917}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.9, y: -4.3, z: 0.049999952}
+  m_LocalPosition: {x: 4.9, y: -4.3, z: 0.05}
   m_LocalScale: {x: 0.2, y: 1.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1190391470}
@@ -1896,7 +1896,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &1387326325
 BoxCollider:
@@ -2004,7 +2004,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 1, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.049999997, y: -0.99999976, z: 0}
+  m_ConnectedAnchor: {x: 0, y: -0.99999976, z: 0.000000018626451}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -2133,7 +2133,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 1, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.049999952, y: -1, z: 0.24999976}
+  m_ConnectedAnchor: {x: 0, y: -1, z: 0.24999975}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -2240,7 +2240,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1426341598}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.01, y: -4.3, z: 0.049999952}
+  m_LocalPosition: {x: 0, y: -4.3, z: 0.04999995}
   m_LocalScale: {x: 0.2, y: 1.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1190391470}
@@ -2281,7 +2281,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!59 &1488128027
 HingeJoint:
@@ -2475,7 +2475,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &1507659562
 BoxCollider:
@@ -2546,7 +2546,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 0, z: 0.5}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 2.8625035, y: -0.25499916, z: -1.6001594}
+  m_ConnectedAnchor: {x: 2.6125026, y: -0.25499916, z: -1.6001594}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -2654,7 +2654,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &1539137025
 BoxCollider:
@@ -2743,7 +2743,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1677934841}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.3, y: -4.75, z: 2.6}
+  m_LocalPosition: {x: 1.25, y: -4.75, z: 2.6}
   m_LocalScale: {x: 0.2, y: 0.5, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1190391470}
@@ -2886,7 +2886,7 @@ HingeJoint:
   m_Anchor: {x: 0, y: 1, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.0000023841858, y: -0.99999976, z: 0}
+  m_ConnectedAnchor: {x: 0.0000023841858, y: -0.99999976, z: -0.00000024214387}
   m_UseSpring: 0
   m_Spring:
     spring: 0
@@ -3301,7 +3301,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &1982456112
 BoxCollider:
@@ -3495,7 +3495,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &2050732216
 BoxCollider:
@@ -3603,7 +3603,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!135 &2081980426
 SphereCollider:
@@ -3755,7 +3755,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!59 &2118060360
 HingeJoint:
@@ -3766,7 +3766,7 @@ HingeJoint:
   m_GameObject: {fileID: 2118060358}
   m_ConnectedBody: {fileID: 2081980425}
   m_Anchor: {x: 0, y: 0.5, z: 0}
-  m_Axis: {x: 1, y: -0.2, z: 0}
+  m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: -0.5081028, z: 0.0273876}
   m_UseSpring: 0
@@ -3913,7 +3913,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!65 &2134409090
 BoxCollider:
