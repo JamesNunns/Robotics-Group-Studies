@@ -154,9 +154,9 @@ class Robot():
         if current_angle + angle <= self.positions['maxs'][limb_name] and current_angle + angle >= self.positions['mins'][limb_name]:
             self.motion.changeAngles(long_name, angle, percent_max_speed)
         elif current_angle + angle > self.positions['maxs'][limb_name]:
-            self.motion.changeAngles(long_name, self.positions['maxs'][limb_name] - current_angle, percent_max_speed)
+            self.motion.setAngles(long_name, self.positions['maxs'][limb_name], percent_max_speed)
         elif current_angle + angle < self.positions['mins'][limb_name]:
-            self.motion.changeAngles(long_name, self.positions['mins'][limb_name] - current_angle, percent_max_speed)
+            self.motion.setAngles(long_name, self.positions['mins'][limb_name], percent_max_speed)
 
 
 

@@ -2,7 +2,7 @@ from robot_interface import Robot
 from encoder_interface import Encoders
 from sys import path
 path.insert(0, 'single_pendulum')
-from interface_machine_learning import Machine_Learning
+from interface_machine_learning_full_movement import Machine_Learning
 from single_nothing import Nothing
 
 class Algorithm(Robot, Encoders):
