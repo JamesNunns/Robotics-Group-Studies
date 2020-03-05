@@ -3,7 +3,7 @@ from encoder_interface import Encoders
 from sys import path
 path.insert(0, 'single_pendulum')
 from interface_machine_learning_full_movement import Machine_Learning
-from single_nothing import Nothing
+from single_nothing_ml import Nothing_ML
 
 class Algorithm(Robot, Encoders):
 
@@ -12,5 +12,5 @@ class Algorithm(Robot, Encoders):
         Encoders.__init__(self, BigEncoder, SmallEncoders, small_encoders_required=False)
         Robot.__init__(self, values, positions, ALProxy, masses=False, acc_required=False, gyro_required=False)
 
-        self.order = [{'algo':Nothing, 'duration':10}, {'algo':Machine_Learning, 'duration': 600}]
+        self.order = [{'algo':Nothing_ML, 'duration':10}, {'algo':Machine_Learning, 'duration': 600}]
         
