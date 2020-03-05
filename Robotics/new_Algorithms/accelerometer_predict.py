@@ -15,7 +15,7 @@ class Algorithm(Robot, Encoders):
         self.order = [
         {
 			'algo': Nothing,
-			'duration': 20
+			'duration': 40
         },
         {
             'algo': Acc,
