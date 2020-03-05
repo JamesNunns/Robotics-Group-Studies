@@ -42,16 +42,18 @@ class Unity:
         '''
         Time step the environment.
         '''
-        self.time = time.time() - self.start_time # Determine current time
         self.perform_action(action) # Perform action
+        self.time = time.time() - self.start_time # Determine current time
 
         old_state = self.state # Save old state
         new_state = self.get_state()[0:2] # Calculate new state
         penalty = self.get_state()[2] / 100
 
-        print(penalty)
-
-        while not self.get_state()[3] or not self.get_state()[4]: pass # Wait until nothing is moving
+        time.sleep(1.0 / 10)
+        # if action == 0 or action == 1: # Action involves legs
+        #     while self.get_state()[4]: time.sleep(1.0 / 100) # Wait until not moving
+        # elif action == 2 or action == 3: # Action involves torso
+        #     while self.get_state()[3]: time.sleep(1.0 / 100) # Wait until not moving
 
         if abs(new_state[0]) > self.max_angle: self.max_angle = abs(new_state[0]) # Update max angle
 
