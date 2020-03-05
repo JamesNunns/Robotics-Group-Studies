@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Linq;
+using System;
 
 public class CustomRotationLeft : MonoBehaviour
 /// <summary>
@@ -201,13 +204,17 @@ public class CustomRotationLeft : MonoBehaviour
 			//Move(leftShoulder, Mathf.Rad2Deg*(1.65f), 1f);
 			Move(leftHip, -200, 1f);
 		}	
-		if (Input.GetKey("p"))
+		//if (Input.GetKey("p"))
 		{
-			changePosition(low_cm, 0.5f);
+			//changePosition(low_cm, 0.5f);
 		}
-		if (Input.GetKey("o"))
+		//if (Input.GetKey("o"))
 		{
-			changePosition(high_cm, 0.5f);
+			//changePosition(high_cm, 0.5f);
+		}
+		if (Input.GetKey("y"))
+		{
+			SceneManager.LoadScene("SampleScene");
 		}
 		for (int i = 0; i < 5; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle

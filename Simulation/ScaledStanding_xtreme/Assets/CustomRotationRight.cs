@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Linq;
+using System;
 
 public class CustomRotationRight : MonoBehaviour
 /// <summary>
@@ -228,6 +231,10 @@ public class CustomRotationRight : MonoBehaviour
 		if (Input.GetKey("o"))
 		{
 			changePosition(high_cm, 0.5f);
+		}
+		if (Input.GetKey("y"))
+		{
+			SceneManager.LoadScene("SampleScene");
 		}
 		for (int i = 0; i < 6; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
