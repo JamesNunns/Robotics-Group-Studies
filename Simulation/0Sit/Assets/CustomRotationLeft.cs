@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
+using System;
 
 public class CustomRotationLeft : MonoBehaviour
 /// <summary>
@@ -12,32 +14,46 @@ public class CustomRotationLeft : MonoBehaviour
 {
 	/// Define all the joints that can move
 	HingeJoint leftShoulder;
-
 	HingeJoint leftElbow;
-
 	HingeJoint leftKnee;
-
 	HingeJoint leftAnkle;
-
 	HingeJoint leftHip;
 
 	HingeJoint rod;
 
+	HingeJoint rightShoulder;
+    HingeJoint rightElbow;
+    HingeJoint rightKnee;
+    HingeJoint rightAnkle;
+    HingeJoint rightHip;
+
+    HingeJoint Neck;
+
 	/// Have a limiting angle for each joint
 	float leftShoulderAngle;
-
 	float leftElbowAngle;
-
 	float leftKneeAngle;
-
 	float leftAnkleAngle;
-
 	float leftHipAngle;
+
+	double Torque0 = 0;
+    double Torque1 = 0;
+    double Torque2 = 0;
+    double Torque3 = 0;
+    double Torque4 = 0;
+    double Torque5 = 0;
+    double Torque6 = 0;
+    double Torque7 = 0;
+    double Torque8 = 0;
+    double Torque9 = 0;
+    double Torque10 = 0;
 
 	
 	/// List every joint and angle together
 	List<HingeJoint> allJoints = new List<HingeJoint>();
 	List<float> allAngles = new List<float>();
+	List<double> Torque = new List<double>();
+	List<HingeJoint> jointsForTorque = new List<HingeJoint>();
 
 	Dictionary<HingeJoint, float> body_down = new Dictionary<HingeJoint, float>();
 	Dictionary<HingeJoint, float> legs_down = new Dictionary<HingeJoint, float>();
@@ -48,14 +64,18 @@ public class CustomRotationLeft : MonoBehaviour
 	{
 		/// Assign all of the defined joints to the correct game objects
 		leftShoulder = GameObject.Find("LeftBicep").GetComponent<HingeJoint>();
-
 		leftElbow = GameObject.Find("LeftForearm").GetComponent<HingeJoint>();
-
 		leftKnee = GameObject.Find("LeftShin").GetComponent<HingeJoint>();
-
 		leftAnkle = GameObject.Find("LeftFoot").GetComponent<HingeJoint>();
-
 		leftHip = GameObject.Find("LeftThigh").GetComponent<HingeJoint>();
+
+        rightShoulder = GameObject.Find("RightBicep").GetComponent<HingeJoint>();
+        rightElbow = GameObject.Find("RightForearm").GetComponent<HingeJoint>();
+        rightKnee = GameObject.Find("RightShin").GetComponent<HingeJoint>();
+        rightAnkle = GameObject.Find("RightFoot").GetComponent<HingeJoint>();
+        rightHip = GameObject.Find("RightThigh").GetComponent<HingeJoint>();
+
+        Neck = GameObject.Find("Body").GetComponent<HingeJoint>();
 
 		rod = GameObject.Find("RodLeft1").GetComponent<HingeJoint>();
 
@@ -79,6 +99,31 @@ public class CustomRotationLeft : MonoBehaviour
 		allAngles.Add(leftElbowAngle);
 		allAngles.Add(leftKneeAngle);
 		allAngles.Add(leftAnkleAngle);
+
+		jointsForTorque.Add(rightShoulder);
+        jointsForTorque.Add(rightElbow);
+        jointsForTorque.Add(leftShoulder);
+        jointsForTorque.Add(leftElbow);
+        jointsForTorque.Add(Neck);
+
+        jointsForTorque.Add(rightKnee);
+        jointsForTorque.Add(rightAnkle);
+        jointsForTorque.Add(rightHip);
+        jointsForTorque.Add(leftKnee);
+        jointsForTorque.Add(leftAnkle);
+        jointsForTorque.Add(leftHip);
+
+        Torque.Add(Torque0);
+        Torque.Add(Torque1);
+        Torque.Add(Torque2);
+        Torque.Add(Torque3);
+        Torque.Add(Torque4);
+        Torque.Add(Torque5);
+        Torque.Add(Torque6);
+        Torque.Add(Torque7);
+        Torque.Add(Torque8);
+        Torque.Add(Torque9);
+        Torque.Add(Torque10);
 
 		// low_cm.Add(leftElbow, Mathf.Rad2Deg*(0.050664f));
 		// low_cm.Add(leftShoulder, Mathf.Rad2Deg*(0.995608f));
@@ -208,6 +253,15 @@ public class CustomRotationLeft : MonoBehaviour
 		joint.useLimits = true;
 	}
 
+ 	double TorqueMotion(HingeJoint joint)
+    /// Defining the torque created when the switching position "crunched --> extended"
+    {
+        /// Torque is given as (x, y, z) coordinates so to find the total torque, use pythagoras 
+
+        return(Math.Sqrt((joint.currentTorque[0] * joint.currentTorque[0]) + (joint.currentTorque[1] * joint.currentTorque[1]) + (joint.currentTorque[2] * joint.currentTorque[2])));
+
+    }
+
 	void Update()
 	{
 		/// These are test inputs, they can be changed
@@ -242,14 +296,35 @@ public class CustomRotationLeft : MonoBehaviour
 		for (int i = 0; i < 5; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
 		{
-			if (allAngles[i] < allJoints[i].angle + 95f && allAngles[i] > allJoints[i].angle + 85f)
+			if (allAngles[i] < allJoints[i].angle + 98f && allAngles[i] > allJoints[i].angle + 82f)
 			{
 				Lock(allJoints[i]);
 			}
 		}
-		string state = rod.angle.ToString() + " " + rod.velocity.ToString();
+		        for (int i=0; i < 11; i++)
+        {
+            if (i < 6)
+            {
+                if (jointsForTorque[i].velocity <= 0.5)
+                {
+                    Torque[i] = 14.3;
+                }
+                else Torque[i] = Math.Abs(TorqueMotion(jointsForTorque[i]));
+            }
+            if (i >= 6)
+            {
+                if (jointsForTorque[i].velocity <= 0.5)
+                {
+                    Torque[i] = 68;
+                }
+                else Torque[i] = Math.Abs(TorqueMotion(jointsForTorque[i]));
+            }
+        }
+
+        
+		string state = (rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString();
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Simulation\angle.txt", state);
-		print(rod.angle );
+		print(Torque.Sum());
 		
 	}
 }
