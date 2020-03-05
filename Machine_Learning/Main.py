@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 
 if __name__ == "__main__":
@@ -20,3 +19,6 @@ if __name__ == "__main__":
         sys.path.insert(1, 'GNARL')
         import GNARL
         GNARL.main()
+    elif algorithm == 'render':
+        import Unity
+        Unity.render(input("Neural net: "))
