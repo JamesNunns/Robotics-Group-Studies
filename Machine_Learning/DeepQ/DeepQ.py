@@ -172,19 +172,19 @@ class DeepQ:
 
         print("Done!\n")
     
-    def save(self, name: str = "Deep Q"):
+    def save(self, name: str = "DeepQ"):
         '''
         Save the current neural network model.
         '''
         self.neural_net.save(name + ".h5")
         print("Saved to " + str(name) + ".h5\n")
     
-    def load(self, name: str = "Deep Q"):
+    def load(self, name: str = "DeepQ"):
         '''
         Load a saved neural network model.
         '''
         self.neural_net = load_model(name + ".h5")
-        print("Loaded " + file + '.h5\n')
+        print("Loaded " + name + '.h5\n')
 
 
 def main():
@@ -194,6 +194,10 @@ def main():
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     parentdir = os.path.dirname(currentdir)
     sys.path.insert(0, parentdir)
+
+    load = input("Load net? ([name] / no) ")
+    if load == '': load = 'DeepQ'
+    if not load == 'no': epsilon = float(input("Epsilon: "))
 
     if environment == 'gym': # Run Gym sim
         import gym
@@ -205,7 +209,11 @@ def main():
         from Unity import Unity
         q = DeepQ(Unity())
     
-    q.run(100)
+    if not load == 'no':
+        q.load(load)
+        q.epsilon = epsilon
+    
+    q.run(1000)
     q.save()
     q.render_actions()
     q.render_sim("Simulation")
