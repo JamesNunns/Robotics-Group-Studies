@@ -19,7 +19,7 @@ if option.upper() == 'NO':
     path.insert(0, "Training_functions")
     from naoqi import ALProxy #Import Fake SDK
     import BigEncoder #Import fake bigencoder
-     #Import fake smallencoder
+    import SmallEncoders #Import fake smallencoder
 elif option.upper() == 'YES':
     setup = 'Real'
     path.insert(0, "hidlibs")
@@ -110,12 +110,14 @@ class Interface(Algorithm):
   		delta_time = time - old_values['time']
   		delta_angle = current_angle - old_values['be']
   		ang_vel = delta_angle / delta_time
-  		if ang_vel == 0.0:
+  		
+        if ang_vel == 0.0:
   			old_old_values = self.all_data[-15]
   			if old_old_values['av'] < 0:
   				ang_vel = -1
   			else:
   				ang_vel = 1
+        
         return ang_vel
 
     def select_algo(self, values, all_data):
@@ -352,7 +354,7 @@ if __name__ == '__main__':
     #If the Script fails the robot will loosen
     interface = Interface(setup, period=0.1)
     try:
-        interface.run(filename='27-02-2020 15:59:56 Org')
+        interface.run(filename='Accelerometer Algorithm')
     except KeyboardInterrupt:
         interface.finish_script()
         interface.speech.say('Tightening')
