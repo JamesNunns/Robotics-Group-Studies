@@ -21,11 +21,12 @@ def convert(fft, freq):
             break
     return fft_conv 
 
-def acc_predict(values, tl=0.77, th=0.82):
+def acc_predict(all_data, tl=0.77, th=0.82):
     time.sleep(1)
-    Time = np.array(values['time'][-120:])
+    Time = np.array(all_data['time'])[-120:]
     rel_Time = Time - Time[0]
-    AccZ = values['ax'][-120:]
+    AccZ = np.array(all_data['az'])[-120:]
+    print AccZ
     Tlist = []
     for i in xrange(len(rel_Time)-1):
         Tlist.append(rel_Time[i+1] - rel_Time[i])
