@@ -88,38 +88,6 @@ class Interface(Algorithm):
 
         self.algo_name = 'None'
 
-    def get_ang_vel(self, time, current_angle):
-        """
-        Function to calculate the current angular velocity, taking last recorded value and new
-        value.
-        Args:
-            time: time since start of algorithm
-            current_angle: current big encoder value
-        Returns:
-            Angular velocity in rad s^-1 is there is previous data, otherwise 0
-        Example:
-            > self.get_ang_vel(0.5, 0.6)
-            -0.2
-        """
-        # No angular velocity if no old data
-        if len(self.all_data) < 5:
-    		return 0
-    
-  		old_values = self.all_data[-5]
-          
-  		delta_time = time - old_values['time']
-  		delta_angle = current_angle - old_values['be']
-  		ang_vel = delta_angle / delta_time
-  		
-        if ang_vel == 0.0:
-  			old_old_values = self.all_data[-15]
-  			if old_old_values['av'] < 0:
-  				ang_vel = -1
-  			else:
-  				ang_vel = 1
-        
-        return ang_vel
-
     def select_algo(self, values, all_data):
         """
         Function to initialise a new Algorithm from the dictionary
@@ -146,6 +114,22 @@ class Interface(Algorithm):
         algo_class_initialized = self.algo_class(values, all_data, **kwargs)
 
         return algo_class_initialized.algo
+        
+    def get_ang_vel(self, time, current_angle):
+		if len(self.all_data) < 15:
+			return 0
+		else:
+			old_values = self.all_data[-5]
+			delta_time = time - old_values['time']
+			delta_angle = current_angle - old_values['be']
+			ang_vel = delta_angle / delta_time
+			if ang_vel == 0.0:
+				old_old_values = self.all_data[-15]
+				if old_old_values['av'] < 0:
+					ang_vel = -1
+				else:
+					ang_vel = 1
+			return ang_vel
 
     def initialize_all_data(self):
         """
@@ -185,7 +169,7 @@ class Interface(Algorithm):
         if isinstance(return_values, list):
             switch, speed = return_values #If algo defines a speed the interface will use it
         else:
-            switch, speed = return_values, 0.4 #Sets a defult speed
+            switch, speed = return_values, 0.5 #Sets a defult speed
 
         # If text returned is a possible position switch to it
         if switch in positions.keys():
@@ -357,6 +341,6 @@ if __name__ == '__main__':
         interface.run(filename='Accelerometer Algorithm')
     except KeyboardInterrupt:
         interface.finish_script()
-        interface.speech.say('Tightening')
+        interface.speech.say('Oh no, your code crashed')
     finally:
         interface.motion.setStiffnesses("Body", 1.0)

@@ -12,11 +12,10 @@ import time
 path.insert(0, "Training_functions")
 import SmallEncoders
 
-path.insert(0, "/home/demo/Documents/Robotics_2020/Robotics-Group-Studies/Machine_Learning")
 from ml import ML
 ml = ML()
 
-Robot = Robot(values, positions, ALProxy, "192.168.1.3", 9559)
+Robot = Robot(values, positions, ALProxy)
 Encoders = Encoders(BigEncoder, SmallEncoders)
 
 
@@ -33,11 +32,11 @@ for joint in torso_list:
 
 
 #functions to move either the legs or torso as a whole
-def move_torso(angle, percent_max_speed=0.4):
+def move_torso(angle, percent_max_speed=0.5):
     for joint in torso_dict:
         Robot.move_limbs(joint, angle*torso_dict[joint]*0.0174533, percent_max_speed)
 
-def move_legs(angle, percent_max_speed=0.4):
+def move_legs(angle, percent_max_speed=0.5):
     legs = ['RKP', 'LKP']
     for joint in legs:
         Robot.move_limbs(joint, angle*0.0174533, percent_max_speed)
@@ -65,16 +64,15 @@ while time.time() - start_time < 60:
 				ang_vel_now = 1
 		action = ml.get_action([ angle_now, ang_vel_now ])
 		if action == 0:
-			move_legs(5)
+			move_legs(500)
 		elif action == 1:
-			move_legs(-5)
+			move_legs(-500)
 		elif action == 2:
-			move_torso(10)
+			move_torso(500)
 		elif action == 3:
-			move_torso(-10)
+			move_torso(-500)
 		elif action == 4:
-			move_legs(7)
-			move_torso(4)
+			pass
 
 		k = (time_now, angle_now, ang_vel_now, action)
 		l.append(k)
@@ -82,5 +80,5 @@ while time.time() - start_time < 60:
 		time.sleep(0.01)
 
 df = pd.DataFrame(l, columns = ['time' , 'angle', 'ang_vel', 'net action'])
-df.to_csv(r'with net')
+df.to_csv(r'with net 050320')
 

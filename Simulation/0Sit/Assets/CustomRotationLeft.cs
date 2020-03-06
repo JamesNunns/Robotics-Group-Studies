@@ -60,6 +60,9 @@ public class CustomRotationLeft : MonoBehaviour
 	Dictionary<HingeJoint, float> body_up = new Dictionary<HingeJoint, float>();
 	Dictionary<HingeJoint, float> legs_up = new Dictionary<HingeJoint, float>();
 
+	bool upperMoving;
+	bool lowerMoving;
+
 	void Start()
 	{
 		/// Assign all of the defined joints to the correct game objects
@@ -150,6 +153,9 @@ public class CustomRotationLeft : MonoBehaviour
 
 		legs_down.Add(leftKnee, 90);
 		legs_down.Add(leftAnkle, 50);
+
+		upperMoving = false;
+		lowerMoving = false;
 	}
 
 	void Move(HingeJoint joint, float ang, float speed)
@@ -176,6 +182,7 @@ public class CustomRotationLeft : MonoBehaviour
 			ang *= -1;
 			ang = 180 - ang;
 			speed *= 246;
+			upperMoving = true;
 		}
 		else if (joint == leftHip)
 		{
@@ -190,6 +197,7 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 		else
 		{
+			lowerMoving = true;
 			speed *= 378;
 		}
 		for (int i = 0; i < 5; i++)
@@ -299,6 +307,14 @@ public class CustomRotationLeft : MonoBehaviour
 			if (allAngles[i] < allJoints[i].angle + 98f && allAngles[i] > allJoints[i].angle + 82f)
 			{
 				Lock(allJoints[i]);
+				if (allJoints[i] == leftElbow)
+				{
+					upperMoving = false;
+				}
+				if (allJoints[i] == leftKnee)
+				{
+					lowerMoving = false;
+				}
 			}
 		}
 		        for (int i=0; i < 11; i++)
@@ -321,10 +337,17 @@ public class CustomRotationLeft : MonoBehaviour
             }
         }
 
-        
-		string state = (rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString();
+        if (lowerMoving)
+        {
+        	print("Moving");
+        }
+        else
+        {
+        	print("Not Moving");
+        }
+		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Simulation\angle.txt", state);
-		print(Torque.Sum());
+		//print(Torque.Sum());
 		
 	}
 }
