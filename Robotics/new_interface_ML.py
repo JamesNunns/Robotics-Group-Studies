@@ -19,7 +19,7 @@ if option.upper() == 'NO':
     path.insert(0, "Training_functions")
     from naoqi import ALProxy #Import Fake SDK
     import BigEncoder #Import fake bigencoder
-     #Import fake smallencoder
+    import SmallEncoders #Import fake smallencoder
 elif option.upper() == 'YES':
     setup = 'Real'
     path.insert(0, "hidlibs")
@@ -338,7 +338,7 @@ if __name__ == '__main__':
     #If the Script fails the robot will loosen
     interface = Interface(setup, period=0.1)
     try:
-        interface.run(filename='27-02-2020 15:59:56 Org')
+        interface.run(filename='Accelerometer Algorithm')
     except KeyboardInterrupt:
         interface.finish_script()
         interface.speech.say('Oh no, your code crashed')
