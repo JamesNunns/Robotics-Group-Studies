@@ -116,20 +116,33 @@ class Interface(Algorithm):
         return algo_class_initialized.algo
         
     def get_ang_vel(self, time, current_angle):
-		if len(self.all_data) < 15:
-			return 0
-		else:
-			old_values = self.all_data[-5]
-			delta_time = time - old_values['time']
-			delta_angle = current_angle - old_values['be']
-			ang_vel = delta_angle / delta_time
-			if ang_vel == 0.0:
-				old_old_values = self.all_data[-15]
-				if old_old_values['av'] < 0:
-					ang_vel = -1
-				else:
-					ang_vel = 1
-			return ang_vel
+        """
+        Function to calculate the current angular velocity, taking last recorded value and new
+        value.
+        Args:
+            time: time since start of algorithm
+            current_angle: current big encoder value
+        Returns:
+            Angular velocity in rad s^-1 is there is previous data, otherwise 0
+        Example:
+            > self.get_ang_vel(0.5, 0.6)
+            -0.2
+        """
+
+        if len(self.all_data) < 15:
+            return 0
+        else:
+            old_values = self.all_data[-5]
+            delta_time = time - old_values['time']
+            delta_angle = current_angle - old_values['be']
+            ang_vel = delta_angle / delta_time
+            if ang_vel == 0.0:
+                old_old_values = self.all_data[-15]
+                if old_old_values['av'] < 0:
+                    ang_vel = -1
+                else:
+                    ang_vel = 1
+            return ang_vel
 
     def initialize_all_data(self):
         """
