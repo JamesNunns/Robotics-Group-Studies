@@ -219,7 +219,7 @@ class Interface(Algorithm):
 
         if switch == "torso_retracted":
             for joint in torso_dict:
-                self.move_limbs(joint, torso_dict[joint]*-500*0.0174533, torso_speed[joint]*torso_speed[joint]*speed)
+                self.move_limbs(joint, torso_dict[joint]*-500*0.0174533, torso_speed[joint]*speed)
                 
         # Add current values to list of all values
         self.all_data = numpy.append(self.all_data, numpy.array(
