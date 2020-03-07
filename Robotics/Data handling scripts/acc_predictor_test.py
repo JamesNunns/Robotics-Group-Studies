@@ -1,6 +1,14 @@
 import numpy as np
 from scipy.signal import find_peaks
 import time
+import pandas as pd
+import matplotlib.pyplot as plt
+# [time, event, ax, ay, az, gx, gy, gz, se0, se1, se2, se3, be, av, cmx, cmy, algo, position]
+
+data = pd.read_csv("Sensor_change_pos.txt")
+
+data.columns =["time", "", "", "","az", "","", "","", "","", "", "","", "","", "", ""]
+
 
 def filt(fft, freq, tl, th):
     for i in xrange(len(freq)):
