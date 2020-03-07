@@ -10,7 +10,7 @@ from robot_interface import Robot, PositionError
 from encoder_interface import Encoders
 import numpy
 from collections import OrderedDict
-from torso_and_legs import torso_dict, legs
+from torso_and_legs import torso_dict, legs_dict, torso_speed, legs_speed
 
 option = raw_input("Using Real Robot (Yes/No)")
 if option.upper() == 'NO':
@@ -190,36 +190,36 @@ class Interface(Algorithm):
 
         if switch == "torso_out":
             for joint in torso_dict:
-                self.move_limbs(joint, torso_dict[joint]*5*0.0174533, speed)
+                self.move_limbs(joint, torso_dict[joint]*5*0.0174533, torso_speed[joint]*speed)
         
         if switch == "torso_in":
             for joint in torso_dict:
-                self.move_limbs(joint, torso_dict[joint]*5*-0.0174533, speed)
+                self.move_limbs(joint, torso_dict[joint]*5*-0.0174533, torso_speed[joint]*speed)
 
         if switch == "legs_out":
-            for joint in legs:
-                self.move_limbs(joint, -5*0.0174533, speed)
+            for joint in legs_dict:
+                self.move_limbs(joint, -5*0.0174533, legs_speed[joint]*speed)
 
         if switch == "legs_in":
-            for joint in legs:
-                self.move_limbs(joint, 5*0.0174533, speed)
+            for joint in legs_dict:
+                self.move_limbs(joint, 5*0.0174533, legs_speed[joint]*speed)
         
         if switch == "legs_retracted":
-            for joint in legs:
-                self.move_limbs(joint, 500*0.0174533, speed) 
+            for joint in legs_dict:
+                self.move_limbs(joint, 500*0.0174533, legs_speed[joint]*speed) 
         
         if switch == "legs_extended":
-            for joint in legs:
-                self.move_limbs(joint, -500*0.0174533, speed) 
+            for joint in legs_dict:
+                self.move_limbs(joint, -500*0.0174533, legs_speed[joint]*speed) 
         
         if switch == "torso_extended":
             for joint in torso_dict:
-                self.move_limbs(joint, torso_dict[joint]*500*0.0174533, speed)
+                self.move_limbs(joint, torso_dict[joint]*500*0.0174533, torso_speed[joint]*speed)
 
 
         if switch == "torso_retracted":
             for joint in torso_dict:
-                self.move_limbs(joint, torso_dict[joint]*-500*0.0174533, speed)
+                self.move_limbs(joint, torso_dict[joint]*-500*0.0174533, torso_speed[joint]*torso_speed[joint]*speed)
                 
         # Add current values to list of all values
         self.all_data = numpy.append(self.all_data, numpy.array(
