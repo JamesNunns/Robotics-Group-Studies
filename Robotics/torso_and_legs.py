@@ -14,7 +14,7 @@ for joint in torso_list:
 torso_speed = {}
 max_angles_torso = max(torso_dict.values())
 for joint in torso_list:
-    speed = torso_dict[joint]/max_angles_torso
+    speed = abs(torso_dict[joint]/max_angles_torso)
     torso_speed[joint] = speed
 
 legs = ['RKP', 'LKP', 'LAP', 'RAP']
@@ -28,5 +28,5 @@ for joint in legs:
 legs_speed = {}
 max_angles_legs = max(legs_dict.values())
 for joint in legs_dict:
-    speed = legs_dict[joint]/max_angles_legs
+    speed = abs(legs_dict[joint]/max_angles_legs)
     legs_speed[joint] = speed
