@@ -2,9 +2,11 @@ from robot_interface import Robot
 from encoder_interface import Encoders
 from sys import path
 path.insert(0, 'single_pendulum')
-from single_test_brute import Test 
-from single_damping_small_angles import SmallAngleDamping
-from single_startup_const_period import Start
+from single_nothing import Nothing
+path.insert(0,'Triple_pendulum')
+from triple_startup import Triple
+from triple_incrase_period import TripleIncrease
+from triple_maintain import Maintain
 
 class Algorithm(Robot, Encoders):
 
@@ -16,10 +18,16 @@ class Algorithm(Robot, Encoders):
 
         self.order = [
         {        
-            'algo': Start,
-            'duration': 30
+            'algo': Nothing,
+            'duration': 10
         },{        
-            'algo': Test,
+            'algo': Triple,
             'duration': 30
+        },{
+            'algo': TripleIncrease,
+            'duration' : 30
+        },{
+            'algo': Maintain,
+            'duration' : 30
         }
         ]
