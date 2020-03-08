@@ -41,9 +41,9 @@ def acc_predict(all_data, tl=0.77, th=0.82):
         tp.append(rel_Time[peaks][i+1]-rel_Time[peaks][i])
     tp = np.mean(tp)
     last_maxima = rel_Time[peaks][-1]+Time[0]
-    next_10_maxima = []
-    next_10_minima = []
-    for i in xrange(10):
-        next_10_maxima.append(last_maxima+(i+1)*tp)
-        next_10_minima.append(last_maxima+(i+1)*tp - tp/2)
-    return next_10_maxima, next_10_minima
+    next_5_maxima = []
+    next_5_minima = []
+    for i in xrange(5):
+        next_5_maxima.append(last_maxima+(i+1)*tp)
+        next_5_minima.append(last_maxima+(i+1)*tp - tp/2)
+    return next_5_maxima, next_5_minima
