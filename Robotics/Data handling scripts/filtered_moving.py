@@ -7,11 +7,13 @@ from scipy.signal import find_peaks
 
 data = np.array(pd.read_csv("Sensor_change_pos.txt"))
 
-Time = np.array([x[0] for x in data])[0:120]
+Time = np.array([x[0] for x in data])[-120:]
+rt = Time
+print rt
 Time = Time - Time[0]
-AccX = np.array([x[2] for x in data])[0:120]
-AccZ = np.array([x[4] for x in data])[0:120]
-Encoder = np.array([x[12] for x in data])[0:120]
+AccX = np.array([x[2] for x in data])[-120:]
+AccZ = np.array([x[4] for x in data])[-120:]
+Encoder = np.array([x[12] for x in data])[-120:]
 fftz = np.fft.fft(AccZ)
 Nz = AccZ.size
 
@@ -57,7 +59,7 @@ plt.title("FFT Filter of Z Accelerometer whilst Nao changes position")
 #plt.figure(1)
 #plt.plot(Time, AccZ)
 #plt.plot(Time, data_2, label="Filtered Z Accelerometer from 0.4Hz")
-plt.plot(Time, data, label="Filtered Z Accelerometer from 0.8Hz halved")
+plt.plot(rt, data, label="Filtered Z Accelerometer from 0.8Hz halved")
 #plt.ylim(-30, 30)
 #plt.xlim(5, 13)
 #plt.ylabel(r"Swing angle $^{\circ}$")

@@ -13,7 +13,7 @@ class Acc():
         print values['time'], values['be'], values['ax'], values['az']
         if values['time'] - self.start_time < self.duration:
             offset = 0.1
-            p = acc_predict(values)
+            p = acc_predict(all_data)
             for i in p[0]:
                 if abs(values['time'] - i) < offset:
                     return 'extended'
