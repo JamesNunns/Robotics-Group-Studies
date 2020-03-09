@@ -140,11 +140,11 @@ public class CustomRotationLeft : MonoBehaviour
 		// high_cm.Add(leftAnkle, Mathf.Rad2Deg*(-1.141338f));
 		// high_cm.Add(leftHip, Mathf.Rad2Deg*(-1.5708f));
 
-		body_down.Add(leftHip, -10);
+		body_down.Add(leftHip, -40);
 		body_down.Add(leftShoulder, 0);
 		body_down.Add(leftElbow, 0);
 
-		body_up.Add(leftHip, -80);
+		body_up.Add(leftHip, -90);
 		body_up.Add(leftShoulder, 75);
 		body_up.Add(leftElbow, -85);
 
@@ -175,19 +175,19 @@ public class CustomRotationLeft : MonoBehaviour
 		if (joint == leftShoulder)
 		{
 			ang += 40;
-			speed *= 246;
+			speed *= 346;
 		}
 		else if (joint == leftElbow)
 		{
 			ang *= -1;
 			ang = 180 - ang;
-			speed *= 246;
+			speed *= 346;
 			upperMoving = true;
 		}
 		else if (joint == leftHip)
 		{
 			ang = 180 + ang;
-			speed *= 378;
+			speed *= 500;
 		}
 		else if (joint == leftAnkle)
 		{
