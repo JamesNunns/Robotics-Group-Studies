@@ -221,7 +221,7 @@ class Gnarl():
         # self.mutate_structure_node_del() # WORKING
         # self.mutate_structure_node_add() # WORKING?
 
-    def main(self):
+    def run(self):
         
         model = self.chromosome
         for gen in range(self.max_generations):
@@ -229,26 +229,22 @@ class Gnarl():
                 fitness = play_cart(model)
                 
     def copy(self):
-        return +self
-    
-    def __pos__(self):
         return self.__class__(*self)
-    
                 
                 
                 
 
-my_net = Gnarl()
+#my_net = Gnarl()
 # my_net.initial_structure()
 
 
 # print(my_net.chromosome.connection_genes)
-for conn in my_net.chromosome.connection_genes:
-    print(conn.weight)
+#for conn in my_net.chromosome.connection_genes:
+#    print(conn.weight)
 
-for i in range(100):
-    my_net.mutate()
-print('\n--Mutating--\n')
+#for i in range(100):
+#    my_net.mutate()
+#print('\n--Mutating--\n')
 
 # for conn in my_net.chromosome.connection_genes:
 #     print(conn.weight)
@@ -261,8 +257,8 @@ print('\n--Mutating--\n')
 
 # my_net.mutate()
 
-for node in my_net.chromosome.node_genes:
-    node.get_connections()
+#for node in my_net.chromosome.node_genes:
+#    node.get_connections()
 
 
 
