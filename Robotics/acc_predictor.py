@@ -22,9 +22,9 @@ def convert(fft, freq):
 
 def acc_predict(all_data, tl=0.77, th=0.82):
     time.sleep(2)
-    Time = np.array(all_data['time'])[-120:]
+    Time = np.array(all_data['time'])[-128:]
     rel_Time = Time - Time[0]
-    AccZ = np.array(all_data['az'])[-120:]
+    AccZ = np.array(all_data['az'])[-128:]
     Tlist = []
     for i in xrange(len(rel_Time)-1):
         Tlist.append(rel_Time[i+1] - rel_Time[i])
@@ -41,9 +41,9 @@ def acc_predict(all_data, tl=0.77, th=0.82):
         tp.append(rel_Time[peaks][i+1]-rel_Time[peaks][i])
     tp = np.mean(tp)
     last_maxima = rel_Time[peaks][-1]+Time[0]
-    next_5_maxima = []
-    next_5_minima = []
+    next_2_maxima = []
+    next_2_minima = []
     for i in xrange(5):
-        next_5_maxima.append(last_maxima+(i+1)*tp)
-        next_5_minima.append(last_maxima+(i+1)*tp - tp/2)
-    return next_5_maxima, next_5_minima
+        next_2_maxima.append(last_maxima+(i+1)*tp)
+        next_2_minima.append(last_maxima+(i+1)*tp - tp/2)
+    return next_2_maxima, next_2_minima
