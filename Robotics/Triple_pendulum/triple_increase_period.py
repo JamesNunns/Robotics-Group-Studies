@@ -8,7 +8,8 @@ class TripleIncrease():
         self.start_time = values['time']
         self.previous_time = values['time']
         self.switch_time = 100
-        self.offet = -0.21
+        self.offset = -0.21
+        self.period = kwargs.get('period', 0.005)
         self.last_maximum = last_maxima(all_data['time'], all_data['be'], time_values='values', dt=self.period)
         self.duration = kwargs.get('duration', float('inf'))
         self.previous_be =  values['be']
@@ -16,7 +17,7 @@ class TripleIncrease():
 
     def algo(self,values,all_data):
 
-        if sign_zero(vales['be']) != sign_zero(self.previous_be):
+        if sign_zero(values['be']) != sign_zero(self.previous_be):
             
             self.min_time = last_zero_crossing(values, self.previous_time, self.previous_be)
             self.max_time, self.last_maximum = last_maxima(all_data['time'], all_data['be'], time_values='both', dt=self.period)
@@ -27,7 +28,7 @@ class TripleIncrease():
 
         self.previous_be = values['be']
         self.previous_time = values['time']
-
+        print values['time'] , values['be']
         if values['time'] > self.switch_time:
             self.switch_time += 100
             if values['be'] < 0:

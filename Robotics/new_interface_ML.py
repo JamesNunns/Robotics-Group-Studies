@@ -177,7 +177,7 @@ class Interface(Algorithm):
             self.algorithm = self.select_algo(current_values, self.all_data)#To change algorithm
 
         #Collects the retuned values from the algorithm        
-        return_values = self.algorithm(current_values, self.all_data[-300:])
+        return_values = self.algorithm(current_values, self.all_data[-1200:])
 
         if isinstance(return_values, list):
             switch, speed = return_values #If algo defines a speed the interface will use it
@@ -238,9 +238,7 @@ class Interface(Algorithm):
 
         self.all_data = self.initialize_all_data() #Initializes all the data
 
-        self.fname = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime()) #Creates an output file
-        
-        self.filename = self.fname + '.txt'
+        self.filename = tme.strftime("%d-%m-%Y %H:%M:%S", tme.gmtime()) #Creates an output file
         
         self.initial_time = tme.time() #Collects the initial time
         switch = 'switch' #Sets the initial output as switch to select the first algo
@@ -330,7 +328,7 @@ class Interface(Algorithm):
         print('\033[1mExpected sampling period: {:.3f}s\nActual sampling period: {:.3f}s\033[0m'.format(self.period, average_cycle_time))
 
         # store data in txt file, all original data has ' Org' added to name
-        store(self.filename + ' Org', self.all_data)
+        store(self.filename + '.txt', self.all_data)
 
     def run(self, **kwargs):
         """
@@ -350,7 +348,7 @@ if __name__ == '__main__':
     #If the Script fails the robot will loosen
     interface = Interface(setup, period=0.01)
     try:
-        interface.run(filename='26-03-2019 15:27:54 Org')
+        interface.run(filename='scipy.txt')
     except KeyboardInterrupt:
         interface.finish_script()
         interface.speech.say('Oh no, your code crashed')

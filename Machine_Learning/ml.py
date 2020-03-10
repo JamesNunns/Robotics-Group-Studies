@@ -2,6 +2,8 @@ from keras.models import load_model
 import numpy as np
 import pickle
 from neat import nn
+from sys import path
+path.insert(0, "../Machine_Learning")
 
 class ML:
     '''

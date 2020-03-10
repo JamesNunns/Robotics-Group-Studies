@@ -21,8 +21,8 @@ def last_key_point(what, all_data):
         return times[last_peak]
     
     if what == "zero":
-        ev = encoder_values[-int(3/ts):]
-        tv = times[-int(3/ts):]
+        ev = encoder_values
+        tv = times
         min_time = []
         for i in xrange(len(ev)-1):
             if np.sign(ev[i+1]) != np.sign(ev[i]):
@@ -51,6 +51,6 @@ def next_points(values, last_key_points):
         quarter_period = abs(l[0] - l[2])
         next_max = l[0] + 4*quarter_period
         next_min = l[0] + 2*quarter_period
-        
+    print next_max, next_min    
     return next_max, next_min
     
