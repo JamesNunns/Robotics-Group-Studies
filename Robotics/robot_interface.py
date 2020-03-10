@@ -241,13 +241,13 @@ class Robot():
         summary = summary.split()
         summary = summary[7:-14]
         for i in range(len(summary)/4):
-            for keys in values:
-                if values[keys][0] == summary[4*i]:
+            for keys in self.values:
+                if self.values[keys][0] == summary[4*i]:
                     current_posture[keys] = summary[4*i + 3]
         if isinstance(label, str):
-            positions['current'] = current_posture
+            self.positions['current{}'.format(label)] = current_posture
         else:
-            positions[]
+            self.positions['current'] = current_posture
 
     def calibrate_acc(self):
         '''

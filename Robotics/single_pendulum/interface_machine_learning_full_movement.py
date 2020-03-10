@@ -10,9 +10,9 @@ class Machine_Learning():
         self.previous_be = values['be']
         self.duration = kwargs.get('duration', float('inf'))
         self.previous_vel = values['av']
-        sys.path.insert(0, "../")
+        sys.path.insert(0, "../Machine_Learning")
         from ml import ML
-        self.ml = ML()
+        self.ml = ML("../Machine_Learning/winner.pkl")
 
     def algo(self,values,all_data):
         time.sleep(0.01)

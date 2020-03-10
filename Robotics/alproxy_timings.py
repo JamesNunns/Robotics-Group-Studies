@@ -1,6 +1,6 @@
 import pandas as pd
 import time
-
+import numpy as np
 from robot_interface import Robot
 from naoqi import ALProxy
 from positions_sym import positions
@@ -11,6 +11,7 @@ from torso_and_legs import torso_dict, torso_speed, legs_dict, legs_speed
 Robot = Robot(values, positions, ALProxy)
 
 calls = np.linspace(100, 1000, 10)
+joint_calls = np.linspace(10, 100, 10)
 
 ##########
 #Joint movement timing test
@@ -18,10 +19,10 @@ calls = np.linspace(100, 1000, 10)
 times_JM = []
 start_time_JM = time.time()
 for i in range(10):
-    for j in range(100):
+    for j in range(10):
         Robot.move_limbs('LKP', 0.0, 0.5)
-    times.append(time.time()-start_time_JM)
-
+    times_JM.append(time.time()-start_time_JM)
+print "joint movements done"
 ##########
 #Get Posture timing test
 ##########
@@ -31,17 +32,17 @@ for i in range(10):
     for j in range(100):
         Robot.get_posture()
     times_GP.append(time.time()-start_time_GP)
-
+print "get posture done"
 ##########
 #Set Posture timing test
 ##########
 times_SP = []
 start_time_SP = time.time()
 for i in range(10):
-    for j in range(100):
-        Robot.set_posture('current')
+    for j in range(10):
+        Robot.set_posture('crunched', 'crunched')
     times_SP.append(time.time()-start_time_SP)
-
+print "set posture done"
 ##########
 #Accelerometer timing test
 ##########
@@ -49,9 +50,12 @@ times_AC = []
 start_time_AC = time.time()
 for i in range(10):
     for j in range(100):
-        Robot.get_acc(y):
-    times.AC.append(time.time()-start_time_AC)
-
-
-df = pd.DataFrame((calls, times_JM, times_GP, times_SP, times_AC), columns = ['calls', 'joints', 'get_p', 'set_p', 'set_a'])
+        Robot.get_acc('y')
+    times_AC.append(time.time()-start_time_AC)
+print "accelerometer done"
+k = calls, joint_calls, times_JM, times_GP, times_SP, times_AC
+print len(k)
+for item in k:
+	print len(item)
+df = pd.DataFrame(np.array(k), columns = ['calls', 'joint_calls', 'joints', 'get_p', 'set_p', 'set_a'])
 df.to_csv("Nao_readout_timings")
