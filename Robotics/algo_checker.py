@@ -19,4 +19,5 @@ data.columns =["time", "", "", "","", "","", "","", "","", "", "be","", "","", "
 
 col = np.where(data["p"] == "extended","r", np.where(data["p"] == "crunched","b", "m"))
 
-plt.scatter(data["time"], data["be"], color=col, s=0.2)
+plt.scatter(data["time"], data["be"], color=col, s=2, label="blue crunched red extended")
+plt.legend()
