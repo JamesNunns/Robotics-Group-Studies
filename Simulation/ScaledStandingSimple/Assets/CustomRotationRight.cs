@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Linq;
+using System;
 
 public class CustomRotationRight : MonoBehaviour
 /// <summary>
@@ -209,23 +212,40 @@ public class CustomRotationRight : MonoBehaviour
 		{
 			Move(rightKnee, 105, 1f);
 			Move(rightElbow, -90, 1f);
-			//Move(rightShoulder, 57, 1f);
 			Move(rightHip, -100, 1f);
 		}
 		if (Input.GetKey("n"))//crouch
 		{
 			Move(rightKnee, 200, 1f);
 			Move(rightElbow, -180, 1f);
-			//Move(rightShoulder, Mathf.Rad2Deg*(1.65f), 1f);
 			Move(rightHip, -200, 1f);
 		}	
-		if (Input.GetKey("p"))
+		if (Input.GetKey("z")) //forward
 		{
-			changePosition(low_cm, 0.5f);
+			Move(rightAnkle, -20, 1f);
+			Move(rightHip, -170, 1f);
+			Move(rightElbow, -210, 1f);
+			Move(rightKnee, 110, 1f);
 		}
-		if (Input.GetKey("o"))
+		if (Input.GetKey("x")) //backwards
 		{
-			changePosition(high_cm, 0.5f);
+			Move(rightKnee, 200, 1f);
+			Move(rightHip, -100, 1f);
+			Move(rightElbow, -90, 1f);
+			Move(rightAnkle, -75, 1f);
+			Move(rightShoulder, 45, 1f);
+		}
+		if (Input.GetKey("c")) //alternate forward
+		{
+			Move(rightAnkle, -70, 1f);
+			Move(rightHip, -180, 1f);
+			Move(rightElbow, -215, 1f);
+			Move(rightKnee, 200, 1f);
+			Move(rightShoulder, 35, 1f);
+		}
+		if (Input.GetKey("y")) //resets
+		{
+			SceneManager.LoadScene("SampleScene");
 		}
 		for (int i = 0; i < 6; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
