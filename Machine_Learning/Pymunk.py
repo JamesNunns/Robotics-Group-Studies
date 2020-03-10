@@ -230,7 +230,7 @@ class Swing:
 
         reward = 0
         if ((velocity < 0 and self.velocity > 0) or (velocity > 0 and self.velocity < 0)) or ((angle < 0 and self.angle > 0) or (angle > 0 and self.angle < 0)):
-            reward = 2 * self.angle**3 + self.velocity**3
+            reward = 2 * self.angle**2 + self.velocity**2
 
         observation = [self.angle, self.velocity]
         if self.time > self.timeout: done = True
@@ -253,7 +253,10 @@ class Swing:
             action = random.randrange(0,4)
         else:
             # prev_obs = np.reshape(self.prev_obs, [1, 2])
-            action = np.argmax(self.model.predict(self.prev_obs.reshape(-1, len(self.prev_obs)))[0])
+            try:
+                action = np.argmax(self.model.predict(self.prev_obs.reshape(-1, len(self.prev_obs)))[0])
+            except:
+                action = np.argmax(self.model.serial_activate(self.prev_obs))
 
         new_observation, reward, done, _ = self.step(action)
         self.prev_obs = np.array(new_observation)
