@@ -24,6 +24,5 @@ class Acc():
                 if next_min - values['time'] > 0:
                     return "crunched"
         else:
-            print "done"
             return 'switch'
         
