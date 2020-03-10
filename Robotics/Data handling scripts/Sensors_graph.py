@@ -58,7 +58,7 @@ AngY = data['AngY']
 Encoder = data['Encoder']
 
 
-test = test_filter(Time, AccX)
+test = test_filter(Time, AngY)
 
 Time_array = np.asarray(Time)
 peaks = find_peaks(test)[0]
@@ -76,6 +76,7 @@ args = [i for i in range(len(test)) if abs(test[i]) <= 0.007]
 fig1, ax1 = plt.subplots()
 #ax1.set_xlim(10, 60)
 
+ax1.set_title('Y Angle')
 ax1.set_xlabel('Time(s)')
 ax1.set_ylabel('Encoder Reading(degrees)', color='cornflowerblue')
 ax1.set_ylim( -50, 50)
@@ -108,13 +109,13 @@ ax1.axhline(y=0)
 ##################################
 #Angles
 ##################################
-ylim = 8
+ylim = 0.3
 ax2 = ax1.twinx()
 ax2.set_ylabel('Sensor Values', color='orange')
 ax2.set_ylim(-ylim, ylim)
 #ax2.plot(Time, smooth(AccZ, 20, 'same'), color='orange', linewidth=2)
-ax2.plot(Time, test, color='red', linewidth=2)
-ax2.plot(Time[peaks], test[peaks], 'k.')
+ax2.plot(Time, test, color='orange', linewidth=2)
+#ax2.plot(Time[peaks], test[peaks], 'k.')
 #ax2.plot(Time[AngX_peaks], AngX[Ang_peaks], 'k.',label = 'Peaks')
 
 
