@@ -174,10 +174,10 @@ class Interface(Algorithm):
         self.algo_name = Algorithm.__name__ #Collects the algorithm name
 
         if switch == 'switch': #If the output of the algo is 'switch' it will call select_algo
-            self.algorithm = self.select_algo(current_values, self.all_data[-1200:])#To change algorithm
+            self.algorithm = self.select_algo(current_values, self.all_data)#To change algorithm
 
         #Collects the retuned values from the algorithm        
-        return_values = self.algorithm(current_values, self.all_data)
+        return_values = self.algorithm(current_values, self.all_data[-1200:])
 
         if isinstance(return_values, list):
             switch, speed = return_values #If algo defines a speed the interface will use it
