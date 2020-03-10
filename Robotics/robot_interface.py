@@ -222,19 +222,19 @@ class Robot():
         # Switch from current position just added to next_posture
         self.set_posture(next_posture, 'startup', max_speed=max_speed)
 
-    def get_posture(self):
+    def get_posture(self, label=None):
         '''
-        Returns the posture of NAO as a dictionary in the same format as the positions dictionary
+        Temporarily adds the current posture of Nao to the imported 'positions'
+        dictionary calling it 'current'
 
-        Parameters
-        ------
-        summary: list
-            Raw list of current posture generated using "motionProxy.getSummary"
-
-        Returns
-        ------
-        current_posture: dict.
-            Dictionary of Nao limb data defining the current posture of Nao
+        Args:
+            summary: list
+                Raw list of current posture generated using "motionProxy.getSummary()"
+        Returns:
+            None
+        Example:
+            self.get_posture()
+            current_posture = positions['current']
         '''
         current_posture = {}
         summary = self.motion.getSummary()
@@ -244,7 +244,10 @@ class Robot():
             for keys in values:
                 if values[keys][0] == summary[4*i]:
                     current_posture[keys] = summary[4*i + 3]
-        return current_posture
+        if isinstance(label, str):
+            positions['current'] = current_posture
+        else:
+            positions[]
 
     def calibrate_acc(self):
         '''
