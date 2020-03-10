@@ -1,21 +1,21 @@
-from sys import path
-path.insert(0, "../")
-from acc_predictor import acc_predict
 from utility_functions_new import last_key_point, next_points
 
-class Acc():
+class TP_Predict():
 
     def __init__(self,values,all_data,**kwargs):
-        self.period = kwargs.get('period', 0.01)
+        self.period = kwargs.get('period', 0.005)
+
         self.start_time = values['time']
+        self.previous_time = values['time']
+        self.previous_be = values['be']
+        self.offset = 0.1
         self.duration = kwargs.get('duration', float('inf'))
-        self.offset = 0.25
+
 
     def algo(self,values,all_data):
-        print values['time'], values['be'], values['ax'], values['az']
+        print values['time'], values['be']
         if values['time'] - self.start_time < self.duration:
-            p = acc_predict(all_data)
-            l = [last_key_point("max", p), last_key_point("min", p), last_key_point("zero", p)]
+            l = [last_key_point("max", all_data), last_key_point("min", all_data), last_key_point("zero", all_data)]
             next_max, next_min = next_points(values, l)
             if next_max - values['time'] < self.offset:
                 if next_max - values['time'] > 0:
@@ -23,6 +23,9 @@ class Acc():
             if next_min - values['time'] < self.offset:
                 if next_min - values['time'] > 0:
                     return "crunched"
+            
+            
         else:
             return 'switch'
-        
+
+
