@@ -177,7 +177,7 @@ class Interface(Algorithm):
             self.algorithm = self.select_algo(current_values, self.all_data)#To change algorithm
 
         #Collects the retuned values from the algorithm        
-        return_values = self.algorithm(current_values, self.all_data[-200:])
+        return_values = self.algorithm(current_values, self.all_data[-300:])
 
         if isinstance(return_values, list):
             switch, speed = return_values #If algo defines a speed the interface will use it
@@ -224,7 +224,6 @@ class Interface(Algorithm):
         # Add current values to list of all values
         self.all_data = numpy.append(self.all_data, numpy.array(
             [tuple(current_values.values())], dtype=self.data_type), axis=0)
-
         return switch
 
     def __run_real(self, t, period):
@@ -349,9 +348,9 @@ class Interface(Algorithm):
 
 if __name__ == '__main__':
     #If the Script fails the robot will loosen
-    interface = Interface(setup, period=0.1)
+    interface = Interface(setup, period=0.01)
     try:
-        interface.run(filename='Accelerometer Algorithm')
+        interface.run(filename='26-03-2019 15:27:54 Org')
     except KeyboardInterrupt:
         interface.finish_script()
         interface.speech.say('Oh no, your code crashed')
