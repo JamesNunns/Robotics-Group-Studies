@@ -31,12 +31,12 @@ class DeepQ:
         self.alpha_decay = 0.01         # Using previous actions to predict more with time
         self.gamma = 1                  # Discout factor
         self.epsilon = 1                # Exploration factor
-        self.epsilon_decay =  0.98      # Less exploration with time
+        self.epsilon_decay =  0.99      # Less exploration with time
         self.epsilon_min =  0.01        # Still non-zero exploration after long time
 
         # Memory
         self.memory = []
-        self.rewards = deque(maxlen=100)
+        self.rewards = deque(maxlen=10000)
         self.performance = []
         self.max_angles = []
         self.actions = []
@@ -65,7 +65,7 @@ class DeepQ:
         print("Done!")
         return neural_net
 
-    def replay(self, batch_size: int = 64):
+    def replay(self, batch_size: int = 64000):
         '''
         Trains the model based on remembered information.
         '''

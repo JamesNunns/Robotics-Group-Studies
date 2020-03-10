@@ -566,6 +566,9 @@ def main():
                                         render_runs=1,
                                         breed_ratio=0.5,
                                         env=env)
+    
+    best_model.save()
+    env.render(best_model, timeout=500)
 
 
 
