@@ -7,7 +7,7 @@ class Unity:
     '''
     Machine learning class that uses a neural network to output trained actions based on current states.
     '''
-    def __init__(self, timeout: int = 60):
+    def __init__(self, timeout: int = 10):
         '''
         Initialise the neural network.
         '''
@@ -49,11 +49,11 @@ class Unity:
         new_state = self.get_state()[0:2] # Calculate new state
         penalty = self.get_state()[2] / 100
 
-        time.sleep(1.0 / 10)
-        # if action == 0 or action == 1: # Action involves legs
-        #     while self.get_state()[4]: time.sleep(1.0 / 100) # Wait until not moving
-        # elif action == 2 or action == 3: # Action involves torso
-        #     while self.get_state()[3]: time.sleep(1.0 / 100) # Wait until not moving
+        time.sleep(1.0 / 50)
+        if action == 0 or action == 1: # Action involves legs
+            while self.get_state()[4]: time.sleep(1.0 / 50) # Wait until not moving
+        if action == 2 or action == 3: # Action involves torso
+            while self.get_state()[3]: time.sleep(1.0 / 50) # Wait until not moving
 
         if abs(new_state[0]) > self.max_angle: self.max_angle = abs(new_state[0]) # Update max angle
 
@@ -111,6 +111,9 @@ def render(neural_net: str):
 
     while True:
         state = np.array(unity.get_state())
-        action = np.argmax(model.predict(state.reshape(-1, len(state)))[0])
+        try:
+            action = np.argmax(model.predict(state.reshape(-1, len(state)))[0])
+        except:
+            action = np.argmax(model.serial_activate(state))
         unity.perform_action(action)
         time.sleep(1.0 / 10)
