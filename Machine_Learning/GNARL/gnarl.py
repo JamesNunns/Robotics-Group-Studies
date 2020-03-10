@@ -22,7 +22,7 @@ max_fitness = 1
 
 
 class Gnarl():
-    def __init__(self,
+    def __init__(self, engine,
                  input_size=2,
                  output_size=4,
                  max_generations=20, # implement
@@ -224,9 +224,7 @@ class Gnarl():
     def run(self):
         
         model = self.chromosome
-        for gen in range(self.max_generations):
-            for pop in range(self.population_size):
-                fitness = play_cart(model)
+        self.fitness = play_cart(model)
                 
     def copy(self):
         return self.__class__(*self)

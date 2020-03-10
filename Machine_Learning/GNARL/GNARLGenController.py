@@ -17,17 +17,21 @@ class gnarl_controller():
         
         if start_entities is None:
             for i in range(pop_size):
-                self.entities[i] = Gnarl(engine, input_size=input_length, output_size=output_length).initial_structure()
+                self.entities[i] = Gnarl(engine, input_size=input_length, output_size=output_length)
+                #self.entities[i].initial_structure()
+                print(self.entities)
                 
         elif len(start_entities) < pop_size:
             self.entities[0:len(start_entities)] = start_entities
             for i in range(pop_size - len(start_entities)):
-                self.entities[len(start_entities) + i] = Gnarl(engine, input_size=input_length, output_size=output_length).initial_structure()
+                self.entities[len(start_entities) + i] = Gnarl(engine, input_size=input_length, output_size=output_length)
                 
         elif len(start_entities) >= pop_size:
             self.entities = start_entities[0:pop_size]
         
         for i in range(max_generation):
+            print("Starting generation {}".format(i))
+            #print(self.entities)
             [e.run() for e in self.entities]
             self.fitnesses = np.array([e.fitness for e in self.entities])
             self.nextGeneration()
@@ -37,15 +41,15 @@ class gnarl_controller():
                 
         
     def nextGeneration(self):
-        #get fitnesses
         sorted_args = self.fitnesses.argsort()
         sorted_fitnesses = self.fitnesses[sorted_args[::-1]]
         parents = sorted_fitnesses[0:self.pop_size]
-        children = np.array([e.copy().mutate() for e in parents])
-        self.entities = np.append(parents, children)
+        children = [e.copy().mutate() for e in parents]
+        self.entities = parents.extend(children)
         
 
 
-if __name__ == '_main_':
+if __name__ == '__main__':
+    print("Starting")
     controller = gnarl_controller(2, None, max_generation=1)
     print([e for e in controller.entities])
