@@ -13,7 +13,7 @@ parser.add_argument('--generations', type=int, default=50,
                     help="The number of generations to evolve the network")
 parser.add_argument('--checkpoint', type=str,
                     help="Uses a checkpoint to start the simulation")
-parser.add_argument('--num-cores', dest="numCores", type=int, default=4,
+parser.add_argument('--num-cores', dest="numCores", type=int, default=6,
                     help="The number cores on your computer for parallel execution")
 args = parser.parse_args()
 
@@ -96,20 +96,28 @@ class NEAT:
             g.fitness = fitness
 
 def main():
-    environment = input("Environment (gym / pymunk / unity): ")
+    print("\nPlease select environment:")
+    print(" [1] OpenAI Gym CartPole-v0")
+    print(" [2] Pymunk")
+    print(" [3] 3D Unity")
+
+    environment = input("--> ")
 
     import os, sys, inspect
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     parentdir = os.path.dirname(currentdir)
     sys.path.insert(0, parentdir)
 
-    if environment == 'gym': # Run Gym sim
+    if environment == '1': # Run Gym sim
+        print("Running NEAT with the OpenAI Gym CartPole-v0 environment...\n")
         import gym
         NEAT(gym.make('CartPole-v0'), 'gym_config')
-    elif environment == 'pymunk': # Run Pymunk sim
+    elif environment == '2': # Run Pymunk sim
+        print("Running NEAT with the Pymunk environment...\n")
         from Pymunk import Swing
         NEAT(Swing(), 'pymunk_config')
-    elif environment == 'unity': # Run Unity sim
+    elif environment == '3': # Run Unity sim
+        print("Running NEAT with the 3D Unity environment...\n")
         from Unity import Unity
         NEAT(Unity(), 'pymunk_config')
 

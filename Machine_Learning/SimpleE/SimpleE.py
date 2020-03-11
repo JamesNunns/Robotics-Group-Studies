@@ -533,7 +533,12 @@ play_cart(NN_opened, goal_steps, render=True, games=100)
 
 
 def main():
-    environment = input("Environment (gym / pymunk / unity): ")
+    print("\nPlease select environment:")
+    print(" [1] OpenAI Gym CartPole-v0")
+    print(" [2] Pymunk")
+    print(" [3] 3D Unity")
+
+    environment = input("--> ")
 
     import os, sys, inspect
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -547,13 +552,16 @@ def main():
                                             input_size=2,
                                             output_size=5)
 
-    if environment == 'gym': # Run Gym sim
+    if environment == '1': # Run Gym sim
+        print("Running Simple Evolutionary with the OpenAI Gym CartPole-v0 environment...\n")
         import gym
         env = gym.make('CartPole-v0')
-    elif environment == 'pymunk': # Run Pymunk sim
+    elif environment == '2': # Run Pymunk sim
+        print("Running Simple Evolutionary with the Pymunk environment...\n")
         from Pymunk import Swing
         env = Swing()
-    elif environment == 'unity': # Run Unity sim
+    elif environment == '3': # Run Unity sim
+        print("Running Simple Evolutionary with the 3D Unity environment...\n")
         from Unity import Unity
         env = Unity()
 
