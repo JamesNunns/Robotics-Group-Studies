@@ -6,7 +6,7 @@ Created on Fri Feb 21 15:10:27 2020
 
 
 Section 1: Class to construct and manipulate Tensorflow models
-Section 2: Classes and functions required for NEAT algorithm
+Section 2: Classes and functions required for SimpleE algorithm
 Section 3: Functions required for OpenAI cartpole gym environment
 
 Note:
@@ -161,7 +161,7 @@ class NeuralNet():
         
 
 '''
-Classes and functions for evolutionary algorithm. The main function 'NEAT()' runs the algorithm.
+Classes and functions for evolutionary algorithm. The main function 'SimpleE()' runs the algorithm.
 ALter the 'run_sim()' function to use a different simulation environment - currently using the
 OpenAI cartpole env; this function must accept a Tensorflow model and return a 'fitness' value.
 
@@ -361,7 +361,7 @@ def evolve_population(parents,                          #list of parent networks
 
 
 #function to run the main evolutionary algorithm
-def NEAT(init_population=None,              #allows for input of an initial list of models
+def SimpleE(init_population=None,              #allows for input of an initial list of models
          input_size=None,                   #model input size
          output_size=None,                  #model output size
          training_data=None,                #training data for initial model (optional)
@@ -385,6 +385,11 @@ def NEAT(init_population=None,              #allows for input of an initial list
          allow_del=True,
          gaussian=True,
          gauss_std=None):
+
+    print("\n------------------------------------------")
+    print("            SIMPLE EVOLUTIONARY             ")
+    print("                 ALGORITHM                  ")
+    print("------------------------------------------\n")
     
     #if no init_population is provided, generate random 
     if not init_population: init_population = [NeuralNet(None, [1], input_size, output_size, training_data, training_epochs)]
@@ -566,7 +571,7 @@ def main():
         env = Unity()
 
     env.reset()
-    best_model, init_population = NEAT(init_population=init_population,
+    best_model, init_population = SimpleE(init_population=init_population,
                                         input_size=2, 
                                         output_size=5, 
                                         max_generations=20, 
