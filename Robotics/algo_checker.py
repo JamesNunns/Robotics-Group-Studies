@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 # [time, event, ax, ay, az, gx, gy, gz, se0, se1, se2, se3, be, av, cmx, cmy, algo, position]
 
 
-data = pd.read_csv("/home/demo/Documents/Robotics_2020/Robotics-Group-Studies/Robotics/Output_data/scipy Tst.txt")
+data = pd.read_csv("Output_data/scipy Tst.txt")
 
 data.columns =["time", "", "", "","", "","", "","", "","", "", "be","", "","", "", "p"]
 

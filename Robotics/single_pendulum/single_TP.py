@@ -1,4 +1,4 @@
-from utility_functions_new import last_key_point, next_points
+from utility_functions_new import last_key_point, next_points_qp, next_points_hp
 
 
 class TP_Predict():
@@ -17,7 +17,8 @@ class TP_Predict():
         print values['time'], values['be']
         if values['time'] - self.start_time < self.duration:
             l = [last_key_point("max", all_data), last_key_point("min", all_data), last_key_point("zero", all_data)]
-            next_max, next_min = next_points(values, l)
+            print(l)
+            next_max, next_min = next_points_hp(values, l)
             if next_max - values['time'] < self.offset:
                 if next_max - values['time'] > 0:
                     return "extended"
