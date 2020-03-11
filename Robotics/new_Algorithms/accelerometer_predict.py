@@ -1,7 +1,7 @@
 from robot_interface import Robot
 from encoder_interface import Encoders
 from sys import path
-path.insert(0, 'single_pendulum')
+path.insert(0, '../Algo_conditions')
 from single_nothing import Nothing
 from acc_predict import Acc
 class Algorithm(Robot, Encoders):
