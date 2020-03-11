@@ -44,7 +44,9 @@ class Unity:
         '''
         Time step the environment.
         '''
-        self.perform_action(action) # Perform action
+        if ((action == 0 or action == 1) and not self.get_state()[4]) or 
+            ((action == 2 or action == 3) and not self.get_state()[3]):
+            self.perform_action(action) # Perform action
         self.time = time.time() - self.start_time # Determine current time
 
         old_state = self.state # Save old state
