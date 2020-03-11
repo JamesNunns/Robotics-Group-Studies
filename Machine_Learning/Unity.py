@@ -106,7 +106,12 @@ def render(neural_net: str):
     '''
     Render a neural network model.
     '''
-    model = load_model(neural_net)
+    try:
+        model = load_model(neural_net)
+    except:
+        with open(neural_net, "rb") as f:
+            winner = pickle.load(f)
+        winner_net = nn.create_feed_forward_phenotype(winner)
     unity = Unity()
 
     while True:
