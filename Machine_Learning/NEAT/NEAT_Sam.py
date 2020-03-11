@@ -25,10 +25,10 @@ from keras.models     import Sequential
 from keras.layers     import Dense
 from keras.models     import load_model
 
-import gym
-gym.logger.set_level(40)
-env = gym.make('CartPole-v1')
-env.reset()
+# import gym
+# gym.logger.set_level(40)
+# env = gym.make('CartPole-v1')
+# env.reset()
 
 
 # lists containing model activations and optimizers to allow for randomisation
@@ -41,7 +41,7 @@ Function taken from online example for running the OpenAI cartpole gym environme
 https://blog.tanka.la/2018/10/19/build-your-first-ai-game-bot-using-openai-gym-keras-tensorflow-in-python/
 '''
 # function to trial neural model over specified number of games, called by run_sim()
-def play_cart(model, goal_steps=500, render=False, games=100, _print=True):
+def play_cart(env, model, goal_steps=500, render=False, games=100, _print=True):
     
     scores = []
     choices = []
@@ -822,7 +822,8 @@ class GIN():
 # class to store genetic information common to the entire NEAT population
 class NEAT():
     
-    def __init__(self,  
+    def __init__(self,
+                env,
                 input_size, 
                 output_size,
                 population_size = 50,
@@ -846,6 +847,8 @@ class NEAT():
                 alt_bias_prob = 0.1
                 ):
                
+        self.env = env
+
         self.input_size, self.output_size = input_size, output_size
         self.population_size = population_size
         self.max_generations = max_generations
@@ -891,7 +894,7 @@ class NEAT():
                 model = genome.compile_network()
                 
                 # find and record fitness value for each model
-                genome.fitness = run_sim(model, goal_steps=500, render=False, games=10, _print=False)
+                genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=10, _print=False)
                 fitness_dist.append(genome.fitness)
             
             # find the 'threshold' fitness based on the percentage of models allowed to survive
@@ -920,7 +923,7 @@ class NEAT():
                 best_genome.get_connection_info()
             
             if self.best_model_runs > 0:
-                run_sim(model=best_genome.model, goal_steps=500, render=render, games=self.best_model_runs, _print=False)
+                run_sim(env=self.env, model=best_genome.model, goal_steps=500, render=render, games=self.best_model_runs, _print=False)
  
             # generate new population from best genomes in generation           
             for i in range(self.population_size - len(parents)):
@@ -1091,9 +1094,9 @@ def crossover(genome1, genome2, params=None, deactivate_prob=0.5):
 
 # function to run simulation with optional rendering and return a fitness value  
 # currently this simply calls the 'play_cart' function which runs the cartpole gym env
-def run_sim(model, goal_steps=500, render=False, games=10, _print=False):
+def run_sim(env, model, goal_steps=500, render=False, games=10, _print=False):
     
-    fitness = play_cart(model, goal_steps, render, games, _print)
+    fitness = play_cart(env, model, goal_steps, render, games, _print)
     
     return fitness
    
@@ -1101,15 +1104,57 @@ def run_sim(model, goal_steps=500, render=False, games=10, _print=False):
 ###############################################################################
     
 
-# initialise NEAT object (increase best_model_runs to show each winning genome perform)
-neat = NEAT(input_size=4, output_size=2, population_size=20, breed_ratio = 0.25, 
-            add_node_prob=0.1, add_connection_prob=0.1, alt_weight_prob=0.1, alt_bias_prob=0.1,
-            best_model_runs=0
-            )
-
-# run NEAT
-best_model, winning_genomes = neat.run(generations=20)
 
 
 # save best model to .h5
 #neat.best_model.save('NEATv1_model')
+
+# MAIN
+
+def main():
+    print("\nPlease select environment:")
+    print(" [1] OpenAI Gym CartPole-v0")
+    print(" [2] Pymunk")
+    print(" [3] 3D Unity")
+
+    environment = input("--> ")
+
+    import os, sys, inspect
+    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.insert(0, parentdir)
+
+    inp = 2
+    if environment == '1': # Run Gym sim
+        print("Running NEAT with the OpenAI Gym CartPole-v0 environment...\n")
+        import gym
+        env = gym.make('CartPole-v0')
+        inp = 4
+    elif environment == '2': # Run Pymunk sim
+        print("Running NEAT with the Pymunk environment...\n")
+        from Pymunk import Swing
+        env = Swing()
+    elif environment == '3': # Run Unity sim
+        print("Running NEAT with the 3D Unity environment...\n")
+        from Unity import Unity
+        env = Unity()
+    
+    env.reset()
+
+    # initialise NEAT object (increase best_model_runs to show each winning genome perform)
+    neat = NEAT(env=env, input_size=inp, output_size=2, population_size=20, breed_ratio = 0.25, 
+                add_node_prob=0.1, add_connection_prob=0.1, alt_weight_prob=0.1, alt_bias_prob=0.1,
+                best_model_runs=0)
+
+    # run NEAT
+    best_model, winning_genomes = neat.run(generations=20)
+
+    name = input("Net name: ")
+    neat.best_model.save(name)
+    print("Net saved as " + name + ".h5")
+    env.render(best_model, timeout=500)
+
+
+if __name__ == "__main__":
+    main()
+    # train_network(env, 'pymunk_config')
