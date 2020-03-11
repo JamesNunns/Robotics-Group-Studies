@@ -11,5 +11,5 @@ python Interface_2020.py $1
 echo cd ../Analysis
 cd ../Analysis
 
-echo python plot_angle.py $1
-python plot_angle.py $1
+echo python3 plot_angle.py $1
+python3 plot_angle.py $1
