@@ -580,7 +580,9 @@ def main():
                                         breed_ratio=0.5,
                                         env=env)
     
-    best_model.save()
+    name = input("Net name: ")
+    best_model.save(name)
+    print("Net saved as " + name + ".h5")
     env.render(best_model, timeout=500)
 
 

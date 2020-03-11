@@ -222,6 +222,8 @@ def main():
         q.epsilon = epsilon
     
     q.run(1000)
-    q.save()
+    name = input("Net name: ")
+    q.save(name)
+    print("Net saved as " + name + ".h5")
     q.render_actions()
     q.render_sim("Simulation")

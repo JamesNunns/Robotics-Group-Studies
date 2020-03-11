@@ -57,11 +57,11 @@ class NEAT:
         winner = pop.statistics.best_genome()
 
         # Save best network
-        print("Saving best network...", end=" ", flush=True)
+        name = input("Net name: ")
         import pickle
-        with open('winner.pkl', 'wb') as output:
+        with open(name + '.pkl', 'wb') as output:
             pickle.dump(winner, output, 1)
-        print("Done!")
+        print("Net saved as " + name + '.pkl')
 
         print('\nBest genome:\n{!s}'.format(winner))
         input("Press enter to run the best genome...")
