@@ -117,7 +117,7 @@ def render(neural_net: str):
     unity = Unity()
 
     while True:
-        state = np.array(unity.get_state())
+        state = np.array(unity.get_state()[0:2])
         try:
             action = np.argmax(model.predict(state.reshape(-1, len(state)))[0])
         except:
