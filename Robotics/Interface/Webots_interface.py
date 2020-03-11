@@ -35,7 +35,6 @@ class Robot():
         self.masses = kwargs.get('masses', True)
         self.acc_required = kwargs.get('acc_required', False)
         self.gyro_required = kwargs.get('gyro_required', False)
-
         accX_0, accY_0, accZ_0 = 0, 0, 0
         self.calibrate_acc()
 
@@ -158,9 +157,6 @@ class Robot():
         elif current_angle + angle < self.positions['mins'][limb_name]:
             self.motion.setAngles(long_name, self.positions['mins'][limb_name], percent_max_speed)
 
-
-
-
     def set_posture(self, next_posture, current_posture, max_speed=1.0):
         """
         Changes position from current_posture to next_posture, calculates correct speeds
@@ -226,30 +222,58 @@ class Robot():
         # Switch from current position just added to next_posture
         self.set_posture(next_posture, 'startup', max_speed=max_speed)
 
-    def get_posture(self):
+    def get_posture(self, label=None):
         '''
-        Returns the posture of NAO as a dictionary in the same format as the positions dictionary
+        Temporarily adds the current posture of Nao to the imported 'positions'
+        dictionary calling it 'current'
 
-        Parameters
-        ------
-        summary: list
-            Raw list of current posture generated using "motionProxy.getSummary"
-
-        Returns
-        ------
-        current_posture: dict.
-            Dictionary of Nao limb data defining the current posture of Nao
+        Args:
+            summary: list
+                Raw list of current posture generated using "motionProxy.getSummary()"
+        Returns:
+            None
+        Example:
+            self.get_posture()
+            current_posture = positions['current']
         '''
         current_posture = {}
         summary = self.motion.getSummary()
+        print summary
         summary = summary.split()
         summary = summary[7:-14]
+        print summary
         for i in range(len(summary)/4):
-            for keys in values:
-                if values[keys][0] == summary[4*i]:
+            for keys in self.values:
+                if self.values[keys][0] == summary[4*i]:
                     current_posture[keys] = summary[4*i + 3]
-        return current_posture
+        if isinstance(label, str):
+            self.positions['current{}'.format(label)] = current_posture
+        else:
+            self.positions['current'] = current_posture
 
+    def is_moving(self):
+        """
+        Checks if the robot is moving by comparing commanded and current joint
+        angles and assuming if it has not reached the command it is still moving
+
+        Returns
+            None
+        """
+        angles = []
+        summary = self.motion.getSummary()
+        summary = summary.split()
+        summary = summary[7:-14]    
+        for i in xrange(len(summary)/4):
+            angles.append((float(summary[4*i + 3]), float(summary[4*i + 2])))
+        difference = [x[1]-x[0] for x in angles]
+        difference.pop(0)
+        difference.pop(0)
+        l = [abs(x) < 0.01 for x in difference]
+        if all(l):
+            return False
+        else:
+            return True
+        
     def calibrate_acc(self):
         '''
         A function that takes no arguments and calibrates the accelerometers to zero
