@@ -73,8 +73,8 @@ def get_latest_file(current_dir, test=True):
     Returns:
         filename + ' Tst' or filename + ' Org'
     """
-    if current_dir == 'Code':
-        output_directory = 'Output_data/'
+    if current_dir == 'Interface':
+        output_directory = '../Output_data/'
     else:
         output_directory = '../Output_data/'
     if test:
@@ -347,7 +347,7 @@ def store(filename, all_data):
     Example:
         > store('file_to_store_to')
     """
-    with open('Output_data/' + filename, 'w') as f:
+    with open('../Output_data/' + filename, 'w') as f:
         rows = [[str(i) for i in list(line)[:-1]] + [line[-1]]
                 for line in all_data]
         for row in rows:

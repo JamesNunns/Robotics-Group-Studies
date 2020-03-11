@@ -337,7 +337,7 @@ class Interface(Algorithm):
         """
 
         if self.setup == 'Testing':
-            latest, output_directory = get_latest_file('Code', test=False)
+            latest, output_directory = get_latest_file('Interface', test=False)
             filename = kwargs.get('filename', latest)
             self.__run_test(filename, output_directory)
         else:
