@@ -8,7 +8,6 @@ if __name__ == "__main__":
     print(" [4] NEAT (Sam)")
     print(" [5] GNARL")
     print("([6] Render Net)")
-
     algorithm = input("--> ")
 
     if algorithm == '1':
