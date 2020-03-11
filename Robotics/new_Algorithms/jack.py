@@ -1,7 +1,7 @@
 from robot_interface import Robot
 from encoder_interface import Encoders
 from sys import path
-path.insert(0, 'single_pendulum')
+path.insert(0, '../Algo_conditions')
 from single_test_brute import Test
 from single_damping_small_angles import SmallAngleDamping
 from single_startup_const_period import Start

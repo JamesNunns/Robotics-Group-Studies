@@ -3,10 +3,10 @@ import os
 import matplotlib.pyplot as plt 
 from graph_functions import *
 from sys import path, argv
-path.insert(0, '..')
+path.insert(0, "../Utility")
 from utility_functions import read_file, get_latest_file, total_angle
 
-print 'Saving plot'
+print('Saving plot')
 #Collects the latest file name and the directory of the file  
 filename, output_data_directory = get_latest_file('Analysis', test=False)
 #Reads the file and collects the output data
