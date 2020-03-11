@@ -1,7 +1,7 @@
 from robot_interface import Robot
 from encoder_interface import Encoders
 from sys import path
-path.insert(0, 'single_pendulum')
+path.insert(0, '../Algo_conditions')
 from interface_machine_learning_full_movement import Machine_Learning
 from single_nothing_ml import Nothing_ML
 
