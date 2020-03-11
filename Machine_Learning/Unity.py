@@ -11,6 +11,8 @@ class Unity:
         '''
         Initialise the neural network.
         '''
+        print("Please start the Unity simulation and click on the environment window.")
+
         for i in range(10):
             print(str(10 - i), end=" ", flush=True)
             time.sleep(1)

@@ -188,7 +188,12 @@ class DeepQ:
 
 
 def main():
-    environment = input("Environment (gym / pymunk / unity): ")
+    print("\nPlease select environment:")
+    print(" [1] OpenAI Gym CartPole-v0")
+    print(" [2] Pymunk")
+    print(" [3] 3D Unity")
+
+    environment = input("--> ")
 
     import os, sys, inspect
     currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -199,13 +204,16 @@ def main():
     if load == '': load = 'DeepQ'
     if not load == 'no': epsilon = float(input("Epsilon: "))
 
-    if environment == 'gym': # Run Gym sim
+    if environment == '1': # Run Gym sim
+        print("Running Deep Q-Learning with the OpenAI Gym CartPole-v0 environment...\n")
         import gym
         q = DeepQ(gym.make('CartPole-v0')) # TODO Make gym work
-    elif environment == 'pymunk': # Run Pymunk sim
+    elif environment == '2': # Run Pymunk sim
+        print("Running Deep Q-Learning with the Pymunk environment...\n")
         from Pymunk import Swing
         q = DeepQ(Swing())
-    elif environment == 'unity': # Run Unity sim
+    elif environment == '3': # Run Unity sim
+        print("Running Deep Q-Learning with the 3D Unity environment...\n")
         from Unity import Unity
         q = DeepQ(Unity())
     
@@ -214,6 +222,8 @@ def main():
         q.epsilon = epsilon
     
     q.run(1000)
-    q.save()
+    name = input("Net name: ")
+    q.save(name)
+    print("Net saved as " + name + ".h5")
     q.render_actions()
     q.render_sim("Simulation")
