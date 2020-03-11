@@ -238,10 +238,8 @@ class Robot():
         '''
         current_posture = {}
         summary = self.motion.getSummary()
-        print summary
         summary = summary.split()
         summary = summary[7:-14]
-        print summary
         for i in range(len(summary)/4):
             for keys in self.values:
                 if self.values[keys][0] == summary[4*i]:
