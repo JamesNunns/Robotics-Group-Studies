@@ -339,13 +339,17 @@ public class CustomRotationLeft : MonoBehaviour
             }
         }
 
-        if (lowerMoving)
+        if (upperMoving)
         {
         	print("Moving");
         }
         else
         {
         	print("Not Moving");
+        }
+        if (rod.angle > 100)
+        {
+        	SceneManager.LoadScene("SampleScene")
         }
 		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\state.txt", state);
