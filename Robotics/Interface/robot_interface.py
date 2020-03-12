@@ -222,7 +222,7 @@ class Robot():
         # Switch from current position just added to next_posture
         self.set_posture(next_posture, 'startup', max_speed=max_speed)
 
-    def get_posture(self, label=None):
+    def get_posture(self):
         '''
         Temporarily adds the current posture of Nao to the imported 'positions'
         dictionary calling it 'current'
@@ -243,11 +243,8 @@ class Robot():
         for i in range(len(summary)/4):
             for keys in self.values:
                 if self.values[keys][0] == summary[4*i]:
-                    current_posture[keys] = summary[4*i + 3]
-        if isinstance(label, str):
-            self.positions['current{}'.format(label)] = current_posture
-        else:
-            self.positions['current'] = current_posture
+                    current_posture[keys] = float(summary[4*i + 3])
+        self.positions['current'] = current_posture
 
     def is_moving(self):
         """

@@ -30,7 +30,7 @@ class TripleIncrease():
 
         self.previous_be = values['be']
         self.previous_time = values['time']
-        print values['time'] , values['be']
+        print 'Increase Period' ,values['time'] , values['be']
         if values['time'] > self.switch_time:
             self.switch_time += 100
             if values['be'] < 0:
