@@ -228,6 +228,10 @@ public class CustomRotationLeft : MonoBehaviour
 
 	void changePosition(Dictionary<HingeJoint, float> position, float speed)
 	{
+		if (position == body_up)
+		{
+			speed *= 1.4f;
+		} 
 		foreach (HingeJoint joint in allJoints)
 		{
 			if (position.ContainsKey(joint))
@@ -285,11 +289,11 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 		if (Input.GetKey("u"))
 		{
-			changePosition(legs_down, 0.5f);
+			changePosition(legs_down, 0.8f);
 		}	
 		if (Input.GetKey("i"))
 		{
-			changePosition(legs_up, 0.5f);
+			changePosition(legs_up, 0.8f);
 		}
 		if (Input.GetKey("p"))
 		{
@@ -306,7 +310,7 @@ public class CustomRotationLeft : MonoBehaviour
 		for (int i = 0; i < 5; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
 		{
-			if (allAngles[i] < allJoints[i].angle + 98f && allAngles[i] > allJoints[i].angle + 82f)
+			if (allAngles[i] < allJoints[i].angle + 100f && allAngles[i] > allJoints[i].angle + 80f)
 			{
 				Lock(allJoints[i]);
 				if (allJoints[i] == leftShoulder)
@@ -339,21 +343,33 @@ public class CustomRotationLeft : MonoBehaviour
             }
         }
 
-        if (upperMoving)
-        {
-        	print("Moving");
-        }
-        else
-        {
-        	print("Not Moving");
-        }
+        // if (upperMoving)
+        // {
+        // 	print("Moving");
+        // }
+        // else
+        // {
+        // 	print("Not Moving");
+        // }
         if (rod.angle > 100)
         {
         	SceneManager.LoadScene("SampleScene");
         }
+        if (leftKnee.angle > 3)
+        {
+        	changePosition(legs_down, 0.5f);
+        }
+        if (leftKnee.angle < -93)
+        {
+        	changePosition(legs_up, 0.5f);
+        }
+        if (leftShoulder.angle > 20)
+        {
+        	changePosition(body_up, 0.5f);
+        }
 		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\state.txt", state);
-		//print(Torque.Sum());
+		print(leftShoulder.angle);
 	}
 }
 

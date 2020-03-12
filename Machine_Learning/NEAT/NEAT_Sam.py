@@ -1151,7 +1151,7 @@ def main():
                 best_model_runs=0)
 
     # run NEAT
-    best_model, winning_genomes = neat.run(generations=20)
+    best_model, winning_genomes = neat.run(generations=5)
 
     name = input("Net name: ")
     neat.best_model.save(name)
