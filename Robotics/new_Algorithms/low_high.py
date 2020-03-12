@@ -3,9 +3,7 @@ from encoder_interface import Encoders
 from sys import path
 path.insert(0, '../Algo_conditions')
 from single_nothing import Nothing
-from triple_startup import Triple
-from triple_increase_period import TripleIncrease
-from maintain import Main
+from low_high_brute import Cm
 
 class Algorithm(Robot, Encoders):
 
@@ -20,13 +18,7 @@ class Algorithm(Robot, Encoders):
             'algo': Nothing,
             'duration': 10
         },{        
-            'algo': Triple,
+            'algo': Cm,
             'duration': 30
-        },{
-            'algo': TripleIncrease,
-            'duration' : 30
-        },{
-			'algo': Main,
-			'duration': 30
-		}
+        }
         ]
