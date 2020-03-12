@@ -178,13 +178,13 @@ public class CustomRotationLeft : MonoBehaviour
 		{
 			ang += 40;
 			speed *= 346;
+			upperMoving = true;
 		}
 		else if (joint == leftElbow)
 		{
 			ang *= -1;
 			ang = 180 - ang;
 			speed *= 346;
-			upperMoving = true;
 		}
 		else if (joint == leftHip)
 		{
@@ -309,7 +309,7 @@ public class CustomRotationLeft : MonoBehaviour
 			if (allAngles[i] < allJoints[i].angle + 98f && allAngles[i] > allJoints[i].angle + 82f)
 			{
 				Lock(allJoints[i]);
-				if (allJoints[i] == leftElbow)
+				if (allJoints[i] == leftShoulder)
 				{
 					upperMoving = false;
 				}
