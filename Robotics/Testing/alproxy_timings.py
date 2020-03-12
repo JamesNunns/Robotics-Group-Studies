@@ -55,9 +55,7 @@ for i in range(10):
         Robot.get_acc('y')
     times_AC.append(time.time()-start_time_AC)
 print "accelerometer done"
-k = calls, joint_calls, times_JM, times_GP, times_SP, times_AC
-print len(k)
-for item in k:
-	print len(item)
-df = pd.DataFrame(np.array(k), columns = ['calls', 'joint_calls', 'joints', 'get_p', 'set_p', 'set_a'])
+
+pandas_data = {'calls':calls, 'joint_calls': joint_calls, 'joints':times_JM, 'get_p':times_GP, 'set_p':times_SP, 'set_a':times_AC}
+df = pd.DataFrame(pandas_data)
 df.to_csv("Nao_readout_timings")
