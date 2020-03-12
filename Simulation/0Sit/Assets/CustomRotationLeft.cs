@@ -29,6 +29,7 @@ public class CustomRotationLeft : MonoBehaviour
 
     HingeJoint Neck;
 
+	public float TimeScale;
 	/// Have a limiting angle for each joint
 	float leftShoulderAngle;
 	float leftElbowAngle;
@@ -65,6 +66,7 @@ public class CustomRotationLeft : MonoBehaviour
 
 	void Start()
 	{
+		Time.timeScale = TimeScale;
 		/// Assign all of the defined joints to the correct game objects
 		leftShoulder = GameObject.Find("LeftBicep").GetComponent<HingeJoint>();
 		leftElbow = GameObject.Find("LeftForearm").GetComponent<HingeJoint>();
@@ -348,7 +350,6 @@ public class CustomRotationLeft : MonoBehaviour
 		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\state.txt", state);
 		//print(Torque.Sum());
-		Time.timeScale = 1;
 	}
 }
 
