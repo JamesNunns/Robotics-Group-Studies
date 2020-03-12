@@ -53,7 +53,7 @@ def play_cart(env, model, goal_steps=500, render=False, games=100, _print=True):
         for step_index in range(goal_steps):
             if render: env.render()
             if len(prev_obs)==0:
-                action = random.randrange(0,2)
+                action = random.randrange(0,4)
             else:
                 action = np.argmax(model.predict(prev_obs))
                 
