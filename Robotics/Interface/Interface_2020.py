@@ -170,7 +170,8 @@ class Interface(Algorithm):
         Returns:
             switch: new Output of Algorithm, either; 'switch', 'crunched' or 'extended'
         """
-
+        self.get_posture()
+        
         self.algo_name = Algorithm.__name__ #Collects the algorithm name
 
         if switch == 'switch': #If the output of the algo is 'switch' it will call select_algo
