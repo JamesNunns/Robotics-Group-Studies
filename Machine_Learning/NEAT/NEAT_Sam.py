@@ -21,6 +21,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import keras
+from tqdm import tqdm
 from keras.models     import Sequential
 from keras.layers     import Dense
 from keras.models     import load_model
@@ -889,7 +890,8 @@ class NEAT():
             best_genome = None
             
             # iterate through new population
-            for genome in self.population:
+            for i in tqdm(range(self.population_size)):
+                genome = self.population[i]
                 
                 model = genome.compile_network()
                 
