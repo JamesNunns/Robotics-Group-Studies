@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using System.IO;
 
 public class CustomRotationLeft : MonoBehaviour
 /// <summary>
@@ -150,6 +151,8 @@ public class CustomRotationLeft : MonoBehaviour
 
 		legs_down.Add(leftKnee, 90);
 		legs_down.Add(leftAnkle, 50);
+
+		///System.IO.File.WriteAllText(@"C:\Users\golda\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", string.Empty);
 	}
 
 	void Move(HingeJoint joint, float ang, float speed)
@@ -323,9 +326,15 @@ public class CustomRotationLeft : MonoBehaviour
 
         
 		string state = (rod.angle + 25).ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString();
-		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Simulation\angle.txt", state);
+		System.IO.File.WriteAllText (@"C:\users\golda\Robotics-Group-Studies\Simulation\angle.txt", state);
 		print(Torque.Sum());
-		
+
+		string anglevalue = (rod.angle + 25).ToString() + " ";
+
+		File.AppendAllText(@"C:\Users\golda\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
+
+		Time.timeScale = 4;
+
 	}
 }
 
