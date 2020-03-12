@@ -896,7 +896,7 @@ class NEAT():
                 model = genome.compile_network()
                 
                 # find and record fitness value for each model
-                genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=10, _print=False)
+                genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=1, _print=False)
                 fitness_dist.append(genome.fitness)
             
             # find the 'threshold' fitness based on the percentage of models allowed to survive
