@@ -143,11 +143,11 @@ public class CustomRotationLeft : MonoBehaviour
 		// high_cm.Add(leftHip, Mathf.Rad2Deg*(-1.5708f));
 
 		body_down.Add(leftHip, -40);
-		body_down.Add(leftShoulder, 0);
+		body_down.Add(leftShoulder, 10);
 		body_down.Add(leftElbow, 0);
 
 		body_up.Add(leftHip, -90);
-		body_up.Add(leftShoulder, 75);
+		body_up.Add(leftShoulder, 70);
 		body_up.Add(leftElbow, -85);
 
 		legs_up.Add(leftKnee, 0);

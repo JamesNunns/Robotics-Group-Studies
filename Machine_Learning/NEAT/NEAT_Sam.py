@@ -896,7 +896,7 @@ class NEAT():
                 model = genome.compile_network()
                 
                 # find and record fitness value for each model
-                genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=10, _print=False)
+                genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=1, _print=False)
                 fitness_dist.append(genome.fitness)
             
             # find the 'threshold' fitness based on the percentage of models allowed to survive
@@ -1127,11 +1127,13 @@ def main():
     sys.path.insert(0, parentdir)
 
     inp = 2
+    out = 5
     if environment == '1': # Run Gym sim
         print("Running NEAT with the OpenAI Gym CartPole-v0 environment...\n")
         import gym
         env = gym.make('CartPole-v0')
         inp = 4
+        out = 2
     elif environment == '2': # Run Pymunk sim
         print("Running NEAT with the Pymunk environment...\n")
         from Pymunk import Swing
@@ -1144,7 +1146,7 @@ def main():
     env.reset()
 
     # initialise NEAT object (increase best_model_runs to show each winning genome perform)
-    neat = NEAT(env=env, input_size=inp, output_size=2, population_size=20, breed_ratio = 0.25, 
+    neat = NEAT(env=env, input_size=inp, output_size=out, population_size=20, breed_ratio = 0.25, 
                 add_node_prob=0.1, add_connection_prob=0.1, alt_weight_prob=0.1, alt_bias_prob=0.1,
                 best_model_runs=0)
 
