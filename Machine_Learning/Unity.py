@@ -7,7 +7,7 @@ class Unity:
     '''
     Machine learning class that uses a neural network to output trained actions based on current states.
     '''
-    def __init__(self, timeout: int = 10):
+    def __init__(self, timeout: int = 60):
         '''
         Initialise the neural network.
         '''
@@ -44,8 +44,7 @@ class Unity:
         '''
         Time step the environment.
         '''
-        if ((action == 0 or action == 1) and not self.get_state()[4]) or 
-            ((action == 2 or action == 3) and not self.get_state()[3]):
+        if ((action == 0 or action == 1) and not self.get_state()[4]) or ((action == 2 or action == 3) and not self.get_state()[3]):
             self.perform_action(action) # Perform action
         self.time = time.time() - self.start_time # Determine current time
 

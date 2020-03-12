@@ -1096,10 +1096,10 @@ def crossover(genome1, genome2, params=None, deactivate_prob=0.5):
 # currently this simply calls the 'play_cart' function which runs the cartpole gym env
 def run_sim(env, model, goal_steps=500, render=False, games=10, _print=False):
     
-    fitness = play_cart(env, model, goal_steps, render, games, _print)
+    fitness = play_cart(env, model, 5000000, render, games, _print=_print)
     
     return fitness
-   
+
 
 ###############################################################################
     
@@ -1152,7 +1152,10 @@ def main():
     name = input("Net name: ")
     neat.best_model.save(name)
     print("Net saved as " + name + ".h5")
-    env.render(best_model, timeout=500)
+    try:
+        env.render()
+    except:
+        env.render(best_model, timeout=500)
 
 
 if __name__ == "__main__":

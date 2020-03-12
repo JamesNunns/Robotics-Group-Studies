@@ -252,7 +252,7 @@ class Swing:
         if len(self.prev_obs) == 0:
             action = random.randrange(0,4)
         else:
-            # prev_obs = np.reshape(self.prev_obs, [1, 2])
+            self.prev_obs = np.reshape(self.prev_obs, [1, 2])
             try:
                 action = np.argmax(self.model.predict(self.prev_obs.reshape(-1, len(self.prev_obs)))[0])
             except:
