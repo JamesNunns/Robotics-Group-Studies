@@ -877,74 +877,84 @@ class NEAT():
         if not gin: self.gin = GIN()
         if not population: self.population = gen_init_population(neat_data = self)
         else: self.gin.val = max([[c.innovation for c in g.connection_genes] for g in population])
-        
+
+        print(".__   __.  _______     ___   .___________.\n|  \ |  | |   ____|   /   \  |           |\n|   \|  | |  |__     /  ^  \ `---|  |----`\n|  . `  | |   __|   /  /_\  \    |  |     \n|  |\   | |  |____ /  _____  \   |  |     \n|__| \__| |_______/__/     \__\  |__|     ")
         
     # main NEAT method
     def run(self, generations=None, _print=True, render=True):
+        try:
         
-        if not generations: generations = self.max_generations
-        
-        for gen in range(generations):
+            if not generations: generations = self.max_generations
             
-            fitness_dist, parents, new_population, mutations = [], [], [], []
-            best_genome = None
-            
-            # iterate through new population
-            for i in tqdm(range(self.population_size)):
-                genome = self.population[i]
+            for gen in range(generations):
+                print("\n---------- Generation " + str(gen + 1) + " ----------\n")
                 
-                model = genome.compile_network()
+                fitness_dist, parents, new_population, mutations = [], [], [], []
+                best_genome = None
                 
-                # find and record fitness value for each model
-                genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=1, _print=False)
-                fitness_dist.append(genome.fitness)
-            
-            # find the 'threshold' fitness based on the percentage of models allowed to survive
-            fitness_dist.sort(reverse=True)
-            fitness_threshold = fitness_dist[int(self.population_size*self.breed_ratio)]
-            
-            # find the best fitness of the generation
-            best_fitness = fitness_dist[0]
-            
-            # use the above to find the best models in the generation            
-            for genome in self.population:
-                
-                if genome.fitness >= fitness_threshold: 
+                print("Processing generation " + str(gen + 1) + "...")
+
+                # iterate through new population
+                for i in tqdm(range(self.population_size)):
+                    genome = self.population[i]
+                    model = genome.compile_network()
                     
-                    parents.append(genome)
-                    if genome.fitness == best_fitness and not best_genome: best_genome = genome
-            
-            self.winning_genomes.append(best_genome)
-            self.best_model = best_genome.model
-            
-            if _print:
+                    # find and record fitness value for each model
+                    genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=1, _print=False)
+                    fitness_dist.append(genome.fitness)
                 
-                print('Best genome for gen {} (score = {}):'.format(gen, best_fitness))
-                if gen > 0 and best_genome == self.winning_genomes[-2]: print('(same as last gen)')
-                print('Connection weights:')
-                best_genome.get_connection_info()
-            
-            if self.best_model_runs > 0:
-                run_sim(env=self.env, model=best_genome.model, goal_steps=500, render=render, games=self.best_model_runs, _print=False)
- 
-            # generate new population from best genomes in generation           
-            for i in range(self.population_size - len(parents)):
+                print("Done!\n")
                 
-                # choose random parent genomes
-                parent1 = random.choice(parents)
-                parent2 = random.choice([p for p in parents if p != parent1])
+                # find the 'threshold' fitness based on the percentage of models allowed to survive
+                fitness_dist.sort(reverse=True)
+                fitness_threshold = fitness_dist[int(self.population_size*self.breed_ratio)]
                 
-                # generate child via crossover method and mutate it
-                child = crossover(parent1, parent2)
-                child.mutate(params=self)
+                # find the best fitness of the generation
+                best_fitness = fitness_dist[0]
                 
-                # add child to new population
-                new_population.append(child)
-            
-            self.population = parents + new_population
-            
-        # returns best_model (NeuralNet object) and list of winning genomes (Genome objects)
-        return self.best_model, self.winning_genomes
+                # use the above to find the best models in the generation            
+                for genome in self.population:
+                    
+                    if genome.fitness >= fitness_threshold: 
+                        
+                        parents.append(genome)
+                        if genome.fitness == best_fitness and not best_genome: best_genome = genome
+                
+                self.winning_genomes.append(best_genome)
+                self.best_model = best_genome.model
+                
+                if _print:
+
+                    print("Best score: " + str(best_fitness))
+                    if gen > 0 and best_genome == self.winning_genomes[-2]: print('(same as last gen)')
+                    print("Connection weights:")
+                    best_genome.get_connection_info()
+                
+                if self.best_model_runs > 0:
+                    run_sim(env=self.env, model=best_genome.model, goal_steps=500, render=render, games=self.best_model_runs, _print=False)
+    
+                # generate new population from best genomes in generation           
+                for i in range(self.population_size - len(parents)):
+                    
+                    # choose random parent genomes
+                    parent1 = random.choice(parents)
+                    parent2 = random.choice([p for p in parents if p != parent1])
+                    
+                    # generate child via crossover method and mutate it
+                    child = crossover(parent1, parent2)
+                    child.mutate(params=self)
+                    
+                    # add child to new population
+                    new_population.append(child)
+                
+                self.population = parents + new_population
+                
+            # returns best_model (NeuralNet object) and list of winning genomes (Genome objects)
+            return self.best_model, self.winning_genomes, fitness_dist
+        
+        except KeyboardInterrupt:
+            print("Exited.")
+            return self.best_model, self.winning_genomes, 0
 
 
 def gen_init_population(neat_data = None, 
@@ -1151,7 +1161,17 @@ def main():
                 best_model_runs=0)
 
     # run NEAT
-    best_model, winning_genomes = neat.run(generations=5)
+    best_model, winning_genomes, fitness_dist = neat.run(generations=5)
+
+    if not fitness_dist == 0:
+        # fitness_dist.sort(reverse=True)
+        plt.plot(np.arange(20), fitness_dist, 'black', label='Performance')
+        plt.legend(loc='upper left')
+        plt.margins(0, 0)
+        plt.title("Performance of NEAT")
+        plt.xlabel("Genome")
+        plt.ylabel("Performance")
+        plt.show()
 
     name = input("Net name: ")
     neat.best_model.save(name)

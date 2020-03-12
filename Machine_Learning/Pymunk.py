@@ -207,7 +207,7 @@ class Swing:
         '''
         Step one time period in the simulation.
         '''
-        penalty = 100
+        penalty = 4
         if action == 0:  # Legs out
             self.legs._set_torque(1000000)
         if action == 1:  # Legs in
