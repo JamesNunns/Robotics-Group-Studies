@@ -628,6 +628,14 @@
  <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.16f1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
  </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Unity.Recorder.Editor.csproj">
+      <Project>{A4897085-9907-065B-F328-886B70E0A7D5}</Project>      <Name>Unity.Recorder.Editor</Name>    </ProjectReference>
+    <ProjectReference Include="Unity.Recorder.csproj">
+      <Project>{3AD2688A-3A7A-C483-10B2-5674C5864CE9}</Project>      <Name>Unity.Recorder</Name>    </ProjectReference>
+    <ProjectReference Include="Unity.Recorder.Samples.csproj">
+      <Project>{DA56B937-5993-5CDC-67BB-3B0BA8C993AF}</Project>      <Name>Unity.Recorder.Samples</Name>    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

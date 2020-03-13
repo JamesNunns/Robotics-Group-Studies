@@ -233,11 +233,11 @@ public class CustomRotationRight : MonoBehaviour
 		}	
 		if (Input.GetKey("u"))
 		{
-			changePosition(legs_down, 0.5f);
+			changePosition(legs_down, 1.2f);
 		}	
 		if (Input.GetKey("i"))
 		{
-			changePosition(legs_up, 0.5f);
+			changePosition(legs_up, 1.2f);
 		}
 		if (Input.GetKey("p"))
 		{

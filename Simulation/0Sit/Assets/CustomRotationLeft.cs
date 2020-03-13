@@ -292,11 +292,11 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 		if (Input.GetKey("u"))
 		{
-			changePosition(legs_down, 0.8f);
+			changePosition(legs_down, 1.2f);
 		}	
 		if (Input.GetKey("i"))
 		{
-			changePosition(legs_up, 0.8f);
+			changePosition(legs_up, 1.2f);
 		}
 		if (Input.GetKey("p"))
 		{
