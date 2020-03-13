@@ -1161,10 +1161,10 @@ def main():
                 best_model_runs=0)
 
     # run NEAT
-    best_model, winning_genomes, fitness_dist = neat.run(generations=5)
+    best_model, winning_genomes, fitness_dist = neat.run(generations=20)
 
     if not fitness_dist == 0:
-        # fitness_dist.sort(reverse=True)
+        fitness_dist.sort(reverse=True)
         plt.plot(np.arange(20), fitness_dist, 'black', label='Performance')
         plt.legend(loc='upper left')
         plt.margins(0, 0)
