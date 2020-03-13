@@ -107,7 +107,7 @@ class NeuralNet():
     #saves network inc. weights to a .h5py file with a given name
     def save(self, name='Neural_Network'):
         
-        self.model.save(name + '.h5')
+        self.model.save('Trained Neural Nets/' + name + '.h5')
         print('Saved to {}'.format(name + '.h5'), '\n')
     
      

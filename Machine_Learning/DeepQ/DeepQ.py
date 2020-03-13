@@ -176,7 +176,7 @@ class DeepQ:
         '''
         Save the current neural network model.
         '''
-        self.neural_net.save(name + ".h5")
+        self.neural_net.save('Trained Neural Nets/' + name + ".h5")
         print("Saved to " + str(name) + ".h5\n")
     
     def load(self, name: str = "DeepQ"):
