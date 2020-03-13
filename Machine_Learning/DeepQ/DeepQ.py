@@ -21,10 +21,7 @@ class DeepQ:
         '''
         Initialise the environment and neural network.
         '''
-        print("\n------------------------------------------")
-        print("          DEEP Q-LEARNING USING             ")
-        print("                NEURAL NETS                 ")
-        print("------------------------------------------\n")
+        print(" _______   _______  _______ .______        ______      \n|       \ |   ____||   ____||   _  \      /  __  \     \n|  .--.  ||  |__   |  |__   |  |_)  |    |  |  |  |    \n|  |  |  ||   __|  |   __|  |   ___/     |  |  |  |    \n|  '--'  ||  |____ |  |____ |  |         |  `--'  '--. \n|_______/ |_______||_______|| _|          \_____\_____\n")
 
         # Hyperparameters
         self.alpha =  0.01              # Learning rate
