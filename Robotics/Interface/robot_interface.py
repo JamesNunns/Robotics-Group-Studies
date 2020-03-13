@@ -246,29 +246,37 @@ class Robot():
                     current_posture[keys] = float(summary[4*i + 3])
         self.positions['current'] = current_posture
 
-    def is_moving(self):
+    def is_moving(self, body_section = 'all'):
         """
         Checks if the robot is moving by comparing commanded and current joint
         angles and assuming if it has not reached the command it is still moving
 
+        Args: body_section ('torso' or 'legs')
+            section of body to check movement
         Returns
             None
         """
-        angles = []
+        current_posture, command_posture = {}, {}
         summary = self.motion.getSummary()
         summary = summary.split()
-        summary = summary[7:-14]    
-        for i in xrange(len(summary)/4):
-            angles.append((float(summary[4*i + 3]), float(summary[4*i + 2])))
-        difference = [x[1]-x[0] for x in angles]
-        difference.pop(0)
-        difference.pop(0)
-        l = [abs(x) < 0.01 for x in difference]
+        summary = summary[7:-14]
+
+        if body_section = 'torso': section_list = ['RHP', 'LHP', 'RSP', 'LSP', 'RSR', 'LSR', 'RER', 'LER', 'REY', 'LEY', 'RWY', 'LWY']
+        elif body_section = 'legs': section_list = ['RKP', 'LKP', 'LAP', 'RAP']
+        else: section_list = ['RHP', 'LHP', 'RSP', 'LSP', 'RSR', 'LSR', 'RER', 'LER', 'REY', 'LEY', 'RWY', 'LWY', 'RKP', 'LKP', 'LAP', 'RAP']
+
+        current_posture, command_posture = {}, {}
+        for i in range(len(summary)/4):
+            for keys in section_list:
+                if self.values[keys][0] == summary[4*i]:
+                    current_posture[keys], command_posture[keys] = float(summary[4*i + 3]), float(summary[4*i + 2])
+        differences = [current_posture[keys]-command_posture[keys] for keys in section_list]
+        l = [abs(dif) < 0.01 for dif in differences]
         if all(l):
             return False
         else:
-            return True    
-    
+            return True
+
     def calibrate_acc(self):
         '''
         A function that takes no arguments and calibrates the accelerometers to zero

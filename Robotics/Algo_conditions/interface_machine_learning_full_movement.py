@@ -1,9 +1,9 @@
 import sys
 import time
 class Machine_Learning():
-    
+
     def __init__(self,values,all_data,**kwargs):
-        
+
         self.period = kwargs.get('period', 0.005)
         self.start_time = values['time']
         self.previous_time = values['time']

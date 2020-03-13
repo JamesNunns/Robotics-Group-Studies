@@ -3,7 +3,7 @@ from positions_sym import positions
 crunched_pos = positions['crunched']
 extended_pos = positions['extended']
 
-torso_list = {'RHP', 'LHP', 'RSP', 'LSP', 'RSR', 'LSR', 'RER', 'LER', 'REY', 'LEY', 'RWY', 'LWY'}
+torso_list = ['RHP', 'LHP', 'RSP', 'LSP', 'RSR', 'LSR', 'RER', 'LER', 'REY', 'LEY', 'RWY', 'LWY']
 hips = extended_pos['RHP'] - crunched_pos['RHP']
 
 torso_dict = {}

@@ -21,10 +21,7 @@ class DeepQ:
         '''
         Initialise the environment and neural network.
         '''
-        print("\n------------------------------------------")
-        print("          DEEP Q-LEARNING USING             ")
-        print("                NEURAL NETS                 ")
-        print("------------------------------------------\n")
+        print(" _______   _______  _______ .______        ______      \n|       \ |   ____||   ____||   _  \      /  __  \     \n|  .--.  ||  |__   |  |__   |  |_)  |    |  |  |  |    \n|  |  |  ||   __|  |   __|  |   ___/     |  |  |  |    \n|  '--'  ||  |____ |  |____ |  |         |  `--'  '--. \n|_______/ |_______||_______|| _|          \_____\_____\n")
 
         # Hyperparameters
         self.alpha =  0.01              # Learning rate
@@ -176,7 +173,7 @@ class DeepQ:
         '''
         Save the current neural network model.
         '''
-        self.neural_net.save(name + ".h5")
+        self.neural_net.save('Trained Neural Nets/' + name + ".h5")
         print("Saved to " + str(name) + ".h5\n")
     
     def load(self, name: str = "DeepQ"):
