@@ -382,7 +382,8 @@ public class CustomRotationLeft : MonoBehaviour
 					System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", rod.angle.ToString());
 				}
 		}
-		print(leftShoulder.angle);
+		string anglevalue = rod.angle.ToString() + " ";
+		File.AppendAllText(@"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
 	}
 }
 
