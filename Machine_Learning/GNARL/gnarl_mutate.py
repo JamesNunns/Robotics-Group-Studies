@@ -35,8 +35,8 @@ class Gnarl():
                  max_generations=20, # implement
                  population_size=50, # implement
                  bias=None,   ## nEed to implement bias input node
-                 mean_init_nodes=8,
-                 mean_init_links=10,
+                 mean_init_nodes=12,
+                 mean_init_links=40,
                  alpha=1,
                  max_node_mods=3,
                  max_link_mods=5,
@@ -100,7 +100,7 @@ class Gnarl():
 
         hidden_nodes = []
 
-        for i in range(1, self.init_nodes):
+        for i in range(0, self.init_nodes):
             hidden_nodes.append(net.NodeGene(bias=0, num=i+starting_nodes,
                                              layer=np.random.random()))
 
@@ -109,17 +109,21 @@ class Gnarl():
         all_nodes = self.get_biased_node()
 
         i = 0
-        if len(self.chromosome.node_genes) == 6:
-            max_links = 8
-        elif len(self.chromosome.node_genes) == 7:
-            max_links = 14
-        else:
-            max_links = 50
+        
+        
+        '''
+        Fix this
+        '''
+        max_links = self.get_max_links()
+            
+            
+            
         # This is a bad fix
         while self.links < min([self.init_links, max_links]):
-            # print(self.links, self.init_links)
-            # print('aaa',len(self.chromosome.node_genes),'\n')
-
+            # print('links: {}, init_links: {}, max_links: {}'.format(self.links, self.init_links, max_links))
+            # print('aaa',len(self.chromosome.node_genes))
+            # print(self.nodes,'\n')
+            
             link = np.random.choice(all_nodes, size=2)
             new_con = link[0].add_connection(link[1], weight=self.init_weights[i])
 
@@ -243,6 +247,7 @@ class Gnarl():
         outer_nodes = [x for x in self.chromosome.node_genes if x.layer == 0 or x.layer == 1]
         # Finds the node objects on the outside
         inner_nodes = [x for x in self.chromosome.node_genes if x.layer != 0 and x.layer != 1]
+        # print(len(inner_nodes))
         return self.bias[0]*outer_nodes + self.bias[1]*inner_nodes
 
 
@@ -290,15 +295,8 @@ class Gnarl():
         '''
         runs
         '''
-        
-        model = self.chromosome
-        # print(self.nodes - 6)
-        if self.engine == 'cartpole' or self.engine is None:
-            self.fitness = self.play_cart(model)
-        if self.engine == 'pymunk':
-            pass
-        if self.engine == 'unity':
-            pass
+
+        self.fitness = self.play_cart(self.chromosome)
 
 
 
@@ -307,6 +305,14 @@ class Gnarl():
         returns a deep copy of iteself to be used as the offspring
         '''
         return copy.deepcopy(self)
+    
+        
+    def get_max_links(self):
+        hidden_nodes = (self.nodes - self.input_size - self.output_size)
+        links = self.input_size * (self.output_size + hidden_nodes) 
+        for i in range(hidden_nodes+1, 1, -1):
+            links += i
+        return links
 
 
     def play_cart(self, chromosome, goal_steps=500):
@@ -315,14 +321,16 @@ class Gnarl():
         prev_obs = []
         done = False
         model = chromosome.compile_network()
+        
         while not done:
     
             if len(prev_obs) == 0:
-                action = np.random.randint(0, 2)
+                action = np.random.randint(0, self.output_size)
+                # print('bad')
             else:
-    
+                # print('good')
                 action = np.argmax(model.predict(prev_obs))
-            print(self.env)
+                
             observation, reward, done, info = self.env.step(action)
             prev_obs = observation
             score += reward
@@ -330,9 +338,10 @@ class Gnarl():
         self.env.reset()
         return score
 
+
 if __name__ == '__main__':
 
-    my_net = Gnarl()
+    my_net = Gnarl(env = gym.make('CartPole-v1'))
 
     for i in range(100):
         print(my_net.fitness)

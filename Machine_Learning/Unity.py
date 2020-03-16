@@ -68,7 +68,7 @@ class Unity:
 
         self.state = new_state # Update current state
 
-        return (self.state, reward - penalty, done, {})
+        return (self.state, reward, done, {})
 
     def perform_action(self, action: int):
         '''

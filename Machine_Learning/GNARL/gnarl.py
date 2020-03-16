@@ -8,7 +8,7 @@ Need to go into
 """
 
 import numpy as np
-import gym
+from tqdm import tqdm
 from gnarl_mutate import Gnarl
 # import construct_net_new
 
@@ -21,18 +21,30 @@ class GnarlController():
     '''
     def __init__(self, pop_size, engine
                  , env=None, start_entities=None, input_length=4,
-                 output_length=2, max_generation=30):
+                 output_length=2, max_generation=30, max_fitness=0):
+
+        print('''
+  _______ .__   __.      ___      .______       __      
+ /  _____||  \ |  |     /   \     |   _  \     |  |     
+|  |  __  |   \|  |    /  ^  \    |  |_)  |    |  |     
+|  | |_ | |  . `  |   /  /_\  \   |      /     |  |     
+|  |__| | |  |\   |  /  _____  \  |  |\  \----.|  `----.
+ \______| |__| \__| /__/     \__\ | _| `._____||_______|''')
 
         self.pop_size = pop_size
         self.entities = [0]*pop_size
         self.fitnesses = np.array(np.zeros((pop_size)))
+        self.max_generation = max_generation
+        self.max_fitness = max_fitness
 
         if start_entities is None:
+            # for i in range(50):
             for i in range(pop_size):
                 # print(i)
                 self.entities[i] = Gnarl(env, engine, input_size=input_length,
-                                         output_size=output_length)
-                # self.entities[i].initial_structure()
+                                         output_size=output_length, 
+                                         max_fitness = self.max_fitness)
+                    # self.entities[i].initial_structure()
 
         elif len(start_entities) < pop_size:
             self.entities[0:len(start_entities)] = start_entities
@@ -41,18 +53,6 @@ class GnarlController():
 
         elif len(start_entities) >= pop_size:
             self.entities = start_entities[0:pop_size]
-
-        for i in range(max_generation):
-            # print(i,'a')
-            [e.run() for e in self.entities]
-            self.fitnesses = np.array([e.fitness for e in self.entities])
-            print('Generation: ', i)
-            # print('fitnesses: ',self.fitnesses)
-            print('mean: ', self.fitnesses.mean(), '\n')
-            self.next_generation()
-
-
-
 
 
     def next_generation(self):
@@ -67,6 +67,31 @@ class GnarlController():
 
         self.entities = parents
         self.entities.extend(children)
+
+
+    
+    def main(self):
+        '''
+        After initialising a net, call this function which will return the bst
+        net
+        '''
+        for i in range(self.max_generation):
+            print("\nGeneration " + str(i + 1))
+            # print(i,'a')
+            for e in tqdm(range(len(self.entities))): self.entities[e].run()
+            self.fitnesses = np.array([e.fitness for e in self.entities])
+            # print('Generation: ', i)
+        
+            print('Fitnesses: ',self.fitnesses)
+            print('Mean: ', self.fitnesses.mean(), '\n')
+            self.next_generation()
+            
+        sorted_chromosomes = sorted(self.entities, key=lambda x: x.fitness, reverse=True)
+        print('Best net fitness: {}'.format(sorted_chromosomes[0].fitness))
+        return sorted_chromosomes[0].chromosome.model             
+
+
+
 
 
 # MAIN
@@ -85,11 +110,15 @@ def main():
     sys.path.insert(0, parentdir)
 
     inp = 2
+    out  = 5
+    fitness = 1000000
     if environment == '1': # Run Gym sim
         print("Running GNARL with the OpenAI Gym CartPole-v0 environment...\n")
         import gym
         env = gym.make('CartPole-v0')
         inp = 4
+        out = 2
+        fitness = 500
     elif environment == '2': # Run Pymunk sim
         print("Running GNARL with the Pymunk environment...\n")
         from Pymunk import Swing
@@ -102,9 +131,12 @@ def main():
     env.reset()
 
     # initialise NEAT object (increase best_model_runs to show each winning genome perform)
-    controller = GnarlController(pop_size=50, env=env, 
+    controller = GnarlController(pop_size=20, env=env, 
                                   engine="cartpole", max_generation=20,
-                                  input_length=inp, output_length=2)
+                                  input_length=inp, output_length=out, 
+                                  max_fitness=fitness)
+    
+    net = controller.main()
 
     # name = input("Net name: ")\
     # neat.best_model.save(name)
@@ -114,12 +146,14 @@ def main():
     # except:
     #     env.render(best_model, timeout=500)
 
-
-
 # if __name__ == '__main__':
 
 #     print('qhh')
 #     controller = GnarlController(pop_size=50, env=gym.make('CartPole-v1'), 
 #                                   engine="cartpole", max_generation=20,
-#                                   input_length=4, output_length=2)
-#     print([e for e in controller.entities])
+#                                   input_length=4, output_length=2, 
+#                                   max_fitness = 500)
+#     net = controller.main()
+#     print(net)
+#     # controller.next_generation()
+#     # print([e for e in controller.entities])
