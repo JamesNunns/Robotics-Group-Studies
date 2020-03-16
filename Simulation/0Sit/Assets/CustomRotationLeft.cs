@@ -292,11 +292,11 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 		if (Input.GetKey("u"))
 		{
-			changePosition(legs_down, 0.8f);
+			changePosition(legs_down, 1.2f);
 		}	
 		if (Input.GetKey("i"))
 		{
-			changePosition(legs_up, 0.8f);
+			changePosition(legs_up, 1.2f);
 		}
 		if (Input.GetKey("p"))
 		{
@@ -382,7 +382,8 @@ public class CustomRotationLeft : MonoBehaviour
 					System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", rod.angle.ToString());
 				}
 		}
-		print(leftShoulder.angle);
+		string anglevalue = rod.angle.ToString() + " ";
+		File.AppendAllText(@"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
 	}
 }
 
