@@ -889,7 +889,7 @@ class NEAT():
             for gen in range(generations):
                 print("\n---------- Generation " + str(gen + 1) + " ----------\n")
                 
-                fitness_dist, parents, new_population, mutations = [], [], [], []
+                gen_fitness, fitness_dist, parents, new_population, mutations = [], [], [], [], []
                 best_genome = None
                 
                 print("Processing generation " + str(gen + 1) + "...")
@@ -911,6 +911,7 @@ class NEAT():
                 
                 # find the best fitness of the generation
                 best_fitness = fitness_dist[0]
+                gen_fitness.append(best_fitness)
                 
                 # use the above to find the best models in the generation            
                 for genome in self.population:
@@ -950,7 +951,7 @@ class NEAT():
                 self.population = parents + new_population
                 
             # returns best_model (NeuralNet object) and list of winning genomes (Genome objects)
-            return self.best_model, self.winning_genomes, fitness_dist
+            return self.best_model, self.winning_genomes, gen_fitness
         
         except KeyboardInterrupt:
             print("Exited.")
@@ -1161,11 +1162,10 @@ def main():
                 best_model_runs=0)
 
     # run NEAT
-    best_model, winning_genomes, fitness_dist = neat.run(generations=20)
+    best_model, winning_genomes, gen_fitness = neat.run(generations=20)
 
-    if not fitness_dist == 0:
-        fitness_dist.sort(reverse=True)
-        plt.plot(np.arange(20), fitness_dist, 'black', label='Performance')
+    if not gen_fitness == 0:
+        plt.plot(np.arange(20), gen_fitness, 'black', label='Performance')
         plt.legend(loc='upper left')
         plt.margins(0, 0)
         plt.title("Performance of NEAT")
@@ -1180,6 +1180,11 @@ def main():
         env.render()
     except:
         env.render(best_model, timeout=500)
+
+    # Write fitness data to file
+    f = open('NEAT/' + name + '.txt', 'w+')
+    f.writelines(gen_fitness)
+    f.close()
 
 
 if __name__ == "__main__":
