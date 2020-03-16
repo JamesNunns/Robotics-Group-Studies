@@ -911,7 +911,7 @@ class NEAT():
                 
                 # find the best fitness of the generation
                 best_fitness = fitness_dist[0]
-                gen_fitness.append(best_fitness)
+                gen_fitness.append(fitness_dist)
                 
                 # use the above to find the best models in the generation            
                 for genome in self.population:
@@ -1177,9 +1177,9 @@ def main():
     neat.best_model.save(name)
     print("Net saved as " + name + ".h5")
     try:
-        env.render()
-    except:
         env.render(best_model, timeout=500)
+    except:
+        env.render
 
     # Write fitness data to file
     f = open('NEAT/' + name + '.txt', 'w+')
