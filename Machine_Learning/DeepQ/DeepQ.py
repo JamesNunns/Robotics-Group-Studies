@@ -218,9 +218,14 @@ def main():
         q.load(load)
         q.epsilon = epsilon
     
-    q.run(1000)
+    e, performance = q.run(1000)
     name = input("Net name: ")
     q.save(name)
     print("Net saved as " + name + ".h5")
     q.render_actions()
     q.render_sim("Simulation")
+
+    # Write fitness data to file
+    f = open('DeepQ/' + name + '.txt', 'w+')
+    f.writelines(perforamnce)
+    f.close()
