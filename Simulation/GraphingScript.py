@@ -11,11 +11,12 @@ import matplotlib.pyplot as plt
 Angle_list = []
 Angle_changes = []
 Time_changes = []
-textfile = open(r"C:\Users\golda\Robotics-Group-Studies\Simulation\SwingAmplitude.txt")
+textfile = open(r"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt")
 lines = textfile.readlines()
 lines[0].split()
 for i in range(0, len(lines[0].split())):
     Angle_list.append(float(lines[0].split()[i]))
+
     
 #Finding the peak amplitude values
 #for i in range(0, len(Angle_list)):
@@ -38,10 +39,10 @@ for i in range(0, len(Angle_list)):
 plt.plot(Time_changes, Angle_list)
 plt.xlabel("Time (s)")
 plt.ylabel("Amplitude (degrees)")
-plt.title("How the amplitude of the swing decays over time with no stimulation")
+plt.title("20-generation NEAT Net Swing - Standing")
 
-
-plt.savefig("Swing amplitude damping")
+name = input("Figure Name: ")
+plt.savefig(name)
 textfile.close()
 
 
