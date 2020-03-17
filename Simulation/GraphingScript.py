@@ -39,7 +39,8 @@ for i in range(0, len(Angle_list)):
 plt.plot(Time_changes, Angle_list)
 plt.xlabel("Time (s)")
 plt.ylabel("Amplitude (degrees)")
-plt.title("20-generation NEAT Net Swing - Standing")
+title = input("Graph Title: ")
+plt.title(title)
 
 name = input("Figure Name: ")
 plt.savefig(name)
