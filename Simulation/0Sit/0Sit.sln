@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{7B238660-55DA-876B-D484-4A6D928676F7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Recorder", "Unity.Recorder.csproj", "{3AD2688A-3A7A-C483-10B2-5674C5864CE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Recorder.Samples", "Unity.Recorder.Samples.csproj", "{DA56B937-5993-5CDC-67BB-3B0BA8C993AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{7B238660-55DA-876B-D484-4A6D928676F7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Recorder.Editor", "Unity.Recorder.Editor.csproj", "{A4897085-9907-065B-F328-886B70E0A7D5}"
 EndProject
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7B238660-55DA-876B-D484-4A6D928676F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B238660-55DA-876B-D484-4A6D928676F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B238660-55DA-876B-D484-4A6D928676F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B238660-55DA-876B-D484-4A6D928676F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3AD2688A-3A7A-C483-10B2-5674C5864CE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3AD2688A-3A7A-C483-10B2-5674C5864CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD2688A-3A7A-C483-10B2-5674C5864CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{DA56B937-5993-5CDC-67BB-3B0BA8C993AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA56B937-5993-5CDC-67BB-3B0BA8C993AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA56B937-5993-5CDC-67BB-3B0BA8C993AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B238660-55DA-876B-D484-4A6D928676F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B238660-55DA-876B-D484-4A6D928676F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B238660-55DA-876B-D484-4A6D928676F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B238660-55DA-876B-D484-4A6D928676F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4897085-9907-065B-F328-886B70E0A7D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4897085-9907-065B-F328-886B70E0A7D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4897085-9907-065B-F328-886B70E0A7D5}.Release|Any CPU.ActiveCfg = Release|Any CPU

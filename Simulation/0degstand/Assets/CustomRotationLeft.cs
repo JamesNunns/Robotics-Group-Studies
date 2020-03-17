@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
+using System.IO;
 
 public class CustomRotationLeft : MonoBehaviour
 /// <summary>
@@ -72,6 +73,7 @@ public class CustomRotationLeft : MonoBehaviour
 
 	void Start()
 	{
+		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", "0 ");
 		/// Assign all of the defined joints to the correct game objects
 		leftShoulder = GameObject.Find("LeftBicep").GetComponent<HingeJoint>();
 
@@ -311,7 +313,7 @@ public class CustomRotationLeft : MonoBehaviour
 		for (int i = 0; i < 5; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
 		{
-			if (allAngles[i] < allJoints[i].angle + 95f && allAngles[i] > allJoints[i].angle + 85f)
+			if (allAngles[i] < allJoints[i].angle + 105f && allAngles[i] > allJoints[i].angle + 75f)
 			{
 				Lock(allJoints[i]);
 				if (allJoints[i] == leftElbow)
@@ -325,8 +327,10 @@ public class CustomRotationLeft : MonoBehaviour
 			}
 		}
 		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
-		System.IO.File.WriteAllText (@"C:\users\Alex\Robotics-Group-Studies\Machine_Learning\state.txt", state);
+		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\state.txt", state);
 		Time.timeScale = TimeScale;
+		string anglevalue = rod.angle.ToString() + " ";
+		File.AppendAllText(@"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
 		
 	}
 }

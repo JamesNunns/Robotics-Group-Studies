@@ -67,6 +67,7 @@ public class CustomRotationLeft : MonoBehaviour
 
 	void Start()
 	{
+		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", "0 ");
 		Time.timeScale = TimeScale;
 		/// Assign all of the defined joints to the correct game objects
 		leftShoulder = GameObject.Find("LeftBicep").GetComponent<HingeJoint>();
@@ -384,6 +385,7 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 		string anglevalue = rod.angle.ToString() + " ";
 		File.AppendAllText(@"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
+
 	}
 }
 

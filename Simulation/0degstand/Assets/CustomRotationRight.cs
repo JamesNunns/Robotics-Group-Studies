@@ -254,7 +254,7 @@ public class CustomRotationRight : MonoBehaviour
 		for (int i = 0; i < 6; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
 		{
-			if (allAngles[i] < allJoints[i].angle + 95f && allAngles[i] > allJoints[i].angle + 85f)
+			if (allAngles[i] < allJoints[i].angle + 105f && allAngles[i] > allJoints[i].angle + 75f)
 			{
 				Lock(allJoints[i]);
 			}
