@@ -330,7 +330,7 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 		        for (int i=0; i < 11; i++)
         {
-            if (i < 6)
+            if (i < 5)
             {
                 if (jointsForTorque[i].velocity <= 0.5)
                 {
@@ -338,7 +338,7 @@ public class CustomRotationLeft : MonoBehaviour
                 }
                 else Torque[i] = Math.Abs(TorqueMotion(jointsForTorque[i]));
             }
-            if (i >= 6)
+            if (i >= 5)
             {
                 if (jointsForTorque[i].velocity <= 0.5)
                 {
