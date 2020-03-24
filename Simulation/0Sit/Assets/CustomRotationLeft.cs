@@ -164,7 +164,7 @@ public class CustomRotationLeft : MonoBehaviour
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", "0");
 	}
 
-	void Move(HingeJoint joint, float ang, float speed)
+	void setAngles(HingeJoint joint, float ang, float speed)
 	/// <summary>
 	/// This class moves a single joint to the passed angle
 	/// at a specified speed. The angles are defined in the
@@ -230,7 +230,7 @@ public class CustomRotationLeft : MonoBehaviour
 
 	}
 
-	void changePosition(Dictionary<HingeJoint, float> position, float speed)
+	void set_posture(Dictionary<HingeJoint, float> position, float speed)
 	{
 		if (position == body_up)
 		{
@@ -245,7 +245,7 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 		foreach (KeyValuePair<HingeJoint, float> item in position)
 		{
-			Move(item.Key, item.Value, speed);
+			setAngles(item.Key, item.Value, speed);
 		}
 
 	}
@@ -285,27 +285,27 @@ public class CustomRotationLeft : MonoBehaviour
 		/// These are test inputs, they can be changed
 		if (Input.GetKey("m"))
 		{
-			Move(leftKnee, Mathf.Rad2Deg*(-0.092082f), 0.5f);
+			setAngles(leftKnee, Mathf.Rad2Deg*(-0.092082f), 0.5f);
 		}
 		if (Input.GetKey("n"))
 		{
-			Move(leftKnee, 90, 1f);
+			setAngles(leftKnee, 90, 1f);
 		}
 		if (Input.GetKey("u"))
 		{
-			changePosition(legs_down, 1.2f);
+			set_posture(legs_down, 1.2f);
 		}	
 		if (Input.GetKey("i"))
 		{
-			changePosition(legs_up, 1.2f);
+			set_posture(legs_up, 1.2f);
 		}
 		if (Input.GetKey("p"))
 		{
-			changePosition(body_down, 0.5f);
+			set_posture(body_down, 0.5f);
 		}
 		if (Input.GetKey("o"))
 		{
-			changePosition(body_up, 0.5f);
+			set_posture(body_up, 0.5f);
 		}
 		if (Input.GetKey("y"))
 		{
@@ -362,15 +362,15 @@ public class CustomRotationLeft : MonoBehaviour
         }
         if (leftKnee.angle > 3)
         {
-        	changePosition(legs_down, 0.5f);
+        	set_posture(legs_down, 0.5f);
         }
         if (leftKnee.angle < -93)
         {
-        	changePosition(legs_up, 0.5f);
+        	set_posture(legs_up, 0.5f);
         }
         if (leftShoulder.angle > 20)
         {
-        	changePosition(body_up, 0.5f);
+        	set_posture(body_up, 0.5f);
         }
 		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\state.txt", state);
@@ -383,7 +383,7 @@ public class CustomRotationLeft : MonoBehaviour
 					System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", rod.angle.ToString());
 				}
 		}
-		string anglevalue = (rod.angle+10).ToString() + " ";
+		string anglevalue = rod.angle.ToString() + " ";
 		File.AppendAllText(@"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
 
 	}

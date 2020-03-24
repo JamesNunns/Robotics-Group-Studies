@@ -113,7 +113,7 @@ public class CustomRotationRight : MonoBehaviour
 		legs_down.Add(rightAnkle, 50);
 	}
 
-	void Move(HingeJoint joint, float ang, float speed)
+	void setAngles(HingeJoint joint, float ang, float speed)
 	/// <summary>
 	/// This class moves a single joint to the passed angle
 	/// at a specified speed. The angles are defined in the
@@ -183,7 +183,7 @@ public class CustomRotationRight : MonoBehaviour
 
 	}
 
-	void changePosition(Dictionary<HingeJoint, float> position, float speed)
+	void set_posture(Dictionary<HingeJoint, float> position, float speed)
 	{
 		foreach (HingeJoint joint in allJoints)
 		{
@@ -194,7 +194,7 @@ public class CustomRotationRight : MonoBehaviour
 		}
 		foreach (KeyValuePair<HingeJoint, float> item in position)
 		{
-			Move(item.Key, item.Value, speed);
+			setAngles(item.Key, item.Value, speed);
 		}
 
 	}
@@ -225,27 +225,27 @@ public class CustomRotationRight : MonoBehaviour
 		/// These are test inputs, they can be changed
 		if (Input.GetKey("m"))
 		{
-			Move(rightKnee, Mathf.Rad2Deg*(-0.092082f), 0.5f);
+			setAngles(rightKnee, Mathf.Rad2Deg*(-0.092082f), 0.5f);
 		}
 		if (Input.GetKey("n"))
 		{
-			Move(rightKnee, 90, 1f);
+			setAngles(rightKnee, 90, 1f);
 		}	
 		if (Input.GetKey("u"))
 		{
-			changePosition(legs_down, 1.2f);
+			set_posture(legs_down, 1.2f);
 		}	
 		if (Input.GetKey("i"))
 		{
-			changePosition(legs_up, 1.2f);
+			set_posture(legs_up, 1.2f);
 		}
 		if (Input.GetKey("p"))
 		{
-			changePosition(body_down, 0.5f);
+			set_posture(body_down, 0.5f);
 		}
 		if (Input.GetKey("o"))
 		{
-			changePosition(body_up, 0.5f);
+			set_posture(body_up, 0.5f);
 		}
 		for (int i = 0; i < 6; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
