@@ -15,18 +15,14 @@ public class CustomRotationLeft : MonoBehaviour
 {
 	/// Define all the joints that can move
 	HingeJoint leftShoulder;
-
 	HingeJoint leftElbow;
-
 	HingeJoint leftKnee;
-
 	HingeJoint leftAnkle;
-
 	HingeJoint leftHip;
 
 	HingeJoint rod;
 
-    HingeJoint rightShoulder;
+	HingeJoint rightShoulder;
     HingeJoint rightElbow;
     HingeJoint rightKnee;
     HingeJoint rightAnkle;
@@ -34,15 +30,12 @@ public class CustomRotationLeft : MonoBehaviour
 
     HingeJoint Neck;
 
+	public float TimeScale;
 	/// Have a limiting angle for each joint
 	float leftShoulderAngle;
-
 	float leftElbowAngle;
-
 	float leftKneeAngle;
-
 	float leftAnkleAngle;
-
 	float leftHipAngle;
 
 	double Torque0 = 0;
@@ -56,6 +49,7 @@ public class CustomRotationLeft : MonoBehaviour
     double Torque8 = 0;
     double Torque9 = 0;
     double Torque10 = 0;
+
 	
 	/// List every joint and angle together
 	List<HingeJoint> allJoints = new List<HingeJoint>();
@@ -63,33 +57,33 @@ public class CustomRotationLeft : MonoBehaviour
 	List<double> Torque = new List<double>();
 	List<HingeJoint> jointsForTorque = new List<HingeJoint>();
 
-	Dictionary<HingeJoint, float> low_cm = new Dictionary<HingeJoint, float>();
-	Dictionary<HingeJoint, float> high_cm = new Dictionary<HingeJoint, float>();
+	Dictionary<HingeJoint, float> stand = new Dictionary<HingeJoint, float>();
+	Dictionary<HingeJoint, float> crouch = new Dictionary<HingeJoint, float>();
+	Dictionary<HingeJoint, float> backwards = new Dictionary<HingeJoint, float>();
+	Dictionary<HingeJoint, float> forwards = new Dictionary<HingeJoint, float>();
 
 	bool upperMoving;
 	bool lowerMoving;
 
-	public float TimeScale;
-
 	void Start()
 	{
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", "0 ");
+		Time.timeScale = TimeScale;
 		/// Assign all of the defined joints to the correct game objects
 		leftShoulder = GameObject.Find("LeftBicep").GetComponent<HingeJoint>();
-
 		leftElbow = GameObject.Find("LeftForearm").GetComponent<HingeJoint>();
-
 		leftKnee = GameObject.Find("LeftShin").GetComponent<HingeJoint>();
-
 		leftAnkle = GameObject.Find("LeftFoot").GetComponent<HingeJoint>();
-
 		leftHip = GameObject.Find("LeftThigh").GetComponent<HingeJoint>();
-		Neck = GameObject.Find("Body").GetComponent<HingeJoint>();
-		rightShoulder = GameObject.Find("RightBicep").GetComponent<HingeJoint>();
+
+        rightShoulder = GameObject.Find("RightBicep").GetComponent<HingeJoint>();
         rightElbow = GameObject.Find("RightForearm").GetComponent<HingeJoint>();
         rightKnee = GameObject.Find("RightShin").GetComponent<HingeJoint>();
         rightAnkle = GameObject.Find("RightFoot").GetComponent<HingeJoint>();
         rightHip = GameObject.Find("RightThigh").GetComponent<HingeJoint>();
+
+        Neck = GameObject.Find("Body").GetComponent<HingeJoint>();
+
 		rod = GameObject.Find("RodLeft1").GetComponent<HingeJoint>();
 
 
@@ -101,30 +95,17 @@ public class CustomRotationLeft : MonoBehaviour
 		leftHipAngle = 0;
 
 		/// Populate the lists with the correct HingeJoint objects
-		
+		allJoints.Add(leftHip);
 		allJoints.Add(leftShoulder);
 		allJoints.Add(leftElbow);
 		allJoints.Add(leftKnee);
 		allJoints.Add(leftAnkle);
-		allJoints.Add(leftHip);
 
+		allAngles.Add(leftHipAngle);
 		allAngles.Add(leftShoulderAngle);
 		allAngles.Add(leftElbowAngle);
 		allAngles.Add(leftKneeAngle);
 		allAngles.Add(leftAnkleAngle);
-		allAngles.Add(leftHipAngle);
-
-		low_cm.Add(leftElbow, Mathf.Rad2Deg*(0.050664f));
-		low_cm.Add(leftShoulder, Mathf.Rad2Deg*(0.995608f));
-		low_cm.Add(leftKnee, Mathf.Rad2Deg*(1.56f));
-		low_cm.Add(leftAnkle, Mathf.Rad2Deg*(0.921976f));
-		low_cm.Add(leftHip, Mathf.Rad2Deg*(-0.052198f));
-
-		high_cm.Add(leftElbow, Mathf.Rad2Deg*(1.356098f));
-		high_cm.Add(leftShoulder, Mathf.Rad2Deg*(1.322266f));
-		high_cm.Add(leftKnee, Mathf.Rad2Deg*(-0.092082f));
-		high_cm.Add(leftAnkle, Mathf.Rad2Deg*(-1.141338f));
-		high_cm.Add(leftHip, Mathf.Rad2Deg*(-1.5708f));
 
 		jointsForTorque.Add(rightShoulder);
         jointsForTorque.Add(rightElbow);
@@ -150,9 +131,47 @@ public class CustomRotationLeft : MonoBehaviour
         Torque.Add(Torque8);
         Torque.Add(Torque9);
         Torque.Add(Torque10);
-		
+
+		// low_cm.Add(leftElbow, Mathf.Rad2Deg*(0.050664f));
+		// low_cm.Add(leftShoulder, Mathf.Rad2Deg*(0.995608f));
+		// low_cm.Add(leftKnee, Mathf.Rad2Deg*(1.56f));
+		// low_cm.Add(leftAnkle, Mathf.Rad2Deg*(0.921976f));
+		// low_cm.Add(leftHip, Mathf.Rad2Deg*(-0.052198f));
+
+		// high_cm.Add(leftElbow, Mathf.Rad2Deg*(1.356098f));
+		// high_cm.Add(leftShoulder, Mathf.Rad2Deg*(1.322266f));
+		// high_cm.Add(leftKnee, Mathf.Rad2Deg*(-0.092082f));
+		// high_cm.Add(leftAnkle, Mathf.Rad2Deg*(-1.141338f));
+		// high_cm.Add(leftHip, Mathf.Rad2Deg*(-1.5708f));
+
+        stand.Add(leftKnee, 115);
+		stand.Add(leftElbow, -120);
+		stand.Add(leftHip, -100);
+		stand.Add(leftAnkle, 0);
+		stand.Add(leftShoulder, 55);
+
+		crouch.Add(leftElbow, -170);
+		crouch.Add(leftHip, -180);
+		crouch.Add(leftAnkle, -70);
+		crouch.Add(leftKnee, 260);
+		crouch.Add(leftShoulder, 55);
+
+		backwards.Add(leftKnee, 250);
+		backwards.Add(leftHip, -120);
+		backwards.Add(leftElbow, -120);
+		backwards.Add(leftAnkle, -55);
+		backwards.Add(leftShoulder, 45);
+
+		forwards.Add(leftAnkle, -55);
+		forwards.Add(leftHip, -180);
+		forwards.Add(leftElbow, -200);
+		forwards.Add(leftKnee, 190);
+		forwards.Add(leftShoulder, 45);
+
 		upperMoving = false;
 		lowerMoving = false;
+
+		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", "0");
 	}
 
 	void Move(HingeJoint joint, float ang, float speed)
@@ -172,29 +191,29 @@ public class CustomRotationLeft : MonoBehaviour
 		if (joint == leftShoulder)
 		{
 			ang += 40;
-			speed *= 246;
+			speed *= 346;
+			upperMoving = true;
 		}
 		else if (joint == leftElbow)
 		{
 			ang *= -1;
 			ang = 180 - ang;
-			speed *= 246;
-			upperMoving = true;
+			speed *= 346;
 		}
 		else if (joint == leftHip)
 		{
 			ang = 180 + ang;
-			speed *= 378;
+			speed *= 500;
 		}
 		else if (joint == leftAnkle)
 		{
 			ang *= -1;
 			ang = 90 - ang;
 			speed *= 378;
-			lowerMoving = true;
 		}
 		else
 		{
+			lowerMoving = true;
 			speed *= 378;
 		}
 		for (int i = 0; i < 5; i++)
@@ -223,9 +242,16 @@ public class CustomRotationLeft : MonoBehaviour
 
 	void changePosition(Dictionary<HingeJoint, float> position, float speed)
 	{
-		for (int i = 0; i < 5; i++)
+		if (position == forwards)
 		{
-			allJoints[i].useLimits = false;
+			speed *= 1.4f;
+		} 
+		foreach (HingeJoint joint in allJoints)
+		{
+			if (position.ContainsKey(joint))
+			{
+				joint.useLimits = false;
+			}
 		}
 		foreach (KeyValuePair<HingeJoint, float> item in position)
 		{
@@ -233,15 +259,6 @@ public class CustomRotationLeft : MonoBehaviour
 		}
 
 	}
-
-	double TorqueMotion(HingeJoint joint)
-    /// Defining the torque created when the switching position "crunched --> extended"
-    {
-        /// Torque is given as (x, y, z) coordinates so to find the total torque, use pythagoras 
-
-        return(Math.Sqrt((joint.currentTorque[0] * joint.currentTorque[0]) + (joint.currentTorque[1] * joint.currentTorque[1]) + (joint.currentTorque[2] * joint.currentTorque[2])));
-
-    }
 
 	void Lock(HingeJoint joint)
 	/// <summary>
@@ -253,6 +270,7 @@ public class CustomRotationLeft : MonoBehaviour
 		motor.targetVelocity = 0;
 		joint.motor = motor;
 		joint.useMotor = true;
+		joint.useMotor = false;
 
 		/// Find the corresponding angle of the joints and set its limmits to +-1 of that angle
 		int ind = allJoints.IndexOf(joint);
@@ -263,60 +281,54 @@ public class CustomRotationLeft : MonoBehaviour
 		joint.useLimits = true;
 	}
 
+ 	double TorqueMotion(HingeJoint joint)
+    /// Defining the torque created when the switching position "crunched --> extended"
+    {
+        /// Torque is given as (x, y, z) coordinates so to find the total torque, use pythagoras 
+
+        return(Math.Sqrt((joint.currentTorque[0] * joint.currentTorque[0]) + (joint.currentTorque[1] * joint.currentTorque[1]) + (joint.currentTorque[2] * joint.currentTorque[2])));
+
+    }
+
 	void Update()
 	{
 		/// These are test inputs, they can be changed
-		if (Input.GetKey("p")) //stand
+		if (Input.GetKey("m"))
 		{
-			Move(leftKnee, 115, 1f);
-			Move(leftElbow, -120, 1f);
-			Move(leftHip, -100, 1f);
-			Move(leftAnkle, 0, 1f);
-			Move(leftShoulder, 55, 1f);
+			Move(leftKnee, Mathf.Rad2Deg*(-0.092082f), 0.5f);
 		}
-		if (Input.GetKey("o")) //crouch
+		if (Input.GetKey("n"))
 		{
-			Move(leftElbow, -170, 1f);
-			Move(leftHip, -180, 1f);
-			Move(leftAnkle, -70, 1f);
-		    Move(leftKnee, 260, 1f);
-			Move(leftShoulder, 55, 1f);
+			Move(leftKnee, 90, 1f);
+		}
+		if (Input.GetKey("u"))
+		{
+			changePosition(forwards, 1f);
 		}	
-		if (Input.GetKey("z")) //alternate forward
+		if (Input.GetKey("i"))
 		{
-			Move(leftAnkle, -20, 1f);
-			Move(leftHip, -170, 1f);
-			Move(leftElbow, -210, 1f);
-			Move(leftKnee, 110, 1f);
+			changePosition(backwards, 1f);
 		}
-		if (Input.GetKey("i")) //backwards
+		if (Input.GetKey("p"))
 		{
-			Move(leftKnee, 250, 1f);
-			Move(leftHip, -120, 1f);
-			Move(leftElbow, -120, 1f);
-			Move(leftAnkle, -55, 1f);
-			Move(leftShoulder, 45, 1f);
+			changePosition(stand, 1f);
 		}
-		if (Input.GetKey("u")) // forward
+		if (Input.GetKey("o"))
 		{
-			Move(leftAnkle, -55, 1f);
-			Move(leftHip, -180, 1f);
-			Move(leftElbow, -200, 1f);
-			Move(leftKnee, 190, 1f);
-			Move(leftShoulder, 45, 1f);
+			changePosition(crouch, 1f);
 		}
-		if (Input.GetKey("y")) //resets
+		if (Input.GetKey("y"))
 		{
 			SceneManager.LoadScene("SampleScene");
+			System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", "0");
 		}
-
 		for (int i = 0; i < 5; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
 		{
 			if (allAngles[i] < allJoints[i].angle + 105f && allAngles[i] > allJoints[i].angle + 75f)
 			{
 				Lock(allJoints[i]);
-				if (allJoints[i] == leftElbow)
+				if (allJoints[i] == leftShoulder)
 				{
 					upperMoving = false;
 				}
@@ -326,12 +338,64 @@ public class CustomRotationLeft : MonoBehaviour
 				}
 			}
 		}
+		        for (int i=0; i < 11; i++)
+        {
+            if (i < 6)
+            {
+                if (jointsForTorque[i].velocity <= 0.5)
+                {
+                    Torque[i] = 14.3;
+                }
+                else Torque[i] = Math.Abs(TorqueMotion(jointsForTorque[i]));
+            }
+            if (i >= 6)
+            {
+                if (jointsForTorque[i].velocity <= 0.5)
+                {
+                    Torque[i] = 68;
+                }
+                else Torque[i] = Math.Abs(TorqueMotion(jointsForTorque[i]));
+            }
+        }
+
+        // if (upperMoving)
+        // {
+        // 	print("Moving");
+        // }
+        // else
+        // {
+        // 	print("Not Moving");
+        // }
+        // if (rod.angle > 100)
+        // {
+        // 	SceneManager.LoadScene("SampleScene");
+        // }
+        // if (leftKnee.angle > 3)
+        // {
+        // 	changePosition(legs_down, 0.5f);
+        // }
+        // if (leftKnee.angle < -93)
+        // {
+        // 	changePosition(legs_up, 0.5f);
+        // }
+        // if (leftShoulder.angle > 20)
+        // {
+        // 	changePosition(body_up, 0.5f);
+        // }
 		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
 		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\state.txt", state);
-		Time.timeScale = TimeScale;
+		using (TextReader maxAngle = File.OpenText(@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt"))
+		{
+				float currentMax = float.Parse(maxAngle.ReadLine());
+				if (rod.angle*rod.angle > currentMax*currentMax)
+				{
+					maxAngle.Close();
+					System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", rod.angle.ToString());
+				}
+		}
 		string anglevalue = rod.angle.ToString() + " ";
 		File.AppendAllText(@"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
-		
+
 	}
 }
 

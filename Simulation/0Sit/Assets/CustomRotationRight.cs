@@ -130,34 +130,34 @@ public class CustomRotationRight : MonoBehaviour
 		if (joint == rightShoulder)
 		{
 			ang += 40;
-			speed *= 346;
+			speed *= 427.2f;
 		}
 		else if (joint == rightElbow)
 		{
 			ang *= -1;
 			ang = 180 - ang;
-			speed *= 346;
+			speed *= 370.6f;
 		}
 		else if (joint == rightHip)
 		{
 			ang = 180 + ang;
-			speed *= 500;
+			speed *= 380.6f;
 		}
 		else if (joint == rightAnkle)
 		{
 			ang *= -1;
 			ang = 90 - ang;
-			speed *= 378;
+			speed *= 380.6f;
 		}
 		else if (joint == Neck)
 		{
 			ang *= -1;
 			ang += 90;
-			speed *= 246;
+			speed *= 370.6f;
 		}
 		else
 		{
-			speed *= 378;
+			speed *= 380.6f;
 		}
 		for (int i = 0; i < 6; i++)
 		/// Set the angle in the list allAngles to the correct limit angle
@@ -185,6 +185,10 @@ public class CustomRotationRight : MonoBehaviour
 
 	void set_posture(Dictionary<HingeJoint, float> position, float speed)
 	{
+		if (position == body_up)
+		{
+			speed *= 1.5f;
+		} 
 		foreach (HingeJoint joint in allJoints)
 		{
 			if (position.ContainsKey(joint))
@@ -233,11 +237,11 @@ public class CustomRotationRight : MonoBehaviour
 		}	
 		if (Input.GetKey("u"))
 		{
-			set_posture(legs_down, 1.2f);
+			set_posture(legs_down, 1f);
 		}	
 		if (Input.GetKey("i"))
 		{
-			set_posture(legs_up, 1.2f);
+			set_posture(legs_up, 1f);
 		}
 		if (Input.GetKey("p"))
 		{
