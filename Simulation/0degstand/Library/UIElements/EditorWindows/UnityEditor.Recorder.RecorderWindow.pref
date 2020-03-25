@@ -16,5 +16,5 @@ MonoBehaviour:
   - __PanelContainer__rootVisualContainer__RecordersList__UnityEditor.Recorder.VisualListItem`1+Selection[UnityEditor.Recorder.RecorderItem]
   - __PanelContainer__rootVisualContainer__RecordingPanelSplitter__UnityEditor.Recorder.PanelSplitter+Width
   m_Values:
-  - '{"index":0}'
+  - '{"index":1}'
   - '{"value":0.0}'
