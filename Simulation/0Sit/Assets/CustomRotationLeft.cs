@@ -67,7 +67,7 @@ public class CustomRotationLeft : MonoBehaviour
 
 	void Start()
 	{
-		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", "0 ");
+		System.IO.File.WriteAllText (@"C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Machine_Learning\SwingAmplitude.txt", "0 ");
 		Time.timeScale = TimeScale;
 		/// Assign all of the defined joints to the correct game objects
 		leftShoulder = GameObject.Find("LeftBicep").GetComponent<HingeJoint>();
@@ -161,7 +161,7 @@ public class CustomRotationLeft : MonoBehaviour
 		upperMoving = false;
 		lowerMoving = false;
 
-		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", "0");
+		System.IO.File.WriteAllText (@"C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", "0");
 	}
 
 	void setAngles(HingeJoint joint, float ang, float speed)
@@ -310,7 +310,7 @@ public class CustomRotationLeft : MonoBehaviour
 		if (Input.GetKey("y"))
 		{
 			SceneManager.LoadScene("SampleScene");
-			System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", "0");
+			System.IO.File.WriteAllText (@"C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", "0");
 		}
 		for (int i = 0; i < 5; i++)
 		/// This will lock any joint that is within 1 degree of its limit angle
@@ -373,18 +373,18 @@ public class CustomRotationLeft : MonoBehaviour
         	set_posture(body_up, 0.5f);
         }
 		string state = rod.angle.ToString() + " " + rod.velocity.ToString() + " " + Torque.Sum().ToString() + " " + upperMoving.ToString() + " " + lowerMoving.ToString();
-		System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\state.txt", state);
-		using (TextReader maxAngle = File.OpenText(@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt"))
+		System.IO.File.WriteAllText (@"C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Machine_Learning\state.txt", state);
+		using (TextReader maxAngle = File.OpenText(@"C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Machine_Learning\maxAngle.txt"))
 		{
 				float currentMax = float.Parse(maxAngle.ReadLine());
 				if (rod.angle*rod.angle > currentMax*currentMax)
 				{
 					maxAngle.Close();
-					System.IO.File.WriteAllText (@"C:\users\james\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", rod.angle.ToString());
+					System.IO.File.WriteAllText (@"C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Machine_Learning\maxAngle.txt", rod.angle.ToString());
 				}
 		}
 		string anglevalue = rod.angle.ToString() + " ";
-		File.AppendAllText(@"C:\Users\james\Robotics-Group-Studies\Simulation\SwingAmplitude.txt", anglevalue);
+		File.AppendAllText(@"C:\Users\Tom\Documents\GitHub\Robotics-Group-Studies\Machine_LearningSwingAmplitude.txt", anglevalue);
 
 	}
 }

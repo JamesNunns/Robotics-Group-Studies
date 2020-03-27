@@ -1157,7 +1157,7 @@ def main():
     env.reset()
 
     # initialise NEAT object (increase best_model_runs to show each winning genome perform)
-    neat = NEAT(env=env, input_size=inp, output_size=out, population_size=20, breed_ratio = 0.25, 
+    neat = NEAT(env=env, input_size=inp, output_size=out, population_size=50, breed_ratio = 0.25, 
                 add_node_prob=0.1, add_connection_prob=0.1, alt_weight_prob=0.1, alt_bias_prob=0.1,
                 best_model_runs=0)
 
