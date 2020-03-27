@@ -16,6 +16,7 @@ Notes:
     - Code to save best model to .h5 is commented out (also at bottom)
 """
 
+import time
 import random
 import numpy as np
 import matplotlib.pyplot as plt
@@ -886,10 +887,14 @@ class NEAT():
         
             if not generations: generations = self.max_generations
             
+            start = time.time()
+            times = []
+            gen_fitness = []
+
             for gen in range(generations):
                 print("\n---------- Generation " + str(gen + 1) + " ----------\n")
                 
-                gen_fitness, fitness_dist, parents, new_population, mutations = [], [], [], [], []
+                fitness_dist, parents, new_population, mutations = [], [], [], []
                 best_genome = None
                 
                 print("Processing generation " + str(gen + 1) + "...")
@@ -911,6 +916,8 @@ class NEAT():
                 
                 # find the best fitness of the generation
                 best_fitness = fitness_dist[0]
+                
+                times.append(time.time() - start)
                 gen_fitness.append(fitness_dist)
                 
                 # use the above to find the best models in the generation            
@@ -951,11 +958,11 @@ class NEAT():
                 self.population = parents + new_population
                 
             # returns best_model (NeuralNet object) and list of winning genomes (Genome objects)
-            return self.best_model, self.winning_genomes, gen_fitness
+            return self.best_model, self.winning_genomes, gen_fitness, times
         
         except KeyboardInterrupt:
             print("Exited.")
-            return self.best_model, self.winning_genomes, 0
+            return self.best_model, self.winning_genomes, 0, 0
 
 
 def gen_init_population(neat_data = None, 
@@ -1162,10 +1169,14 @@ def main():
                 best_model_runs=0)
 
     # run NEAT
-    best_model, winning_genomes, gen_fitness = neat.run(generations=20)
+    best_model, winning_genomes, gen_fitness, times = neat.run(generations=20)
+
+    print(gen_fitness)
+
+    best_fitness = [np.max(i) for i in gen_fitness]
 
     if not gen_fitness == 0:
-        plt.plot(np.arange(20), gen_fitness, 'black', label='Performance')
+        plt.plot(np.arange(20), best_fitness, 'black', label='Performance')
         plt.legend(loc='upper left')
         plt.margins(0, 0)
         plt.title("Performance of NEAT")
@@ -1183,7 +1194,7 @@ def main():
 
     # Write fitness data to file
     f = open('NEAT/' + name + '.txt', 'w+')
-    f.writelines(gen_fitness)
+    f.writelines(repr(times) + '\n' + repr(gen_fitness))
     f.close()
 
 
