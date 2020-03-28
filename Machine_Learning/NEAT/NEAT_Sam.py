@@ -66,10 +66,11 @@ def play_cart(env, model, goal_steps=500, render=False, games=100, _print=True):
                 break
         if _print: print('Score: ' + str(score))
         
+        angle = env.max_angle
         env.reset()
         scores.append(score)
         
-    return sum(scores)/len(scores)
+    return sum(scores)/len(scores), angle
 
 
 ###############################################################################
@@ -889,12 +890,13 @@ class NEAT():
             
             start = time.time()
             times = []
+            gen_angles = []
             gen_fitness = []
 
             for gen in range(generations):
                 print("\n---------- Generation " + str(gen + 1) + " ----------\n")
                 
-                fitness_dist, parents, new_population, mutations = [], [], [], []
+                angles, fitness_dist, parents, new_population, mutations = [], [], [], [], []
                 best_genome = None
                 
                 print("Processing generation " + str(gen + 1) + "...")
@@ -905,8 +907,9 @@ class NEAT():
                     model = genome.compile_network()
                     
                     # find and record fitness value for each model
-                    genome.fitness = run_sim(self.env, model, goal_steps=500, render=False, games=1, _print=False)
+                    genome.fitness, angle = run_sim(self.env, model, goal_steps=500, render=False, games=1, _print=False)
                     fitness_dist.append(genome.fitness)
+                    angles.append(angle)
                 
                 print("Done!\n")
                 
@@ -918,6 +921,7 @@ class NEAT():
                 best_fitness = fitness_dist[0]
                 
                 times.append(time.time() - start)
+                gen_angles.append(angles)
                 gen_fitness.append(fitness_dist)
                 
                 # use the above to find the best models in the generation            
@@ -958,7 +962,7 @@ class NEAT():
                 self.population = parents + new_population
                 
             # returns best_model (NeuralNet object) and list of winning genomes (Genome objects)
-            return self.best_model, self.winning_genomes, gen_fitness, times
+            return self.best_model, self.winning_genomes, gen_fitness, gen_angles, times
         
         except KeyboardInterrupt:
             print("Exited.")
@@ -1116,9 +1120,9 @@ def crossover(genome1, genome2, params=None, deactivate_prob=0.5):
 # currently this simply calls the 'play_cart' function which runs the cartpole gym env
 def run_sim(env, model, goal_steps=500, render=False, games=10, _print=False):
     
-    fitness = play_cart(env, model, 5000000, render, games, _print=_print)
+    fitness, angle = play_cart(env, model, 5000000, render, games, _print=_print)
     
-    return fitness
+    return fitness, angle
 
 
 ###############################################################################
@@ -1169,9 +1173,10 @@ def main():
                 best_model_runs=0)
 
     # run NEAT
-    best_model, winning_genomes, gen_fitness, times = neat.run(generations=20)
+    best_model, winning_genomes, gen_fitness, gen_angles, times = neat.run(generations=20)
 
     print(gen_fitness)
+    print(gen_angles)
 
     best_fitness = [np.max(i) for i in gen_fitness]
 
@@ -1194,7 +1199,7 @@ def main():
 
     # Write fitness data to file
     f = open('NEAT/' + name + '.txt', 'w+')
-    f.writelines(repr(times) + '\n' + repr(gen_fitness))
+    f.writelines(repr(times) + '\n' + repr(gen_fitness) + '\n' + repr(gen_angles))
     f.close()
 
 
