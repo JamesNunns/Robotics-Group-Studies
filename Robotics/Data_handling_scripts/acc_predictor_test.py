@@ -29,7 +29,6 @@ def convert(fft, freq):
     return fft_conv 
 
 def acc_predict(all_data, tl=0.77, th=0.82):
-    time.sleep(2)
     Time = np.array(all_data['time'])[-120:]
     rel_Time = Time - Time[0]
     AccZ = np.array(all_data['az'])[-120:]
@@ -44,6 +43,10 @@ def acc_predict(all_data, tl=0.77, th=0.82):
     fftz = filt(fftz, freqsz, tl, th)
     fft_conv = convert(fftz, freqsz)
     data = np.real(np.fft.ifft(fft_conv))
+    plt.plot(Time, data)
+    plt.title("Filtered Accelerometer Output")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Filtered Amplitude")
     peaks = find_peaks(data)[0]
     tp = []
     for i in xrange(len(rel_Time[peaks])-1):
@@ -58,3 +61,4 @@ def acc_predict(all_data, tl=0.77, th=0.82):
         next_5_maxima.append(last_maxima+(i+1)*tp)
         next_5_minima.append(last_maxima+(i+1)*tp - tp/2)
     return next_5_maxima, next_5_minima
+acc_predict(data)
