@@ -69,20 +69,24 @@ def next_points_qp(values, last_key_points):
         quarter_period = abs(l[1] - l[2])
         next_max = l[1] + 2*quarter_period
         next_min = l[1] + 4*quarter_period
+        next_zero = l[1] + quarter_period
     if values['time'] - l[2] < values['time'] - l[1] and values['time'] - l[0]:
         if values['time'] - l[1] < values['time'] - l[0]: 
             quarter_period = abs(l[2] - l[1])
             next_max = l[2] + quarter_period
             next_min = l[2] + 3*quarter_period
+            next_zero = l[2] + 4*quarter_period
         if values['time'] - l[0] < values['time'] - l[1]: 
             quarter_period = abs(l[2] - l[0])
             next_max = l[2] + 3*quarter_period
             next_min = l[2] + quarter_period
+            next_zero = l[2] + 4*quarter_period
     if values['time'] - l[0] < values['time'] - l[1] and values['time'] - l[2]:
         quarter_period = abs(l[0] - l[2])
         next_max = l[0] + 4*quarter_period
-        next_min = l[0] + 2*quarter_period  
-    return next_max, next_min
+        next_min = l[0] + 2*quarter_period
+        next_zero = l[0] + quarter_period
+    return next_max, next_min, next_zero
 
 def next_points_hp(values, last_key_points):
     l = last_key_points
@@ -90,18 +94,22 @@ def next_points_hp(values, last_key_points):
         half_period = abs(l[1] - l[0])
         next_max = l[1] + half_period
         next_min = l[1] + 2*half_period
+        next_zero = l[1] + half_period/2
     if values['time'] - l[2] < values['time'] - l[1] and values['time'] - l[0]:
         if values['time'] - l[1] < values['time'] - l[0]: 
             half_period = abs(l[1] - l[0])
             next_max = l[2] + half_period/2
             next_min = l[2] + 3*half_period/2
+            next_zero = l[2] + 2*half_period
         if values['time'] - l[0] < values['time'] - l[1]: 
             half_period = abs(l[0] - l[1])
             next_max = l[2] + 3*half_period/2
             next_min = l[2] + half_period/2
+            next_zero = l[2] + 2*half_period
     if values['time'] - l[0] < values['time'] - l[1] and values['time'] - l[2]:
         half_period = abs(l[0] - l[1])
         next_max = l[0] + 2*half_period
-        next_min = l[0] + half_period  
-    return next_max, next_min
+        next_min = l[0] + half_period
+        next_zero = l[0] + half_period/2
+    return next_max, next_min, next_zero
     
