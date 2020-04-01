@@ -3,7 +3,7 @@ from encoder_interface import Encoders
 from sys import path
 path.insert(0, '../Algo_conditions')
 from single_nothing import Nothing
-from triple_max_rotational import TP_Predict
+from triple_max_parametric import TP_Predict
 
 class Algorithm(Robot, Encoders):
 
